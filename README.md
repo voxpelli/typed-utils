@@ -30,6 +30,15 @@ Creates a new array with all values from `inputArray` except the one that matche
 
 Can be useful in combination with eg. a `.map()` where some items in the array has resulted in `undefined` / `null` / `false` values that one wants to have removed before processing the result further.
 
+### `isStringArray(value)`
+
+Similar to `Array.isArray()` but also checks that the array only contains values of type `string` and sets the type to `string[]` rather than `any[]`. A helpful sibling to `isUnknownArray()`
+
+### `isUnknownArray(value)`
+
+Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
+
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
