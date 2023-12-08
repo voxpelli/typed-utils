@@ -1,1 +1,3 @@
-export { default } from './lib/main.js';
+export {
+  filter,
+} from './lib/main.js';
