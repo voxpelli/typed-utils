@@ -1,5 +1,1 @@
-export {
-  filter,
-  isStringArray,
-  isUnknownArray,
-} from './lib/main.js';
+export * from './lib/main.js';
