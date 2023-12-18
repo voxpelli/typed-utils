@@ -24,7 +24,7 @@ const noUndefined = filter(['foo', undefined]);
 
 ### `filter(inputArray, [valueToRemove]) => filteredArray`
 
-Takes an array as `inputArray` and a `valueToRemove` that is either `false`, `null` or `undefined`, defaulting to `undefined` if left out.
+Takes an array as `inputArray` and a `valueToRemove` that is a string literal, `false`, `null` or `undefined`, defaulting to `undefined` if left out.
 
 Creates a new array with all values from `inputArray` except the one that matches `valueToRemove`, then returns that array with a type where the`valueToRemove` type has also been removed from the possible values.
 
