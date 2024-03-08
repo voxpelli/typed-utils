@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-null */
 import chai from 'chai';
 
-import { filter } from '../index.js';
+import { filter } from '../lib/array.js';
 
 chai.should();
 
