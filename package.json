@@ -48,16 +48,16 @@
     "test": "run-s check test:*"
   },
   "dependencies": {
-    "@voxpelli/type-helpers": "^3.0.0"
+    "@voxpelli/type-helpers": "^3.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.5",
+    "@types/chai": "^4.3.12",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^18.19.3",
+    "@types/node": "^18.19.22",
     "@voxpelli/eslint-config": "^19.0.0",
     "@voxpelli/tsconfig": "^10.0.0",
-    "c8": "^8.0.1",
-    "chai": "^4.3.7",
+    "c8": "^9.1.0",
+    "chai": "^4.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-es-x": "^7.5.0",
     "eslint-plugin-import": "^2.29.1",
@@ -70,11 +70,11 @@
     "eslint-plugin-unicorn": "^48.0.1",
     "husky": "^8.0.3",
     "installed-check": "^8.0.0",
-    "knip": "^3.8.2",
-    "mocha": "^10.2.0",
-    "npm-run-all2": "^6.0.6",
+    "knip": "^5.0.3",
+    "mocha": "^10.3.0",
+    "npm-run-all2": "^6.1.2",
     "tsd": "^0.30.7",
-    "type-coverage": "^2.26.0",
+    "type-coverage": "^2.27.1",
     "typescript": "~5.3.3"
   }
 }
