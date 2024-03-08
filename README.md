@@ -20,9 +20,11 @@ import { filter } from '@voxpelli/typed-utils';
 const noUndefined = filter(['foo', undefined]);
 ```
 
-## API
+## Helpers
 
-### `filter(inputArray, [valueToRemove]) => filteredArray`
+### Array
+
+#### `filter(inputArray, [valueToRemove]) => filteredArray`
 
 Takes an array as `inputArray` and a `valueToRemove` that is a string literal, `false`, `null` or `undefined`, defaulting to `undefined` if left out.
 
@@ -30,18 +32,27 @@ Creates a new array with all values from `inputArray` except the one that matche
 
 Can be useful in combination with eg. a `.map()` where some items in the array has resulted in `undefined` / `null` / `false` values that one wants to have removed before processing the result further.
 
-### `isArrayOfType(value, callback)`
+#### `isArrayOfType(value, callback)`
 
 Similar to `Array.isArray()` but also checks that the array only contains values of type verified by the `callback` function and sets the type to be an array of that type rather than simply `any[]`. The `callback` should be a function like `(value: unknown) => value is any` and needs to have an `is` in the return type for the types to work.
 
-### `isStringArray(value)`
+#### `isStringArray(value)`
 
 Similar to `Array.isArray()` but also checks that the array only contains values of type `string` and sets the type to `string[]` rather than `any[]`.
 
-### `isUnknownArray(value)`
+#### `isUnknownArray(value)`
 
 Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
 
+### Object
+
+#### `omit(obj, keys)`
+
+The TypeScript utility type [`Omit<obj, keys>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys) with code that does the actual omit.
+
+#### `pick(obj, keys)`
+
+The TypeScript utility type [`Pick<obj, keys>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys) with code that does the actual pick.
 
 <!-- ## Used by
 
