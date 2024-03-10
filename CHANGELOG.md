@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/voxpelli/typed-utils/compare/v1.4.0...v1.4.1) (2024-03-10)
+
+
+### Bug Fixes
+
+* actually export pick/omit ([e210d1b](https://github.com/voxpelli/typed-utils/commit/e210d1b0c1a3d380c37f40fb9bfe4af7b51734d5))
+
 ## [1.4.0](https://github.com/voxpelli/typed-utils/compare/v1.3.0...v1.4.0) (2024-03-10)
 
 
