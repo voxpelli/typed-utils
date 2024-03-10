@@ -55,7 +55,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^18.19.22",
     "@voxpelli/eslint-config": "^19.0.0",
-    "@voxpelli/tsconfig": "^10.0.0",
+    "@voxpelli/tsconfig": "^11.0.0",
     "c8": "^9.1.0",
     "chai": "^4.4.1",
     "eslint": "^8.57.0",
@@ -75,6 +75,6 @@
     "npm-run-all2": "^6.1.2",
     "tsd": "^0.30.7",
     "type-coverage": "^2.27.1",
-    "typescript": "~5.3.3"
+    "typescript": "~5.4.2"
   }
 }
