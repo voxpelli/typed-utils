@@ -75,6 +75,7 @@
     "npm-run-all2": "^6.1.2",
     "tsd": "^0.30.7",
     "type-coverage": "^2.27.1",
-    "typescript": "~5.4.2"
+    "typescript": "~5.4.2",
+    "validate-conventional-commit": "^1.0.3"
   }
 }
