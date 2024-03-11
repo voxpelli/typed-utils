@@ -20,8 +20,7 @@ permissions:
 jobs:
   release-please:
     uses: voxpelli/ghatemplates/.github/workflows/release-please.yml@main
-    secrets:
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    secrets: inherit
     with:
       releaseAs: ${{ inputs.releaseAs }}
       packageName: "@voxpelli/typed-utils"
