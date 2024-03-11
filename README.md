@@ -44,6 +44,12 @@ Similar to `Array.isArray()` but also checks that the array only contains values
 
 Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
 
+### Miscellaneous
+
+#### `explainVariable(value)`
+
+Returns a `typeof` style explanation of a variable, with added support for eg. `null` and `array`
+
 ### Object
 
 #### `omit(obj, keys)`

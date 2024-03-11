@@ -48,7 +48,7 @@
     "test": "run-s check test:*"
   },
   "dependencies": {
-    "@voxpelli/type-helpers": "^3.2.1"
+    "@voxpelli/type-helpers": "^3.4.0"
   },
   "devDependencies": {
     "@types/chai": "^4.3.12",
