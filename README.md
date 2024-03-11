@@ -60,6 +60,14 @@ The TypeScript utility type [`Omit<obj, keys>`](https://www.typescriptlang.org/d
 
 The TypeScript utility type [`Pick<obj, keys>`](https://www.typescriptlang.org/docs/handbook/utility-types.html#picktype-keys) with code that does the actual pick.
 
+#### `typedObjectKeys(obj)`
+
+Like []`Object.keys()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys) but typed with `Array<keyof obj>` rather than `string[]`. When `obj` is a union this means the type will resolve to only the keys _shared_ between all objects in the union.
+
+#### `typedObjectKeysAll(obj)`
+
+Like [`typedObjectKeys(obj)`](#typedobjectkeysobj) but when `obj` is a union this type will resolve to _all possible keys_ within that union, not just the shared ones.
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
