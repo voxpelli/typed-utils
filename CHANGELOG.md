@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/voxpelli/typed-utils/compare/v1.4.1...v1.5.0) (2024-03-11)
+
+
+### Features
+
+* `explainVariable()` ([b89aea8](https://github.com/voxpelli/typed-utils/commit/b89aea8f20d29ca29bac80e87a439f939717602e))
+
 ## [1.4.1](https://github.com/voxpelli/typed-utils/compare/v1.4.0...v1.4.1) (2024-03-10)
 
 
