@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/voxpelli/typed-utils/compare/v1.6.0...v1.7.0) (2024-03-14)
+
+
+### Features
+
+* filterWithCallback() ([87591ab](https://github.com/voxpelli/typed-utils/commit/87591abea0db11141cfc3dc898d3bb74958d6d55))
+
 ## [1.6.0](https://github.com/voxpelli/typed-utils/compare/v1.5.0...v1.6.0) (2024-03-11)
 
 
