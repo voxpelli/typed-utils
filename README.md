@@ -32,6 +32,10 @@ Creates a new array with all values from `inputArray` except the one that matche
 
 Can be useful in combination with eg. a `.map()` where some items in the array has resulted in `undefined` / `null` / `false` values that one wants to have removed before processing the result further.
 
+#### `filterWithCallback(value, callback)`
+
+Similar to `Array..prorotype.filter()` but expects the `callback` to be a function like `(value: unknown) => value is any` where the `is` is the magic sauce.
+
 #### `isArrayOfType(value, callback)`
 
 Similar to `Array.isArray()` but also checks that the array only contains values of type verified by the `callback` function and sets the type to be an array of that type rather than simply `any[]`. The `callback` should be a function like `(value: unknown) => value is any` and needs to have an `is` in the return type for the types to work.
