@@ -51,8 +51,8 @@
     "@voxpelli/type-helpers": "^3.4.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.12",
-    "@types/mocha": "^10.0.1",
+    "@types/chai": "^4.3.14",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^18.19.22",
     "@voxpelli/eslint-config": "^19.0.0",
     "@voxpelli/tsconfig": "^11.0.0",
