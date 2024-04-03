@@ -34,7 +34,7 @@ Can be useful in combination with eg. a `.map()` where some items in the array h
 
 #### `filterWithCallback(value, callback)`
 
-Similar to `Array..prorotype.filter()` but expects the `callback` to be a function like `(value: unknown) => value is any` where the `is` is the magic sauce.
+Similar to `Array.prototype.filter()` but expects the `callback` to be a function like `(value: unknown) => value is any` where the `is` is the magic sauce.
 
 #### `isArrayOfType(value, callback)`
 
