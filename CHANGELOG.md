@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.7.0](https://github.com/voxpelli/typed-utils/compare/v1.6.0...v1.7.0) (2024-04-03)
+
+
+### Features
+
+* filterWithCallback() ([87591ab](https://github.com/voxpelli/typed-utils/commit/87591abea0db11141cfc3dc898d3bb74958d6d55))
+* rename `isUnknownArray` to `typesafeIsArray` ([b594494](https://github.com/voxpelli/typed-utils/commit/b594494ea3fb4758c03a2e186f562b2b0f784248))
+
 ## [1.6.0](https://github.com/voxpelli/typed-utils/compare/v1.5.0...v1.6.0) (2024-03-11)
 
 
