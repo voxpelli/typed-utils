@@ -44,7 +44,9 @@ Similar to `Array.isArray()` but also checks that the array only contains values
 
 Similar to `Array.isArray()` but also checks that the array only contains values of type `string` and sets the type to `string[]` rather than `any[]`.
 
-#### `isUnknownArray(value)`
+#### `typesafeIsArray(value)`
+
+Alias: ~~`isUnknownArray(value)`~~ (deprecated)
 
 Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
 

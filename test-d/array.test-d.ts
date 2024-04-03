@@ -1,6 +1,6 @@
 import { expectType, expectNotType } from 'tsd';
 
-import { isArrayOfType, isStringArray, isUnknownArray } from '../lib/array.js';
+import { isArrayOfType, isStringArray, typesafeIsArray } from '../lib/array.js';
 
 // isArrayOfType
 
@@ -17,7 +17,7 @@ if (isArrayOfType(unknownNumberArray, isNumber)) {
 }
 
 
-// isUnknownArray
+// typesafeIsArray
 const unknownArray: unknown = [];
 
 expectNotType<unknown[]>(unknownArray);
@@ -25,12 +25,12 @@ expectNotType<unknown[]>(unknownArray);
 if (Array.isArray(unknownArray)) {
   expectType<any[]>(unknownArray);
   expectNotType<unknown[]>(unknownArray);
-  if (isUnknownArray(unknownArray)) {
+  if (typesafeIsArray(unknownArray)) {
     expectType<unknown[]>(unknownArray);
   }
 }
 
-if (isUnknownArray(unknownArray)) {
+if (typesafeIsArray(unknownArray)) {
   expectType<unknown[]>(unknownArray);
 }
 
