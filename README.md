@@ -68,7 +68,7 @@ The TypeScript utility type [`Pick<obj, keys>`](https://www.typescriptlang.org/d
 
 #### `typedObjectKeys(obj)`
 
-Like []`Object.keys()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys) but typed with `Array<keyof obj>` rather than `string[]`. When `obj` is a union this means the type will resolve to only the keys _shared_ between all objects in the union.
+Like [`Object.keys()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys) but typed with `Array<keyof obj>` rather than `string[]`. When `obj` is a union this means the type will resolve to only the keys _shared_ between all objects in the union.
 
 #### `typedObjectKeysAll(obj)`
 
