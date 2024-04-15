@@ -10,7 +10,7 @@
 
 ### Bug Fixes
 
-* ensure `[@deprecated](https://github.com/deprecated)` is kept in exported type ([ab05a1d](https://github.com/voxpelli/typed-utils/commit/ab05a1dc1ac7bac616dc93e045dd25bd9c29032f))
+* ensure `@deprecated` is kept in exported type ([ab05a1d](https://github.com/voxpelli/typed-utils/commit/ab05a1dc1ac7bac616dc93e045dd25bd9c29032f))
 
 ## [1.7.0](https://github.com/voxpelli/typed-utils/compare/v1.6.0...v1.7.0) (2024-04-03)
 
