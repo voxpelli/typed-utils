@@ -56,6 +56,10 @@ Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` 
 
 Returns a `typeof` style explanation of a variable, with added support for eg. `null` and `array`
 
+#### `looksLikeAnErrnoException(err)`
+
+Returns `true` if the `err` looks like being of the `NodeJS.ErrnoException` type
+
 ### Object
 
 #### `omit(obj, keys)`
