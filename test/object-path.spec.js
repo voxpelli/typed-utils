@@ -26,6 +26,14 @@ describe('object path helpers', () => {
       result?.should.deep.equal({ bcd: 'test' });
     });
 
+    it('should get object value by array path', () => {
+      const result = getObjectValueByPath(referenceObject(), ['foo', 'xyz']);
+
+      should.exist(result);
+
+      result?.should.deep.equal({ bcd: 'test' });
+    });
+
     it('should return false when value is not an object', () => {
       const result = getObjectValueByPath(referenceObject(), 'foo.bar');
 
@@ -96,6 +104,14 @@ describe('object path helpers', () => {
       should.exist(result);
 
       result?.should.equal('test');
+    });
+
+    it('should get string value by array path', () => {
+      const result = getStringValueByPath(referenceObject(), ['foo', 'xyz', 'bcd']);
+
+      should.exist(result);
+
+      result?.should.deep.equal('test');
     });
 
     it('should get string value by single segment path', () => {
@@ -173,6 +189,14 @@ describe('object path helpers', () => {
   describe('getValueByPath()', () => {
     it('should get value by key path', () => {
       const result = getValueByPath(referenceObject(), 'foo.bar');
+
+      should.exist(result);
+
+      result?.should.deep.equal({ value: 123 });
+    });
+
+    it('should get value by array path', () => {
+      const result = getValueByPath(referenceObject(), ['foo', 'bar']);
 
       should.exist(result);
 
