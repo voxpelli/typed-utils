@@ -78,6 +78,14 @@ Like [`Object.keys()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 
 Like [`typedObjectKeys(obj)`](#typedobjectkeysobj) but when `obj` is a union this type will resolve to _all possible keys_ within that union, not just the shared ones.
 
+### Object Path
+
+#### `getObjectValueByPath(obj, path, createIfMissing)`
+
+#### `getStringValueByPath(obj, path)`
+
+#### `getValueByPath(obj, path)`
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
