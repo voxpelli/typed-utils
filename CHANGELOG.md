@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.0](https://github.com/voxpelli/typed-utils/compare/v1.8.0...v1.9.0) (2024-04-19)
+
+
+### Features
+
+* add `getValueByPath()` and friends ([6c2e298](https://github.com/voxpelli/typed-utils/commit/6c2e298fedece21a4a8ed1584be364a318646675))
+* add `isErrorWithCode` ([0de6a4f](https://github.com/voxpelli/typed-utils/commit/0de6a4fe155e2e84f8178e200305c62793c44ac1))
+
 ## [1.8.0](https://github.com/voxpelli/typed-utils/compare/v1.7.0...v1.8.0) (2024-04-15)
 
 
