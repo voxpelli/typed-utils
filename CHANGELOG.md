@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/voxpelli/typed-utils/compare/v1.9.0...v1.10.0) (2024-04-19)
+
+
+### Features
+
+* array object paths in `getValueByPath` etc ([a2fb594](https://github.com/voxpelli/typed-utils/commit/a2fb5941718950c593391f0b9961d2f57e5f0aa4))
+
 ## [1.9.0](https://github.com/voxpelli/typed-utils/compare/v1.8.0...v1.9.0) (2024-04-19)
 
 
