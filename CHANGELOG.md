@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/voxpelli/typed-utils/compare/v1.10.0...v1.10.1) (2024-04-22)
+
+
+### Bug Fixes
+
+* only `pick` keys that are set ([103bc69](https://github.com/voxpelli/typed-utils/commit/103bc6907de0853fdca969d77a648f738f25c829))
+
 ## [1.10.0](https://github.com/voxpelli/typed-utils/compare/v1.9.0...v1.10.0) (2024-04-19)
 
 
