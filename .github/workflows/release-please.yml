@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      releaseAs:
-        description: 'Release as version'
-        required: true
-        type: string
 
 permissions:
   contents: write
@@ -19,9 +13,5 @@ permissions:
 
 jobs:
   release-please:
-    uses: voxpelli/ghatemplates/.github/workflows/release-please.yml@main
+    uses: voxpelli/ghatemplates/.github/workflows/release-please-4.yml@main
     secrets: inherit
-    with:
-      releaseAs: ${{ inputs.releaseAs }}
-      packageName: "@voxpelli/typed-utils"
-      bootstrapSha: aa2baf047fe00b7892ee5edd932fb5b506f11a8d
