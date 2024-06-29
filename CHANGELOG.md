@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.2](https://github.com/voxpelli/typed-utils/compare/v1.10.1...v1.10.2) (2024-06-29)
+
+
+### 🧹 Chores
+
+* **deps:** update dev dependencies ([51a15d1](https://github.com/voxpelli/typed-utils/commit/51a15d11ce8268d51666060de109cfb94b1973b7))
+* **deps:** update to neostandard based linting ([734a2ae](https://github.com/voxpelli/typed-utils/commit/734a2ae92faf832a1ed31212827e85c4009c70a5))
+
 ## [1.10.1](https://github.com/voxpelli/typed-utils/compare/v1.10.0...v1.10.1) (2024-04-22)
 
 
