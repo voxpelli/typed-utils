@@ -8,14 +8,13 @@ const unknownNumberArray: unknown = [123];
 
 expectNotType<number[]>(unknownNumberArray);
 
-function isNumber(value: unknown): value is number {
+function isNumber (value: unknown): value is number {
   return typeof value === 'number';
 }
 
 if (isArrayOfType(unknownNumberArray, isNumber)) {
   expectType<number[]>(unknownNumberArray);
 }
-
 
 // typesafeIsArray
 const unknownArray: unknown = [];

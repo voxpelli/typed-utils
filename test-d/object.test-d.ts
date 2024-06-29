@@ -6,9 +6,9 @@ const readonlyObject = { abc: 123, xyz: 789 } as const;
 const readonlyKeys = ['abc'] as const;
 const genericObject: Record<string, number> = { abc: 123, xyz: 789 };
 const stringKeys = ['abc'];
-const anyArray: any[] = ['abc']
+const anyArray: any[] = ['abc'];
 const anyObject: Record<any, number> = { abc: 123, xyz: 789 };
-const anyValue: any = ['abc']
+const anyValue: any = ['abc'];
 
 // *** omit() ***
 
