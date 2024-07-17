@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.3](https://github.com/voxpelli/typed-utils/compare/v1.10.2...v1.10.3) (2024-07-17)
+
+
+### 🧹 Chores
+
+* **deps:** update linting dependencies ([#18](https://github.com/voxpelli/typed-utils/issues/18)) ([1cb3b14](https://github.com/voxpelli/typed-utils/commit/1cb3b1430b92b57fcf3767288b0ec7c58bb23c2b))
+* **deps:** update test dependencies ([#21](https://github.com/voxpelli/typed-utils/issues/21)) ([1af37ba](https://github.com/voxpelli/typed-utils/commit/1af37ba941587fc02ea858bed087ecfc3ba4f06d))
+* **deps:** update type dependencies ([#19](https://github.com/voxpelli/typed-utils/issues/19)) ([925074e](https://github.com/voxpelli/typed-utils/commit/925074ec9abccebafce31b94cb3ca99697d8290e))
+
 ## [1.10.2](https://github.com/voxpelli/typed-utils/compare/v1.10.1...v1.10.2) (2024-06-29)
 
 
