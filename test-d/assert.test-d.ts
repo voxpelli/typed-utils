@@ -56,7 +56,7 @@ try {
   const unknownKey: string = '';
 
   expectType<Record<'foo', boolean>>(knownValue);
-  // @ts-expect-error Neede for tsd
+  // @ts-expect-error Needed for tsd
   const value = knownValue[unknownKey];
   expectType<any>(value);
 
@@ -84,7 +84,7 @@ try {
   const unknownKey: string = '';
 
   expectType<Record<'foo', boolean>>(knownValue);
-  // @ts-expect-error Neede for tsd
+  // @ts-expect-error Needed for tsd
   const value = knownValue[unknownKey];
   expectType<any>(value);
 

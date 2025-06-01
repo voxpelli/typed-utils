@@ -37,7 +37,6 @@ if (isType(value, typeof value)) {
 }
 
 // isObjectWithKey - with unknown object
-
 const unknownValue3: unknown = {};
 const key = 'foo';
 
@@ -80,7 +79,7 @@ const knownValue2 = { foo: true };
 const unknownKey2: string = '';
 
 expectType<Record<'foo', boolean>>(knownValue2);
-// @ts-expect-error Neede for tsd
+// @ts-expect-error Needed for tsd
 const value4 = knownValue2[unknownKey2];
 expectType<any>(value4);
 
