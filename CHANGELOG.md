@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.0.0](https://github.com/voxpelli/typed-utils/compare/v1.10.2...v2.0.0) (2025-06-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* require node.js `^20.11.0 || >=22.0.0`
+
+### 🌟 Features
+
+* add assert and is helpers ([#33](https://github.com/voxpelli/typed-utils/issues/33)) ([ccca2b2](https://github.com/voxpelli/typed-utils/commit/ccca2b2b02bd2419855a82bf80743f3b53f340d3))
+
+
+### 🧹 Chores
+
+* **deps:** update dependency @voxpelli/eslint-config to v22 ([#30](https://github.com/voxpelli/typed-utils/issues/30)) ([dfddedd](https://github.com/voxpelli/typed-utils/commit/dfddedd7c9fd7c9301f9cd5210d057dfed656006))
+* **deps:** update dev dependencies ([e32fe27](https://github.com/voxpelli/typed-utils/commit/e32fe2703a95a107c06888ed9252ab04218ccf4b))
+* **deps:** update dev dependencies ([8770ff8](https://github.com/voxpelli/typed-utils/commit/8770ff8e1dfb9f0ab876cb0cfc57e1f94e6f70a8))
+* **deps:** update linting dependencies ([#18](https://github.com/voxpelli/typed-utils/issues/18)) ([1cb3b14](https://github.com/voxpelli/typed-utils/commit/1cb3b1430b92b57fcf3767288b0ec7c58bb23c2b))
+* **deps:** update test dependencies ([#21](https://github.com/voxpelli/typed-utils/issues/21)) ([1af37ba](https://github.com/voxpelli/typed-utils/commit/1af37ba941587fc02ea858bed087ecfc3ba4f06d))
+* **deps:** update type dependencies ([#19](https://github.com/voxpelli/typed-utils/issues/19)) ([925074e](https://github.com/voxpelli/typed-utils/commit/925074ec9abccebafce31b94cb3ca99697d8290e))
+* require node.js `^20.11.0 || >=22.0.0` ([4b9e306](https://github.com/voxpelli/typed-utils/commit/4b9e3062d8a38a71fb3d95b5e4a48af745cf325b))
+* use modern eslint script command ([c750235](https://github.com/voxpelli/typed-utils/commit/c7502351b0a164f30aed7b7062166a1553374a9e))
+
 ## [1.10.2](https://github.com/voxpelli/typed-utils/compare/v1.10.1...v1.10.2) (2024-06-29)
 
 
