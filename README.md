@@ -50,6 +50,34 @@ Alias: ~~`isUnknownArray(value)`~~ (deprecated)
 
 Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
 
+### Assertions
+
+#### `assertObjectWithKey(obj, key)`
+
+Asserts that `obj` is an object and contains the property `key`. Throws an error if not.
+
+#### `assertType(value, type, [message])`
+
+Asserts that `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)). Throws an error if not. Optional custom error message.
+
+#### `assertKeyWithType(obj, key, type)`
+
+Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is of the given `type`.
+
+### `is`-calls / Type Checks
+
+#### `isObjectWithKey(obj, key)`
+
+Returns `true` if `obj` is an object and contains the property `key`.
+
+#### `isType(value, type)`
+
+Returns `true` if `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)).
+
+#### `isKeyWithType(obj, key, type)`
+
+Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]` is of the given `type`.
+
 ### Miscellaneous
 
 #### `explainVariable(value)`
@@ -82,9 +110,15 @@ Like [`typedObjectKeys(obj)`](#typedobjectkeysobj) but when `obj` is a union thi
 
 #### `getObjectValueByPath(obj, path, createIfMissing)`
 
+Returns the object at the given path within `obj`, where `path` can be a string (dot-separated) or an array of strings. If `createIfMissing` is `true`, missing objects along the path are created. Returns `false` if a non-object is encountered, or `undefined` if the path does not exist.
+
 #### `getStringValueByPath(obj, path)`
 
+Returns the string value at the given path within `obj`, or `false` if the value is not a string, or `undefined` if the path does not exist. The path can be a string (dot-separated) or an array of strings.
+
 #### `getValueByPath(obj, path)`
+
+Returns an object `{ value }` where `value` is the value at the given path within `obj`, or `false` if a non-object is encountered, or `undefined` if the path does not exist. The path can be a string (dot-separated) or an array of strings.
 
 <!-- ## Used by
 
