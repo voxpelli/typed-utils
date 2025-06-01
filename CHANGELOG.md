@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.1](https://github.com/voxpelli/typed-utils/compare/v2.0.0...v2.0.1) (2025-06-01)
+
+
+### 📚 Documentation
+
+* improve the readme with new methods ([c802169](https://github.com/voxpelli/typed-utils/commit/c80216996c601bd1de15546794189599a02f7b70))
+
+
+### 🧹 Chores
+
+* **deps:** update dependency validate-conventional-commit to ^1.0.4 ([#25](https://github.com/voxpelli/typed-utils/issues/25)) ([bc6382d](https://github.com/voxpelli/typed-utils/commit/bc6382d0a5771f317e4efbd9c371cd82ad976769))
+
 ## [2.0.0](https://github.com/voxpelli/typed-utils/compare/v1.10.2...v2.0.0) (2025-06-01)
 
 
