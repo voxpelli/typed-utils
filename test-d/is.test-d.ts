@@ -54,12 +54,12 @@ const knownValue = { foo: true };
 const unknownKey: string = '';
 
 expectType<Record<'foo', boolean>>(knownValue);
-// @ts-expect-error Neede for tsd
+// @ts-expect-error Needed for tsd
 const value2 = knownValue[unknownKey];
 expectType<any>(value2);
 
 if (isObjectWithKey(knownValue, unknownKey)) {
-  // @ts-expect-error Neede for tsd
+  // @ts-expect-error Needed for tsd
   const value3 = knownValue[unknownKey];
   expectType<any>(value3);
 }
