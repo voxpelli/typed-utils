@@ -31,7 +31,7 @@
     "check:0": "run-s clean",
     "check:1:installed-check": "installed-check",
     "check:1:knip": "knip",
-    "check:1:lint": "eslint --report-unused-disable-directives .",
+    "check:1:lint": "eslint",
     "check:1:tsc": "tsc",
     "check:1:type-coverage": "type-coverage --detail --strict --at-least 99 --ignore-files 'test/*'",
     "check:1": "run-p check:1:*",
