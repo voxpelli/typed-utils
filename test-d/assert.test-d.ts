@@ -61,7 +61,7 @@ try {
   expectType<any>(value);
 
   assertObjectWithKey(knownValue, unknownKey);
-  // @ts-expect-error Neede for tsd
+  // @ts-expect-error Needed for tsd
   const value2 = knownValue[unknownKey];
   expectType<any>(value2);
 } catch {}
