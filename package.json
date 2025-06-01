@@ -67,6 +67,6 @@
     "tsd": "^0.32.0",
     "type-coverage": "^2.29.7",
     "typescript": "~5.8.3",
-    "validate-conventional-commit": "^1.0.3"
+    "validate-conventional-commit": "^1.0.4"
   }
 }
