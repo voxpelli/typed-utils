@@ -52,6 +52,14 @@ Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` 
 
 ### Assertions
 
+#### `TypeHelpersAssertionError`
+
+Custom error class thrown by all assertion helpers in this module. You can catch this error type to specifically handle assertion failures from these utilities.
+
+#### `assert(condition, message)`
+
+Throws a `TypeHelpersAssertionError` if `condition` is falsy. Used internally by other assertion helpers, but can also be used directly for custom runtime assertions.
+
 #### `assertObjectWithKey(obj, key)`
 
 Asserts that `obj` is an object and contains the property `key`. Throws an error if not.
