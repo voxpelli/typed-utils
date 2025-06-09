@@ -145,7 +145,7 @@ if (isOptionalKeyWithType(objWithUndefined, 'foo', 'string')) {
   expectType<undefined>(objWithUndefined['foo']);
 }
 
-// isKeyWithType - key present but wrong type
+// isOptionalKeyWithType - key present but wrong type
 const objWithWrongType = { bar: true, foo: true };
 if (isOptionalKeyWithType(objWithWrongType, 'foo', 'string')) {
   expectType<never>(objWithWrongType);
