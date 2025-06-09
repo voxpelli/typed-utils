@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/voxpelli/typed-utils/compare/v2.1.0...v2.2.0) (2025-06-09)
+
+
+### 🌟 Features
+
+* add `assertOptionalKeyWithType` ([#40](https://github.com/voxpelli/typed-utils/issues/40)) ([4de95dc](https://github.com/voxpelli/typed-utils/commit/4de95dcfc6b9511ee5fb1104e5bbbce3ce2cb1e8))
+
 ## [2.1.0](https://github.com/voxpelli/typed-utils/compare/v2.0.1...v2.1.0) (2025-06-09)
 
 
