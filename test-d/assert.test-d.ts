@@ -1,8 +1,9 @@
 import { expectType, expectNever, expectNotType, expectError } from 'tsd';
 
 import {
-  assertObjectWithKey,
   assertKeyWithType,
+  assertObjectWithKey,
+  assertOptionalKeyWithType,
   assertType,
 } from '../lib/assert.js';
 
@@ -90,4 +91,75 @@ try {
 
   assertKeyWithType(knownValue, unknownKey, 'string');
   expectType<string | undefined>(knownValue[unknownKey]);
+} catch {}
+
+// assertKeyWithType - key missing
+try {
+  const objWithoutKey1 = { bar: true };
+  assertKeyWithType(objWithoutKey1, 'foo', 'string');
+  expectType<{ bar: boolean } & Record<'foo', string>>(objWithoutKey1);
+  expectType<string>(objWithoutKey1['foo']);
+} catch {}
+
+// assertKeyWithType - key present but undefined
+try {
+  const objWithUndefined1 = { bar: true, foo: undefined };
+  assertKeyWithType(objWithUndefined1, 'foo', 'string');
+  expectType<never>(objWithUndefined1);
+} catch {}
+
+// assertKeyWithType - key present but wrong type
+try {
+  const objWithWrongType1 = { bar: true, foo: true };
+  assertKeyWithType(objWithWrongType1, 'foo', 'string');
+  expectType<never>(objWithWrongType1);
+} catch {}
+
+// assertOptionalKeyWithType - with unknown object
+try {
+  const unknownValue5: unknown = {};
+  const key5 = 'foo';
+
+  expectError(unknownValue5[key5]);
+
+  assertOptionalKeyWithType(unknownValue5, key5, 'string');
+  expectType<Partial<Record<'foo', string>>>(unknownValue5);
+  expectType<string | undefined>(unknownValue5[key5]);
+} catch {}
+
+// assertOptionalKeyWithType - with unknown key, will give known non-required type
+try {
+  const knownValue3 = { foo: true };
+  const unknownKey3: string = '';
+
+  expectType<Record<'foo', boolean>>(knownValue3);
+  // @ts-expect-error Needed for tsd
+  const value5 = knownValue3[unknownKey3];
+  expectType<any>(value5);
+
+  assertOptionalKeyWithType(knownValue3, unknownKey3, 'string');
+  expectType<string | undefined>(knownValue3[unknownKey3]);
+} catch {}
+
+// assertOptionalKeyWithType - key missing
+try {
+  const objWithoutKey = { bar: true };
+  assertOptionalKeyWithType(objWithoutKey, 'foo', 'string');
+  expectType<{ bar: boolean } & Partial<Record<'foo', string>>>(objWithoutKey);
+  expectType<string | undefined>(objWithoutKey['foo']);
+} catch {}
+
+// assertOptionalKeyWithType - key present but undefined
+try {
+  const objWithUndefined = { bar: true, foo: undefined };
+  assertOptionalKeyWithType(objWithUndefined, 'foo', 'string');
+  expectType<{ bar: boolean; foo: undefined; } & Partial<Record<'foo', string>>>(objWithUndefined);
+  expectType<undefined>(objWithUndefined['foo']);
+} catch {}
+
+// assertOptionalKeyWithType - key present but wrong type
+try {
+  const objWithWrongType = { bar: true, foo: true };
+  assertOptionalKeyWithType(objWithWrongType, 'foo', 'string');
+  expectType<never>(objWithWrongType);
 } catch {}
