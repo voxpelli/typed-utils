@@ -78,6 +78,10 @@ Returns `true` if `value` is of the given `type` (string literal, eg. `'string'`
 
 Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]` is of the given `type`.
 
+#### `isOptionalKeyWithType(obj, key, type)`
+
+Returns `true` if `obj` is an object and either does not contain the property `key`, or if present, `obj[key]` is of the given `type` or `undefined`.
+
 ### Miscellaneous
 
 #### `explainVariable(value)`
