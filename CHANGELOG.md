@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/voxpelli/typed-utils/compare/v2.2.0...v2.2.1) (2025-06-09)
+
+
+### 🩹 Fixes
+
+* remove reliance on `node:assert` ([bb570f1](https://github.com/voxpelli/typed-utils/commit/bb570f14b600a36bd47a289ed51a6b806ad5b56b))
+
 ## [2.2.0](https://github.com/voxpelli/typed-utils/compare/v2.1.0...v2.2.0) (2025-06-09)
 
 
