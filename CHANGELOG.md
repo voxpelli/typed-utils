@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0](https://github.com/voxpelli/typed-utils/compare/v2.0.1...v2.1.0) (2025-06-09)
+
+
+### 🌟 Features
+
+* add `isOptionalKeyWithType` ([#35](https://github.com/voxpelli/typed-utils/issues/35)) ([68b780a](https://github.com/voxpelli/typed-utils/commit/68b780a2f3ea4af15f4a10ff76ec9387e877f73b))
+
+
+### 🧹 Chores
+
+* **deps:** update dependency @types/node to ^18.19.111 ([#37](https://github.com/voxpelli/typed-utils/issues/37)) ([131e057](https://github.com/voxpelli/typed-utils/commit/131e057cb93d510c4c31cdb7e409dda69011fcba))
+* **deps:** update dependency knip to ^5.60.2 ([#38](https://github.com/voxpelli/typed-utils/issues/38)) ([b824749](https://github.com/voxpelli/typed-utils/commit/b8247495a6b6d528df4244e1fe198068224b9232))
+* **deps:** update dependency mocha to ^11.6.0 ([#39](https://github.com/voxpelli/typed-utils/issues/39)) ([baeb9de](https://github.com/voxpelli/typed-utils/commit/baeb9dec112636d1f5b48f2ed3dbd54c0f6aa151))
+
 ## [2.0.1](https://github.com/voxpelli/typed-utils/compare/v2.0.0...v2.0.1) (2025-06-01)
 
 
