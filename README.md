@@ -64,6 +64,10 @@ Asserts that `value` is of the given `type` (string literal, eg. `'string'`, `'n
 
 Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is of the given `type`.
 
+#### `assertOptionalKeyWithType(obj, key, type)`
+
+Asserts that `obj` is an object and either does not contain the property `key`, or if present, that `obj[key]` is `undefined` or of the given `type`.
+
 ### `is`-calls / Type Checks
 
 #### `isObjectWithKey(obj, key)`
