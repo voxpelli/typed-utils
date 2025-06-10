@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2](https://github.com/voxpelli/typed-utils/compare/v2.2.1...v2.2.2) (2025-06-10)
+
+
+### 🩹 Fixes
+
+* remove one remaining nodejs reliance ([c4fc3af](https://github.com/voxpelli/typed-utils/commit/c4fc3afce7e2f6ae20621b9cf5b82bd17c370a83))
+
 ## [2.2.1](https://github.com/voxpelli/typed-utils/compare/v2.2.0...v2.2.1) (2025-06-09)
 
 
