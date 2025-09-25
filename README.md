@@ -154,7 +154,7 @@ const COLORS = new FrozenSet(['red', 'green', 'blue']);
 COLORS.has('red'); // true
 COLORS.size;       // 3
 
-COLORS.add('purple'); // throws TypeError: FrozenSet is frozen / immutable.
+COLORS.add('purple'); // throws TypeError: Cannot modify frozen set
 ```
 
 To create one from an existing `Set`:
