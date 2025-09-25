@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/voxpelli/typed-utils/compare/v2.3.0...v2.3.1) (2025-09-25)
+
+
+### 🩹 Fixes
+
+* the type of `FrozenSet` wasn't a generic ([aa702b1](https://github.com/voxpelli/typed-utils/commit/aa702b1fc4cb1f16325bb2cbc45738e4ba249a70))
+
 ## [2.3.0](https://github.com/voxpelli/typed-utils/compare/v2.2.2...v2.3.0) (2025-09-25)
 
 
