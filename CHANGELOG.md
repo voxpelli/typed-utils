@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/voxpelli/typed-utils/compare/v2.2.2...v2.3.0) (2025-09-25)
+
+
+### 🌟 Features
+
+* add `FrozenSet` ([#47](https://github.com/voxpelli/typed-utils/issues/47)) ([98c039d](https://github.com/voxpelli/typed-utils/commit/98c039d342af3d7fee63171b6811adc9ed68c226))
+
 ## [2.2.2](https://github.com/voxpelli/typed-utils/compare/v2.2.1...v2.2.2) (2025-06-10)
 
 
