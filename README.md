@@ -136,6 +136,39 @@ Returns the string value at the given path within `obj`, or `false` if the value
 
 Returns an object `{ value }` where `value` is the value at the given path within `obj`, or `false` if a non-object is encountered, or `undefined` if the path does not exist. The path can be a string (dot-separated) or an array of strings.
 
+### Set
+
+#### `FrozenSet`
+
+An immutable variant of `Set`. All mutating methods (`add()`, `delete()`, `clear()`) throw a `TypeError`, making it safe to expose as a read-only collection without risking external mutation.
+
+Useful when you want a `Set` API for membership tests (`has()`, iteration, `size`) but want to guarantee it cannot be modified after creation.
+
+Example:
+
+```js
+import { FrozenSet } from '@voxpelli/typed-utils';
+
+const COLORS = new FrozenSet(['red', 'green', 'blue']);
+
+COLORS.has('red'); // true
+COLORS.size;       // 3
+
+COLORS.add('purple'); // throws TypeError: FrozenSet is frozen / immutable.
+```
+
+To create one from an existing `Set`:
+
+```js
+const regular = new Set([1, 2, 3]);
+const frozen = new FrozenSet(regular); // copies current contents; further changes to `regular` won't affect `frozen`
+```
+
+Notes:
+* Still inherits all read-only / iteration behavior from `Set` (eg. `for...of`, spread, `keys()`, `values()`).
+* Throws eagerly on mutation attempts—no silent failures.
+* If you need deep immutability of nested values, freeze those separately; `FrozenSet` only prevents structural changes to the set itself.
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
