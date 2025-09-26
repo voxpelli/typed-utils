@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.2](https://github.com/voxpelli/typed-utils/compare/v2.4.1...v2.4.2) (2025-09-26)
+
+
+### 🩹 Fixes
+
+* guardedArrayIncludes, use `.has()` if a Set ([#52](https://github.com/voxpelli/typed-utils/issues/52)) ([f631f01](https://github.com/voxpelli/typed-utils/commit/f631f016c6e5b3e2ae023e2558fd58f6a8d20fa0))
+
 ## [2.4.1](https://github.com/voxpelli/typed-utils/compare/v2.4.0...v2.4.1) (2025-09-26)
 
 
