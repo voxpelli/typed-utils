@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/voxpelli/typed-utils/compare/v2.3.1...v2.4.0) (2025-09-26)
+
+
+### 🌟 Features
+
+* add `guardedArrayIncludes` ([101a0cf](https://github.com/voxpelli/typed-utils/commit/101a0cf52eec7493d0c8a250d5955b37b3defe27))
+
+
+### 🧹 Chores
+
+* initial copilot-instructions ([928e498](https://github.com/voxpelli/typed-utils/commit/928e4983cad0153d603a99b8015b2ae0111dda28))
+
 ## [2.3.1](https://github.com/voxpelli/typed-utils/compare/v2.3.0...v2.3.1) (2025-09-25)
 
 
