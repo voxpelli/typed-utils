@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.4.1](https://github.com/voxpelli/typed-utils/compare/v2.4.0...v2.4.1) (2025-09-26)
+
+
+### 🩹 Fixes
+
+* `FrozenSet` wasn't working as intended ([2929d35](https://github.com/voxpelli/typed-utils/commit/2929d358d952a3307369efed126cde7ce959c565))
+
+
+### 🧹 Chores
+
+* **deps:** update dev dependencies ([4d59dae](https://github.com/voxpelli/typed-utils/commit/4d59daeb713722b1a49cc567056ff4cb683e1045))
+* fix linting warning ([f049aed](https://github.com/voxpelli/typed-utils/commit/f049aed7ce4d0e5bea41516cea568ef3b2812b94))
+
 ## [2.4.0](https://github.com/voxpelli/typed-utils/compare/v2.3.1...v2.4.0) (2025-09-26)
 
 
