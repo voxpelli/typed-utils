@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.5.0](https://github.com/voxpelli/typed-utils/compare/v2.4.4...v2.5.0) (2025-09-29)
+
+
+### 🌟 Features
+
+* add `hasOwn`, `hasOwnAll`, `isPropertyKey` ([#58](https://github.com/voxpelli/typed-utils/issues/58)) ([f9cfccc](https://github.com/voxpelli/typed-utils/commit/f9cfccc8c4a544eb97db20e057657cf3efb40f59))
+
 ## [2.4.4](https://github.com/voxpelli/typed-utils/compare/v2.4.3...v2.4.4) (2025-09-29)
 
 
