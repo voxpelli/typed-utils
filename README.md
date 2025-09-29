@@ -109,6 +109,10 @@ Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]
 
 Returns `true` if `obj` is an object and either does not contain the property `key`, or if present, `obj[key]` is of the given `type` or `undefined`.
 
+#### `isPropertyKey(value)`
+
+Runtime guard that returns `true` when `value` is a valid `PropertyKey` (`string | number | symbol`). Used internally by `hasOwn()` helpers; exported for external guard composition.
+
 ### Miscellaneous
 
 #### `explainVariable(value)`
@@ -136,6 +140,42 @@ Like [`Object.keys()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/R
 #### `typedObjectKeysAll(obj)`
 
 Like [`typedObjectKeys(obj)`](#typedobjectkeysobj) but when `obj` is a union this type will resolve to _all possible keys_ within that union, not just the shared ones.
+
+#### `hasOwn(obj, key)`
+
+Safe wrapper + type guard around `Object.hasOwn(obj, key)` that first ensures `key` is a `PropertyKey`. Narrows `key` to the intersection of keys when `obj` is a union type (same semantics as `typedObjectKeys`). Unlike the raw `in` operator, prototype chain properties are excluded.
+
+Example:
+```js
+const shape = Math.random() > 0.5 ? { kind: 'a', value: 1 } : { kind: 'b', label: 'hi' };
+let k /** @type {string | number | symbol} */ = 'kind';
+if (hasOwn(shape, k)) {
+  // k narrowed to 'kind'
+  console.log(shape[k]); // 'a' | 'b' (further narrowed by shape.kind checks)
+}
+```
+
+#### `hasOwnAll(obj, key)`
+
+Variant of `hasOwn()` whose key type narrows to the full union of all possible keys across union object members (like `typedObjectKeysAll`). Runtime behavior is identical to `hasOwn()`; the difference is purely at the type level. Indexed access still requires a further presence guard because not every union member has every key.
+
+Example union refinement:
+```js
+/** @type {{ foo: number; bar: string } | { foo: number; baz: boolean }} */
+const maybe = Math.random() ? { foo: 1, bar: 'x' } : { foo: 2, baz: true };
+/** @type {string} */
+const key = Math.random() ? 'bar' : 'baz';
+if (hasOwnAll(maybe, key)) {
+  // key: 'foo' | 'bar' | 'baz'
+  switch (key) {
+    case 'baz':
+      // Safe indexed access after runtime membership confirmation
+      if (key in maybe) console.log(maybe[key]);
+      break;
+    // ... more checks
+  }
+}
+```
 
 ### Object Path
 
