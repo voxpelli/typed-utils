@@ -52,7 +52,7 @@ Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` 
 
 #### `guardedArrayIncludes(collection, searchElement)`
 
-Type-narrowing variant of `Array.prototype.includes` that works on any iterable. Returns `true` if `searchElement` is strictly equal to a member of `collection`. When `true`, narrows the type of `searchElement` to the element type of the iterable (`C extends Iterable<infer U> ? U : never`). Useful when you have an `unknown` (or union) value and want to both test membership and refine its type in one step.
+Type-narrowing variant of `Array.prototype.includes` that works on arrays and sets. Returns `true` if `searchElement` is strictly equal to a member of `collection`. When `true`, narrows the type of `searchElement` to the element type of the iterable (`C extends Iterable<infer U> ? U : never`). Useful when you have an `unknown` (or union) value and want to both test membership and refine its type in one step.
 
 Example:
 ```js
