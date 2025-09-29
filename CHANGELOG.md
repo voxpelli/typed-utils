@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.3](https://github.com/voxpelli/typed-utils/compare/v2.4.2...v2.4.3) (2025-09-29)
+
+
+### 🩹 Fixes
+
+* clarify types of `guardedArrayIncludes()` ([#54](https://github.com/voxpelli/typed-utils/issues/54)) ([c67f74b](https://github.com/voxpelli/typed-utils/commit/c67f74b6276458aeb3cc60e63bf5b48d8a6f810f))
+
 ## [2.4.2](https://github.com/voxpelli/typed-utils/compare/v2.4.1...v2.4.2) (2025-09-26)
 
 
