@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.4](https://github.com/voxpelli/typed-utils/compare/v2.4.3...v2.4.4) (2025-09-29)
+
+
+### 🩹 Fixes
+
+* **types:** improve types for `typedObjectKeys*` ([#56](https://github.com/voxpelli/typed-utils/issues/56)) ([dcd7dca](https://github.com/voxpelli/typed-utils/commit/dcd7dca2c5e10b6d38e0b50a3fa2ee994619ffdd))
+
 ## [2.4.3](https://github.com/voxpelli/typed-utils/compare/v2.4.2...v2.4.3) (2025-09-29)
 
 
