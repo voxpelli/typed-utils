@@ -1,7 +1,9 @@
 import { expectType, expectNever, expectNotType, expectError } from 'tsd';
 
 import {
+  assertArrayOfLiteralType,
   assertKeyWithType,
+  assertObjectValueType,
   assertObjectWithKey,
   assertOptionalKeyWithType,
   assertType,
@@ -162,4 +164,32 @@ try {
   const objWithWrongType = { bar: true, foo: true };
   assertOptionalKeyWithType(objWithWrongType, 'foo', 'string');
   expectType<never>(objWithWrongType);
+} catch {}
+
+// assertArrayOfLiteralType - narrows unknown to string array
+try {
+  const unknownValue6: unknown = ['foo', 'bar'];
+  assertArrayOfLiteralType(unknownValue6, 'string');
+  expectType<string[]>(unknownValue6);
+} catch {}
+
+// assertArrayOfLiteralType - narrows unknown to number array
+try {
+  const unknownValue7: unknown = [1, 2, 3];
+  assertArrayOfLiteralType(unknownValue7, 'number');
+  expectType<number[]>(unknownValue7);
+} catch {}
+
+// assertObjectValueType - narrows unknown to string record
+try {
+  const unknownValue8: unknown = { a: 'foo', b: 'bar' };
+  assertObjectValueType(unknownValue8, 'string');
+  expectType<Record<string, string>>(unknownValue8);
+} catch {}
+
+// assertObjectValueType - narrows unknown to number record
+try {
+  const unknownValue9: unknown = { x: 1, y: 2 };
+  assertObjectValueType(unknownValue9, 'number');
+  expectType<Record<string, number>>(unknownValue9);
 } catch {}
