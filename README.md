@@ -91,6 +91,14 @@ Asserts that `obj` is an object, contains the property `key`, and that `obj[key]
 
 Asserts that `obj` is an object and either does not contain the property `key`, or if present, that `obj[key]` is `undefined` or of the given `type`.
 
+#### `assertArrayOfLiteralType(value, type, [message])`
+
+Asserts that `value` is an array where every element is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'`). Throws an error if any element fails the type check. Optional custom error message.
+
+#### `assertObjectValueType(obj, type)`
+
+Asserts that `obj` is an object where all values are of the given `type` and all keys are strings. This is useful for validating objects used as dictionaries/maps with homogeneous value types.
+
 ### `is`-calls / Type Checks
 
 #### `isObjectWithKey(obj, key)`
