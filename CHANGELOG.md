@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.6.0](https://github.com/voxpelli/typed-utils/compare/v2.5.0...v2.6.0) (2026-01-20)
+
+
+### 🌟 Features
+
+* add new type assertions ([16b5152](https://github.com/voxpelli/typed-utils/commit/16b5152a25e01c2285898d644889b915fc28da86))
+
+
+### 📚 Documentation
+
+* update Copilot instructions ([05c0a92](https://github.com/voxpelli/typed-utils/commit/05c0a920e2887d1d6b778e573f4d3987e0e864bf))
+
+
+### 🧹 Chores
+
+* **assert:** added test asserts ([c1b7da0](https://github.com/voxpelli/typed-utils/commit/c1b7da06aacfb5143fa86e1e18a234ad4263860a))
+* improve compaitiblity with tsgo ([c51dd14](https://github.com/voxpelli/typed-utils/commit/c51dd14658568a85bf108b79e9b6ca07bd4813e3))
+
 ## [2.5.0](https://github.com/voxpelli/typed-utils/compare/v2.4.4...v2.5.0) (2025-09-29)
 
 
