@@ -1,5 +1,9 @@
 # Copilot / AI Assistant Project Instructions
 
+## Overview
+
+This is a **utility library module** providing type-safe structural and narrowing helpers for TypeScript/JavaScript projects. It follows the voxpelli Node.js module style with ESM, JSDoc types, and strict type coverage.
+
 Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG: Humane, Usable, Guided).
 
 ## Core Shape
@@ -8,12 +12,51 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 - Scope: generic structural + type narrowing helpers (arrays, objects, guards, assertions, paths, sets). No business logic, no heavy deps.
 - Runtime engines specify the verified Node range (see `engines` in `package.json`), but library code MUST stay platform‑neutral: avoid Node‑only built‑ins (`fs`, `path`, `process.env`, `Buffer`, etc.) and Node‑specific deps so it can be bundled for browsers. Stick to standard ECMAScript + harmless globals (eg. `Array`, `Set`, `Error`). If a feature would require a Node API, reconsider or make it optional behind user-provided functions.
 
+## Code Style and Standards
+
+1. **JavaScript Style**
+   - Use ESM (ECMAScript Modules) syntax exclusively (`import`/`export`)
+   - Follow [neostandard](https://github.com/neostandard/neostandard) JavaScript style guide
+   - Use single quotes for strings
+   - Include semicolons
+   - 2-space indentation
+
+2. **Type Safety**
+   - Use TypeScript for type definitions but write JavaScript for implementation
+   - Include JSDoc comments with type annotations
+   - Maintain strict type coverage (≥99%)
+   - Generate `.d.ts` files from JSDoc annotations
+   - Import shared helper types inline: `import('@voxpelli/type-helpers').LiteralTypes`, `LiteralTypeOf`, `NonGenericString`
+
+3. **Module Structure**
+   - Main entry point: `index.js` (re-exports from lib/main.js)
+   - Implementation: `lib/*.js` files
+   - Keep index.js minimal - just re-exports
+
 ## Typing & Guards
 - Use JSDoc `@template` + constrained generics (see `array.js`, `object.js`).
 - Import shared helper types inline: `import('@voxpelli/type-helpers').LiteralTypes`, `LiteralTypeOf`, `NonGenericString`.
 - Every `value is X` guard must fully validate at runtime (mirror `is.js`, `isArrayOfType`, `typesafeIsArray`).
 - Assertions must throw `TypeHelpersAssertionError` (see `assert.js`) and use `asserts` return types.
 - Array narrowing: replicate `filter()` pattern (exclude literal) or `filterWithCallback()` (predicate guard). Use targeted casts on push only—never widen with `any`.
+
+## Testing
+
+1. **Test Framework**
+   - Use Mocha for test runner
+   - Use Chai for assertions
+   - Place tests in `test/` directory with `.spec.js` extension
+   - Add runtime spec (`test/*.spec.js`) and type test (`test-d/*.test-d.ts`) with positive + `// @ts-expect-error` cases
+
+2. **Code Coverage**
+   - Use c8 for coverage reporting
+   - Aim for high coverage on new code
+   - Coverage reports generated in LCOV and text formats
+
+3. **Running Tests**
+   - `npm test` - Full test suite with checks
+   - `npm run test:mocha` - Just the tests
+   - `npm run check` - Linting and type checking only
 
 ## Implementation Rules
 - No mutation of caller inputs except documented creation in `getObjectValueByPath(..., true)`.
@@ -29,10 +72,51 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 4. Maintain type coverage ≥99% (enforced). Run `npm run check` locally before PR.
 5. If signature change: update JSDoc, rebuild declarations, adjust tests.
 
+## Code Quality Tools
+
+1. **ESLint**
+   - Configuration: `eslint.config.js`
+   - Based on `@voxpelli/eslint-config`
+   - Run: `npm run check:1:lint`
+   - Fix automatically when possible
+
+2. **TypeScript Checking**
+   - Run: `npm run check:1:tsc`
+   - Ensures type correctness without compilation
+   - Check type coverage: `npm run check:1:type-coverage`
+
+3. **Knip**
+   - Detects unused files, dependencies, and exports
+   - Run: `npm run check:1:knip`
+
+4. **Dependency Hygiene**
+   - Use `installed-check` to verify dependency hygiene
+   - Run: `npm run check:1:installed-check`
+
 ## Scripts & Quality Gates
 - Fast verify: `npm run check` (clean, lint, types, knip, type-coverage, tsd build cycle).
 - Full tests: `npm test` (adds mocha + coverage). CI relies on `check` + `test-ci`.
 - Only run `npm run build` for generating `.d.ts` (prepack). Do NOT commit extraneous build artifacts.
+
+## Dependencies
+
+1. **Adding Dependencies**
+   - Avoid adding dependencies unless absolutely necessary
+   - Prefer modern Node.js built-in APIs
+   - Production dependencies should be minimal
+   - Runtime dep list is intentionally tiny
+
+2. **Development Dependencies**
+   - Keep devDependencies up to date via Renovate
+   - Use `installed-check` to verify dependency hygiene
+   - Use `knip` to detect unused dependencies
+
+## Node.js Version Support
+
+- Required versions: `^20.11.0 || >=22.0.0` (see `engines` in package.json)
+- Target latest LTS versions
+- Use modern JavaScript features available in these versions
+- No transpilation needed
 
 ## Errors & Messages
 - Error text should name offending key/value (see `assertType`, `assertObjectWithKey`). Prefer clarity over brevity.
@@ -43,13 +127,27 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 - For AI review prompts use `TODO(ai):` for human follow-up.
 
 ## Do / Don’t
-- DO keep JSDoc generics + literal exclusions precise.
-- DO reuse existing patterns (guards, path checks, immutability).
-- DO minimize dependencies (runtime dep list is intentionally tiny).
-- DON’T introduce TS source files (JS + JSDoc only).
-- DON’T broaden to `any` or weaken guard semantics.
-- DON’T leak undocumented mutations.
-- DON’T add Node‑only dependencies or APIs that block browser bundling.
+
+**Anti-Patterns to Avoid:**
+- ❌ DON'T introduce TS source files (JS + JSDoc only).
+- ❌ DON'T broaden to `any` or weaken guard semantics.
+- ❌ DON'T leak undocumented mutations.
+- ❌ DON'T add Node‑only dependencies or APIs that block browser bundling.
+- ❌ DON'T use CommonJS (`require`/`module.exports`).
+- ❌ DON'T skip type annotations in JSDoc.
+- ❌ DON'T commit auto-generated `.d.ts` files (only commit hand-written ones like `index.d.ts`).
+- ❌ DON'T skip tests for new functionality.
+
+**Best Practices:**
+- ✅ DO keep JSDoc generics + literal exclusions precise.
+- ✅ DO reuse existing patterns (guards, path checks, immutability).
+- ✅ DO minimize dependencies (runtime dep list is intentionally tiny).
+- ✅ DO write clear JSDoc comments with types.
+- ✅ DO export everything through `lib/main.js`.
+- ✅ DO keep functions tiny, pure, explicit; reuse `explainVariable()` for diagnostics.
+- ✅ DO use async/await for asynchronous operations.
+- ✅ DO validate inputs and provide helpful error messages.
+- ✅ DO follow the existing code style consistently.
 
 ## Example Guard Pattern
 ```js
