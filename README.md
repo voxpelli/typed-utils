@@ -99,6 +99,10 @@ Asserts that `value` is an array where every element is of the given `type` (str
 
 Asserts that `obj` is an object where all values are of the given `type` and all keys are strings. This is useful for validating objects used as dictionaries/maps with homogeneous value types.
 
+#### `assertStringKeyedObject(obj)`
+
+Asserts that `obj` is an object with only string keys. Throws an error if `obj` is not an object or if any of its keys are not strings. Useful for validating that an object can be used as a string-keyed dictionary.
+
 ### `is`-calls / Type Checks
 
 #### `isObjectWithKey(obj, key)`

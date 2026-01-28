@@ -6,6 +6,7 @@ import {
   assertObjectValueType,
   assertObjectWithKey,
   assertOptionalKeyWithType,
+  assertStringKeyedObject,
   assertType,
 } from '../lib/assert.js';
 
@@ -192,4 +193,18 @@ try {
   const unknownValue9: unknown = { x: 1, y: 2 };
   assertObjectValueType(unknownValue9, 'number');
   expectType<Record<string, number>>(unknownValue9);
+} catch {}
+
+// assertStringKeyedObject - narrows unknown to Record<string, unknown>
+try {
+  const unknownValue10: unknown = { foo: 'bar', num: 123 };
+  assertStringKeyedObject(unknownValue10);
+  expectType<Record<string, unknown>>(unknownValue10);
+} catch {}
+
+// assertStringKeyedObject - with known object still gives Record<string, unknown>
+try {
+  const knownObject = { foo: 'bar', num: 123 } as const;
+  assertStringKeyedObject(knownObject);
+  expectType<{ readonly foo: 'bar'; readonly num: 123; }>(knownObject);
 } catch {}
