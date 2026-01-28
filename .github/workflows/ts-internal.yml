@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   type-check:
-    uses: voxpelli/ghatemplates/.github/workflows/type-check.yml@main
+    uses: ./.github/workflows/type-check.yml
     with:
       ts-versions: ${{ github.event.schedule && 'next' || '5.8,next' }}
       ts-libs: 'es2022;esnext'

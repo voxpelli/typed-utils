@@ -26,7 +26,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
    - Include JSDoc comments with type annotations
    - Maintain strict type coverage (≥99%)
    - Generate `.d.ts` files from JSDoc annotations
-   - Import shared helper types inline: `import('@voxpelli/type-helpers').LiteralTypes`, `LiteralTypeOf`, `NonGenericString`
+   - Import shared helper types inline: `import('./types/literal-types.js').LiteralTypes`, `LiteralTypeOf`, `import('./types/string-types.js').NonGenericString`
 
 3. **Module Structure**
    - Main entry point: `index.js` (re-exports from lib/main.js)
@@ -35,7 +35,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 
 ## Typing & Guards
 - Use JSDoc `@template` + constrained generics (see `array.js`, `object.js`).
-- Import shared helper types inline: `import('@voxpelli/type-helpers').LiteralTypes`, `LiteralTypeOf`, `NonGenericString`.
+- Import shared helper types inline: `import('./types/literal-types.js').LiteralTypes`, `LiteralTypeOf`, `import('./types/string-types.js').NonGenericString`.
 - Every `value is X` guard must fully validate at runtime (mirror `is.js`, `isArrayOfType`, `typesafeIsArray`).
 - Assertions must throw `TypeHelpersAssertionError` (see `assert.js`) and use `asserts` return types.
 - Array narrowing: replicate `filter()` pattern (exclude literal) or `filterWithCallback()` (predicate guard). Use targeted casts on push only—never widen with `any`.
