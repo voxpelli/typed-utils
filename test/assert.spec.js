@@ -10,6 +10,7 @@ import {
   assertObjectWithKey,
   assertKeyWithType,
   assertOptionalKeyWithType,
+  assertStringKeyedObject,
   assertType,
   TypeHelpersAssertionError,
 } from '../lib/assert.js';
@@ -46,7 +47,6 @@ describe('assert', () => {
     it('should not throw for valid objects', () => {
       expect(() => assertObject({})).to.not.throw();
       expect(() => assertObject({ foo: 'bar' })).to.not.throw();
-      expect(() => assertObject([])).to.not.throw();
     });
 
     it('should throw for non-objects', () => {
@@ -54,6 +54,7 @@ describe('assert', () => {
       expect(() => assertObject(undefined)).to.throw(TypeHelpersAssertionError);
       expect(() => assertObject('string')).to.throw(TypeHelpersAssertionError);
       expect(() => assertObject(123)).to.throw(TypeHelpersAssertionError);
+      expect(() => assertObject([])).to.throw(TypeHelpersAssertionError);
     });
   });
 
@@ -184,6 +185,27 @@ describe('assert', () => {
     it('should validate that all keys are strings', () => {
       const obj = { a: 'foo', b: 'bar' };
       expect(() => assertObjectValueType(obj, 'string')).to.not.throw();
+    });
+  });
+
+  describe('assertStringKeyedObject()', () => {
+    it('should not throw for objects with string keys', () => {
+      expect(() => assertStringKeyedObject({})).to.not.throw();
+      expect(() => assertStringKeyedObject({ foo: 'bar' })).to.not.throw();
+      expect(() => assertStringKeyedObject({ a: 1, b: 2, c: 3 })).to.not.throw();
+      expect(() => assertStringKeyedObject({ nested: { key: 'value' } })).to.not.throw();
+    });
+
+    it('should not throw for empty objects', () => {
+      expect(() => assertStringKeyedObject({})).to.not.throw();
+    });
+
+    it('should throw when value is not an object', () => {
+      expect(() => assertStringKeyedObject(null)).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      expect(() => assertStringKeyedObject(undefined)).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      expect(() => assertStringKeyedObject('string')).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      expect(() => assertStringKeyedObject(123)).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      expect(() => assertStringKeyedObject([])).to.throw(TypeHelpersAssertionError, 'Expected an object');
     });
   });
 });
