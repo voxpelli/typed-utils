@@ -106,7 +106,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm rebuild && npm run prepare --if-present
 
-      - name: prebuild types
+      - name: Prebuild types
         if: inputs.ts-prebuild-script
         run: npm run ${{ inputs.ts-prebuild-script }}
         working-directory: ${{ inputs.ts-prebuild-script-working-directory }}
@@ -116,7 +116,7 @@ jobs:
         run: npm install --ignore-scripts
         working-directory: ${{ inputs.ts-working-directory }}
 
-      - name: update tsconfig lib to "${{ matrix.ts_lib }}"
+      - name: Update tsconfig lib to "${{ matrix.ts_lib }}"
         run: |
           node -e "
             const fs = require('fs');
@@ -128,7 +128,7 @@ jobs:
             fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
           "
 
-      - name: type check using tstyche with TS ${{ matrix.ts_version }}
+      - name: Type check using tstyche with TS ${{ matrix.ts_version }}
         run: npx tstyche --target ${{ matrix.ts_version }} --tsconfig ${{ matrix.ts_project }}
         working-directory: ${{ inputs.ts-working-directory }}
 
