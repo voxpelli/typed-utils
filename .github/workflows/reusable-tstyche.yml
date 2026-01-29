@@ -25,7 +25,7 @@ on:
       ts-projects:
         description: 'A comma separated list of TypeScript project that you want to test.'
         required: false
-        default: './tsconfig.json'
+        default: 'tsconfig.json'
         type: string
       ts-working-directory:
         description: 'Where the ts-projects are relative to.'
