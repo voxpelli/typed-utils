@@ -121,7 +121,7 @@ jobs:
           node -e "
             const fs = require('fs');
             const path = require('path');
-            const configPath = path.join('${{ inputs.ts-working-directory }}', '${{ matrix.ts_project }}', 'tsconfig.json');
+            const configPath = path.join('${{ inputs.ts-working-directory }}', '${{ matrix.ts_project }}');
             const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
             config.compilerOptions = config.compilerOptions || {};
             config.compilerOptions.lib = ['${{ matrix.ts_lib }}'];
