@@ -128,7 +128,7 @@ jobs:
             fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
           "
 
-      - name: type check using tstyche with lib "${{ matrix.ts_lib }}" and TS ${{ matrix.ts_version }}
+      - name: type check using tstyche with TS ${{ matrix.ts_version }}
         run: npx tstyche --target ${{ matrix.ts_version }} --tsconfig ${{ matrix.ts_project }}
         working-directory: ${{ inputs.ts-working-directory }}
 
