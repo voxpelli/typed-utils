@@ -116,13 +116,6 @@ jobs:
         run: npm install --ignore-scripts
         working-directory: ${{ inputs.ts-working-directory }}
 
-      - name: install typescript version ${{ matrix.ts_version }}
-        run: npm install --force typescript@${{ matrix.ts_version }}
-        working-directory: ${{ inputs.ts-working-directory }}
-      - name: show installed typescript version
-        run: npm list typescript --depth=0
-        working-directory: ${{ inputs.ts-working-directory }}
-
       - name: update tsconfig lib to "${{ matrix.ts_lib }}"
         run: |
           node -e "
