@@ -1,5 +1,24 @@
 # Changelog
 
+## [3.0.0](https://github.com/voxpelli/typed-utils/compare/v2.6.0...v3.0.0) (2026-01-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* refactorings, bug fixes and new utils ([#65](https://github.com/voxpelli/typed-utils/issues/65))
+
+### 🌟 Features
+
+* refactorings, bug fixes and new utils ([#65](https://github.com/voxpelli/typed-utils/issues/65)) ([435c525](https://github.com/voxpelli/typed-utils/commit/435c525ffd5f2cc0c8132a39d8d0066fd8c3267a))
+
+
+### 🧹 Chores
+
+* add context7.json with URL and public key ([a059866](https://github.com/voxpelli/typed-utils/commit/a0598663edad8681b6493832083c5732f235f61a))
+* **deps:** update dependency mocha to ^11.7.5 ([#45](https://github.com/voxpelli/typed-utils/issues/45)) ([534c5c5](https://github.com/voxpelli/typed-utils/commit/534c5c5f51e10a166ac3eceda7207fb929988d1b))
+* **deps:** update dependency typescript to ~5.9.3 ([#46](https://github.com/voxpelli/typed-utils/issues/46)) ([7595ad3](https://github.com/voxpelli/typed-utils/commit/7595ad3fbe39db5f8dd79d01e98cf670a8861450))
+* **deps:** update linting dependencies ([#44](https://github.com/voxpelli/typed-utils/issues/44)) ([c8e35fe](https://github.com/voxpelli/typed-utils/commit/c8e35fe2a68c2ae7303180b13bf8b29ce61679cb))
+
 ## [2.6.0](https://github.com/voxpelli/typed-utils/compare/v2.5.0...v2.6.0) (2026-01-20)
 
 
