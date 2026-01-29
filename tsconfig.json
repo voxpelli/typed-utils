@@ -6,8 +6,10 @@
   "include": [
     "lib/**/*",
     "test/**/*",
+    "typetests/**/*"
   ],
   "compilerOptions": {
+    "lib": ["es2022", "dom"],
     "types": ["mocha"]
   }
 }

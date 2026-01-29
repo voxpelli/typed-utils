@@ -9,7 +9,8 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 ## Core Shape
 - Pure ESM util library: `index.js → lib/main.js → individual modules` (public API = everything re-exported in `lib/main.js`).
 - Source-of-truth is hand‑written JS + JSDoc; `.d.ts` generated via `npm run build` (tsc). Keep JSDoc perfectly synced with runtime logic.
-- Scope: generic structural + type narrowing helpers (arrays, objects, guards, assertions, paths, sets). No business logic, no heavy deps.
+- Scope: generic structural + type narrowing helpers (arrays, objects, guards, assertions, paths, sets, type utilities). No business logic, no heavy deps.
+- Shared type definitions live in `lib/types/*.d.ts` (e.g., `literal-types.d.ts`, `string-types.d.ts`, `misc-types.d.ts`)—these are hand-written and committed.
 - Runtime engines specify the verified Node range (see `engines` in `package.json`), but library code MUST stay platform‑neutral: avoid Node‑only built‑ins (`fs`, `path`, `process.env`, `Buffer`, etc.) and Node‑specific deps so it can be bundled for browsers. Stick to standard ECMAScript + harmless globals (eg. `Array`, `Set`, `Error`). If a feature would require a Node API, reconsider or make it optional behind user-provided functions.
 
 ## Code Style and Standards
@@ -26,7 +27,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
    - Include JSDoc comments with type annotations
    - Maintain strict type coverage (≥99%)
    - Generate `.d.ts` files from JSDoc annotations
-   - Import shared helper types inline: `import('@voxpelli/type-helpers').LiteralTypes`, `LiteralTypeOf`, `NonGenericString`
+   - Import shared helper types inline: `import('./types/literal-types.js').LiteralTypes`, `LiteralTypeOf`, `import('./types/string-types.js').NonGenericString`
 
 3. **Module Structure**
    - Main entry point: `index.js` (re-exports from lib/main.js)
@@ -35,7 +36,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 
 ## Typing & Guards
 - Use JSDoc `@template` + constrained generics (see `array.js`, `object.js`).
-- Import shared helper types inline: `import('@voxpelli/type-helpers').LiteralTypes`, `LiteralTypeOf`, `NonGenericString`.
+- Import shared helper types inline: `import('./types/literal-types.js').LiteralTypes`, `LiteralTypeOf`, `import('./types/string-types.js').NonGenericString`.
 - Every `value is X` guard must fully validate at runtime (mirror `is.js`, `isArrayOfType`, `typesafeIsArray`).
 - Assertions must throw `TypeHelpersAssertionError` (see `assert.js`) and use `asserts` return types.
 - Array narrowing: replicate `filter()` pattern (exclude literal) or `filterWithCallback()` (predicate guard). Use targeted casts on push only—never widen with `any`.
@@ -46,7 +47,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
    - Use Mocha for test runner
    - Use Chai for assertions
    - Place tests in `test/` directory with `.spec.js` extension
-   - Add runtime spec (`test/*.spec.js`) and type test (`test-d/*.test-d.ts`) with positive + `// @ts-expect-error` cases
+   - Add runtime spec (`test/*.spec.js`) and type test (`typetests/*.test.ts`) with positive + `// @ts-expect-error` cases
 
 2. **Code Coverage**
    - Use c8 for coverage reporting
@@ -68,7 +69,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 ## Adding / Changing Exports
 1. Confirm fits scope + adds meaningful type narrowing.
 2. Implement in `lib/<area>.js` (or new file) and export via `lib/main.js` (logical grouping + light alphabetical care).
-3. Add runtime spec (`test/*.spec.js`) and type test (`test-d/*.test-d.ts`) with positive + `// @ts-expect-error` cases.
+3. Add runtime spec (`test/*.spec.js`) and type test (`typetests/*.test.ts`) with positive + `// @ts-expect-error` cases.
 4. Maintain type coverage ≥99% (enforced). Run `npm run check` locally before PR.
 5. If signature change: update JSDoc, rebuild declarations, adjust tests.
 
@@ -135,7 +136,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 - ❌ DON'T add Node‑only dependencies or APIs that block browser bundling.
 - ❌ DON'T use CommonJS (`require`/`module.exports`).
 - ❌ DON'T skip type annotations in JSDoc.
-- ❌ DON'T commit auto-generated `.d.ts` files (only commit hand-written ones like `index.d.ts`).
+- ❌ DON'T commit auto-generated `.d.ts` files (only commit hand-written ones like `index.d.ts` and those in `lib/types/`).
 - ❌ DON'T skip tests for new functionality.
 
 **Best Practices:**

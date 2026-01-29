@@ -9,6 +9,14 @@ My personal (type-enabled) utils / helpers
 [![Types in JS](https://img.shields.io/badge/types_in_js-yes-brightgreen)](https://github.com/voxpelli/types-in-js)
 [![Follow @voxpelli@mastodon.social](https://img.shields.io/mastodon/follow/109247025527949675?domain=https%3A%2F%2Fmastodon.social&style=social)](https://mastodon.social/@voxpelli)
 
+## Requirements
+
+> [!NOTE]
+> Check the `"engines"` field in [`package.json`](./package.json) for the definitive version requirements, as they may be updated independently of this README.
+
+- **Node.js**: ^20.11.0 or >=22.0.0
+- **TypeScript**: >=5.8
+
 ## Usage
 
 ### Simple
@@ -63,6 +71,18 @@ let input /** @type {string | number} */ = Math.random() > 0.5 ? 'red' : 42;
 if (guardedArrayIncludes(COLORS, input)) {
   // inside: input is now "red"|"green"|"blue"
 }
+```
+
+#### `ensureArray(value)`
+
+Converts a value to an array if it isn't already one. If `value` is already an array, returns it as-is. Otherwise, wraps `value` in a new single-element array. Useful for normalizing inputs that may be either a single item or an array of items.
+
+Example:
+```js
+/** @type {string | string[]} */
+const input = Math.random() > 0.5 ? 'single' : ['multiple', 'items'];
+
+const normalized = ensureArray(input); // always string[]
 ```
 
 ### Assertions
@@ -198,6 +218,37 @@ Returns the string value at the given path within `obj`, or `false` if the value
 #### `getValueByPath(obj, path)`
 
 Returns an object `{ value }` where `value` is the value at the given path within `obj`, or `false` if a non-object is encountered, or `undefined` if the path does not exist. The path can be a string (dot-separated) or an array of strings.
+
+### Type Utilities
+
+#### `assertTypeIsNever(value, [message])`
+
+Asserts that a value is of type `never`, used for exhaustive switch/conditional checks. This function ensures all cases in a discriminated union are handled. If called at runtime, it throws an error indicating an unhandled case was encountered.
+
+Useful for compile-time exhaustiveness checking:
+```js
+/**
+ * @param {'red' | 'green' | 'blue'} color
+ */
+function handleColor(color) {
+  switch (color) {
+    case 'red': return '#f00';
+    case 'green': return '#0f0';
+    case 'blue': return '#00f';
+    default:
+      // TypeScript error if a color case is missing
+      assertTypeIsNever(color);
+  }
+}
+```
+
+#### `noopTypeIsAssignableToBase(base, superset)`
+
+No-op function that validates at compile-time that `Superset` type is assignable to `Base` type. Does nothing at runtime. Useful for type tests and ensuring type relationships hold.
+
+#### `noopTypeIsEmptyObject(base, shouldHaveKeys)`
+
+No-op function that validates at compile-time that `Base` type is an empty object. Does nothing at runtime. Useful for type tests.
 
 ### Set
 
