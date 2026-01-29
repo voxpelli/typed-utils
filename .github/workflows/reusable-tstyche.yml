@@ -129,6 +129,6 @@ jobs:
           "
 
       - name: type check using tstyche with lib "${{ matrix.ts_lib }}" and TS ${{ matrix.ts_version }}
-        run: npx tstyche --target ${{ matrix.ts_version }} -p ${{ matrix.ts_project }}
+        run: npx tstyche --target ${{ matrix.ts_version }} --tsconfig ${{ matrix.ts_project }}
         working-directory: ${{ inputs.ts-working-directory }}
 
