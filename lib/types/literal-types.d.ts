@@ -1,4 +1,3 @@
-// TODO: Add tests that ensures that this always returns a key from LiteralTypes
 export type LiteralTypeOf<T> =
   T extends string ? 'string' :
   T extends number ? 'number' :
@@ -12,7 +11,6 @@ export type LiteralTypeOf<T> =
   T extends object ? 'object' :
   never;
 
-// TODO: Add tests that ensures that this maps to LiteralTypeOf<>
 export type LiteralTypes = {
   'string': string,
   'number': number,
