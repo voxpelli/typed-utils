@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   type-check:
-    uses: ./.github/workflows/reusable-tstyche.yml
+    uses: voxpelli/ghatemplates/.github/workflows/reusable-tstyche.yml
     with:
       ts-versions: ${{ github.event.schedule && 'next' || '>=5.8,next' }}
       ts-libs: 'es2022;esnext'
