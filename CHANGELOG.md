@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.1](https://github.com/voxpelli/typed-utils/compare/v3.0.0...v3.0.1) (2026-01-30)
+
+
+### 📚 Documentation
+
+* add DeepWiki badge to README ([145a25c](https://github.com/voxpelli/typed-utils/commit/145a25c3ab9fdd10ddcb84954e0a15e2737a2275))
+
 ## [3.0.0](https://github.com/voxpelli/typed-utils/compare/v2.6.0...v3.0.0) (2026-01-29)
 
 
