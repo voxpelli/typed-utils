@@ -43,7 +43,7 @@
     "clean": "run-p clean:*",
     "prepack": "run-s build",
     "prepare": "husky",
-    "test:tstyche": "run-s build && tstyche --target \"$(jq -r '.engines.typescript' package.json)\" --reporters ./node_modules/@voxpelli/tstyche-reporters/lib/tstyche-dot-reporter.js,summary && run-s clean",
+    "test:tstyche": "run-s build && tstyche --target \"$(jq -r '.engines.typescript' package.json)\" --reporters dot,summary && run-s clean",
     "test:mocha": "c8 --reporter=lcov --reporter text mocha 'test/**/*.spec.js'",
     "test-ci": "run-s test:mocha",
     "test": "run-s check test:*"
@@ -70,7 +70,7 @@
     "knip": "^5.82.1",
     "mocha": "^11.7.5",
     "npm-run-all2": "^8.0.4",
-    "tstyche": "^6.1.0",
+    "tstyche": "^6.2.0",
     "type-coverage": "^2.29.7",
     "typescript": "~5.9.3",
     "validate-conventional-commit": "^1.0.4"
