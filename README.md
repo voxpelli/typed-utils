@@ -58,6 +58,32 @@ Alias: ~~`isUnknownArray(value)`~~ (deprecated)
 
 Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
 
+#### `typesafeIsReadonlyArray(value)`
+
+Like `typesafeIsArray()` but also accepts readonly arrays in the type signature. Returns `true` if the value is an array (either mutable or readonly). Useful for functions that need to work with both regular arrays and readonly tuples from const assertions.
+
+Example:
+```js
+const mutablePath = ['server', 'port'];
+const readonlyPath = ['server', 'port'] as const;
+
+if (typesafeIsReadonlyArray(mutablePath)) {
+  // mutablePath is unknown[]
+}
+
+if (typesafeIsReadonlyArray(readonlyPath)) {
+  // readonlyPath is readonly unknown[]
+}
+
+// Used internally by path helpers to accept both formats
+function processPath(path) {
+  const keys = typesafeIsReadonlyArray(path) 
+    ? [...path] 
+    : path.split('.');
+  return keys;
+}
+```
+
 #### `guardedArrayIncludes(collection, searchElement)`
 
 Type-narrowing variant of `Array.prototype.includes` that works on arrays and sets. Returns `true` if `searchElement` is strictly equal to a member of `collection`. When `true`, narrows the type of `searchElement` to the element type of the iterable (`C extends Iterable<infer U> ? U : never`). Useful when you have an `unknown` (or union) value and want to both test membership and refine its type in one step.
@@ -207,19 +233,399 @@ if (hasOwnAll(maybe, key)) {
 
 ### Object Path
 
+Path-based helpers for safely navigating and validating nested object structures. All path functions support both dot-separated string paths (`'foo.bar.baz'`) and array paths (`['foo', 'bar', 'baz']`), including readonly arrays.
+
+**When to Use Path-Based Functions:**
+
+Use the path-based helpers (`isPathWithType`, `assertPathWithType`, etc.) when:
+- ✅ Working with deeply nested object structures where manual navigation is cumbersome
+- ✅ Validating configuration objects with dynamic or variable paths
+- ✅ Parsing external data (JSON, APIs) where nested structure needs validation
+- ✅ Need to check multiple levels of nesting with a single validation call
+- ✅ Working with path strings from external sources (user input, config files)
+
+Use the direct property helpers (`isType`, `assertType`, `isKeyWithType`, etc.) when:
+- ✅ Accessing properties at the top level or shallow nesting (1-2 levels)
+- ✅ You know the exact property structure at compile time
+- ✅ Want more precise type narrowing for discriminated unions
+- ✅ Need to validate individual values rather than nested paths
+- ✅ Performance is critical (direct access is faster than path traversal)
+
+**Examples:**
+
+```javascript
+// ❌ Don't use path-based for shallow access
+if (isPathWithType(config, 'port', 'number')) { /* ... */ }
+
+// ✅ Use direct helper instead
+if (isType(config.port, 'number')) { /* ... */ }
+
+// ❌ Don't use direct access for deep nesting
+if (isType(config?.server?.database?.connection?.pool, 'object')) { /* ... */ }
+
+// ✅ Use path-based helper instead
+if (isObjectWithPath(config, 'server.database.connection.pool')) { /* ... */ }
+
+// ✅ Path-based excels with dynamic paths
+const pathToValidate = userInput; // e.g., "server.cache.redis"
+if (isObjectWithPath(config, pathToValidate)) { /* ... */ }
+
+// ✅ Direct helpers excel with known structure
+if (isKeyWithType(config, 'server', 'object')) {
+  // More precise narrowing for config.server
+}
+```
+
 #### `getObjectValueByPath(obj, path, createIfMissing)`
 
 Returns the object at the given path within `obj`, where `path` can be a string (dot-separated) or an array of strings. If `createIfMissing` is `true`, missing objects along the path are created. Returns `false` if a non-object is encountered, or `undefined` if the path does not exist.
+
+**Example:**
+```javascript
+const config = { server: { settings: { port: 3000 } } };
+
+const settings = getObjectValueByPath(config, 'server.settings');
+// { port: 3000 }
+
+const missing = getObjectValueByPath(config, 'server.database');
+// undefined
+
+const created = getObjectValueByPath(config, 'server.cache', true);
+// {} (created if missing)
+```
 
 #### `getStringValueByPath(obj, path)`
 
 Returns the string value at the given path within `obj`, or `false` if the value is not a string, or `undefined` if the path does not exist. The path can be a string (dot-separated) or an array of strings.
 
+**Example:**
+```javascript
+const config = { server: { host: 'localhost', port: 3000 } };
+
+const host = getStringValueByPath(config, 'server.host');
+// 'localhost'
+
+const notString = getStringValueByPath(config, 'server.port');
+// false (port is a number, not a string)
+```
+
 #### `getValueByPath(obj, path)`
 
 Returns an object `{ value }` where `value` is the value at the given path within `obj`, or `false` if a non-object is encountered, or `undefined` if the path does not exist. The path can be a string (dot-separated) or an array of strings.
 
+**Example:**
+```javascript
+const data = { user: { profile: { age: 25 } } };
+
+const result = getValueByPath(data, 'user.profile.age');
+// { value: 25 }
+
+const missing = getValueByPath(data, 'user.settings');
+// undefined
+```
+
+#### `isObjectWithPath(obj, path)`
+
+Type guard that returns `true` if the specified path exists in the object and resolves to an object value (not null, array, or primitive). Narrows the object type while preserving its structure.
+
+**Example:**
+```javascript
+const config = { server: { port: 3000, settings: {} } };
+
+if (isObjectWithPath(config, 'server')) {
+  // config type is narrowed
+  console.log(config.server.port);
+}
+
+if (isObjectWithPath(config, 'server.settings')) {
+  // Nested path validation
+  config.server.settings.timeout = 5000;
+}
+
+// Works with array paths
+if (isObjectWithPath(config, ['server', 'settings'])) {
+  // Type-safe access
+}
+```
+
+#### `isPathWithType(obj, path, type)`
+
+Type guard that returns `true` if the path exists and the value at that path matches the specified literal type (`'string'`, `'number'`, `'boolean'`, `'array'`, `'object'`, `'null'`, etc.).
+
+**Example:**
+```javascript
+const config = { 
+  server: { host: 'localhost', port: 3000 },
+  features: ['auth', 'logging']
+};
+
+if (isPathWithType(config, 'server.host', 'string')) {
+  // config.server.host is confirmed to be a string
+  console.log(config.server.host.toUpperCase());
+}
+
+if (isPathWithType(config, 'server.port', 'number')) {
+  // config.server.port is confirmed to be a number
+  console.log(config.server.port * 2);
+}
+
+if (isPathWithType(config, 'features', 'array')) {
+  // config.features is confirmed to be an array
+  console.log(config.features.length);
+}
+```
+
+#### `isPathWithValue(obj, path, expectedValue)`
+
+Type guard that returns `true` if the path exists and the value at that path is strictly equal (`===`) to the expected value. Useful for checking configuration flags, environment modes, or specific states.
+
+**Example:**
+```javascript
+const config = { 
+  env: 'production',
+  debug: false,
+  server: { port: 8080 }
+};
+
+if (isPathWithValue(config, 'env', 'production')) {
+  console.log('Running in production mode');
+}
+
+if (isPathWithValue(config, 'debug', false)) {
+  console.log('Debug mode is disabled');
+}
+
+if (isPathWithValue(config, 'server.port', 8080)) {
+  console.log('Using default port');
+}
+```
+
+#### `assertObjectWithPath(obj, path)`
+
+Asserts that the path exists and resolves to an object. Throws `TypeHelpersAssertionError` if the path doesn't exist or isn't an object. The object type is narrowed after the assertion.
+
+**Example:**
+```javascript
+const config = { server: { settings: { timeout: 5000 } } };
+
+assertObjectWithPath(config, 'server');
+// Guaranteed to exist, can safely access properties
+console.log(config.server.settings.timeout);
+
+// Validate deeply nested structures
+assertObjectWithPath(config, 'server.settings');
+
+try {
+  assertObjectWithPath(config, 'server.database');
+} catch (err) {
+  console.error('Missing database configuration');
+  // TypeHelpersAssertionError: Expected path "server.database" to exist and be an object
+}
+```
+
+#### `assertPathWithType(obj, path, type)`
+
+Asserts that the path exists and the value matches the specified literal type. Throws `TypeHelpersAssertionError` if the path doesn't exist or the type doesn't match.
+
+**Example:**
+```javascript
+const config = {
+  server: { host: 'localhost', port: 3000 },
+  features: ['auth', 'logging']
+};
+
+assertPathWithType(config, 'server.host', 'string');
+// Guaranteed to be a string
+const upperHost = config.server.host.toUpperCase();
+
+assertPathWithType(config, 'server.port', 'number');
+// Guaranteed to be a number
+const timeout = config.server.port * 1000;
+
+assertPathWithType(config, 'features', 'array');
+// Guaranteed to be an array
+console.log(config.features.length);
+
+try {
+  assertPathWithType(config, 'server.port', 'string');
+} catch (err) {
+  console.error('Invalid type:', err.message);
+  // TypeHelpersAssertionError: Expected path "server.port" to have type "string", but got: number
+}
+```
+
+#### `assertPathWithValue(obj, path, expectedValue)`
+
+Asserts that the path exists and the value is strictly equal to the expected value. Throws `TypeHelpersAssertionError` if the path doesn't exist or the value doesn't match.
+
+**Example:**
+```javascript
+const config = {
+  env: 'production',
+  debug: false,
+  version: 2
+};
+
+assertPathWithValue(config, 'env', 'production');
+// Guaranteed to be in production mode
+
+assertPathWithValue(config, 'debug', false);
+// Guaranteed debug is disabled
+
+try {
+  assertPathWithValue(config, 'version', 1);
+} catch (err) {
+  console.error('Version mismatch:', err.message);
+  // TypeHelpersAssertionError: Expected path "version" to have value 1, but got: 2
+}
+```
+
+**Path Format Examples:**
+```javascript
+// String paths (dot-separated)
+isPathWithType(obj, 'server.database.connection.pool', 'object');
+
+// Array paths (mutable)
+const path = ['server', 'database', 'connection'];
+isPathWithType(obj, path, 'object');
+
+// Readonly array paths (with const assertion)
+isPathWithType(obj, ['server', 'port'] as const, 'number');
+```
+
+**Prototype Pollution Protection:**
+
+All path helpers include built-in protection against prototype pollution attacks by rejecting paths containing `__proto__`, `constructor`, or `prototype`:
+
+```javascript
+try {
+  getObjectValueByPath(obj, '__proto__.polluted');
+} catch (err) {
+  // Error: Do not include "__proto__" in your path
+}
+```
+
 ### Type Utilities
+
+#### Path Type Helpers
+
+Advanced TypeScript utility types for path-based type inference and validation. These types enable compile-time path validation and type extraction for nested object properties. Available in `@voxpelli/typed-utils/path-types`.
+
+##### `PathValue<T, P>`
+
+Extracts the type at a given path in an object using dot notation string literals.
+
+**Example:**
+```typescript
+import type { PathValue } from '@voxpelli/typed-utils/path-types';
+
+type Config = {
+  server: {
+    database: {
+      connection: {
+        pool: { min: number; max: number }
+      }
+    }
+  }
+};
+
+type PoolMax = PathValue<Config, 'server.database.connection.pool.max'>;
+// number
+
+type Pool = PathValue<Config, 'server.database.connection.pool'>;
+// { min: number; max: number }
+
+type Invalid = PathValue<Config, 'server.missing.path'>;
+// unknown (invalid path)
+```
+
+##### `PathArrayValue<T, P>`
+
+Extracts the type at a given path using an array/tuple of keys. Works with both mutable and readonly arrays.
+
+**Example:**
+```typescript
+import type { PathArrayValue } from '@voxpelli/typed-utils/path-types';
+
+type Data = {
+  user: {
+    profile: {
+      settings: { theme: 'dark' | 'light' }
+    }
+  }
+};
+
+type Theme = PathArrayValue<Data, ['user', 'profile', 'settings', 'theme']>;
+// 'dark' | 'light'
+
+// Works with const assertions (readonly tuples)
+type ThemeConst = PathArrayValue<Data, ['user', 'profile', 'settings', 'theme'] as const>;
+// 'dark' | 'light'
+```
+
+##### `ObjectWithPathOfType<T, P, V>`
+
+Validates that an object has a path resolving to a specific type. Returns the original type if valid, `never` if invalid.
+
+**Example:**
+```typescript
+import type { ObjectWithPathOfType } from '@voxpelli/typed-utils/path-types';
+
+type Config = {
+  server?: {
+    port?: number;
+    host?: string;
+  }
+};
+
+type ValidPort = ObjectWithPathOfType<Config, 'server.port', number>;
+// Config (valid)
+
+type InvalidPort = ObjectWithPathOfType<Config, 'server.port', string>;
+// never (type mismatch)
+```
+
+##### `PathNarrowedSimple<T>` and `PathAssertedSimple<T>`
+
+Simplified helper types used by path-based type guards and assertions. Return the intersection of `T` with `Record<string, unknown>`.
+
+**Example:**
+```typescript
+import type { PathNarrowedSimple, PathAssertedSimple } from '@voxpelli/typed-utils/path-types';
+
+type Config = { server: { port: number } };
+
+type Narrowed = PathNarrowedSimple<Config>;
+// Config & Record<string, unknown>
+
+type Asserted = PathAssertedSimple<Config>;
+// Config & Record<string, unknown>
+```
+
+**Practical Usage in Type Guards:**
+```typescript
+import { isPathWithType } from '@voxpelli/typed-utils';
+import type { PathValue } from '@voxpelli/typed-utils/path-types';
+
+type AppConfig = {
+  database: {
+    host: string;
+    port: number;
+  }
+};
+
+const config: unknown = loadConfig();
+
+if (isPathWithType(config, 'database.port', 'number')) {
+  // config is narrowed to AppConfig & Record<string, unknown>
+  // You can now safely access config.database.port
+  const port: number = config.database.port;
+}
+
+// Type-level validation
+type DbPort = PathValue<AppConfig, 'database.port'>;
+// number
+```
 
 #### `assertTypeIsNever(value, [message])`
 
