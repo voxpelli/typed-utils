@@ -5,7 +5,9 @@
   ],
   "include": [
     "lib/**/*",
-    "test/**/*",
+    "test/**/*"
+  ],
+  "exclude": [
     "typetests/**/*"
   ],
   "compilerOptions": {
