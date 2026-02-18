@@ -54,3 +54,73 @@ export type ObjectWithPathOfType<T, P extends string | readonly string[], V> =
         ? PathArrayValue<T, P> extends V ? T : never
         : never
     : never;
+
+/**
+ * Helper type for narrowing objects with path-based type guards
+ * Uses PathValue/PathArrayValue to infer the type at the path
+ */
+export type PathNarrowed<T, P extends string | readonly string[]> =
+  T extends Record<string, unknown>
+    ? P extends string
+      ? PathValue<T, P> extends infer V
+        ? V extends Record<string, unknown>
+          ? T & Record<string, unknown>
+          : Record<string, unknown>
+        : Record<string, unknown>
+      : P extends readonly string[]
+        ? PathArrayValue<T, P> extends infer V
+          ? V extends Record<string, unknown>
+            ? T & Record<string, unknown>
+            : Record<string, unknown>
+          : Record<string, unknown>
+        : Record<string, unknown>
+    : Record<string, unknown>;
+
+/**
+ * Simplified version that preserves T when it's already a record
+ * Used by type guards like isObjectWithPath
+ */
+export type PathNarrowedSimple<T> = T & Record<string, unknown>;
+
+/**
+ * Helper type for assertion-based narrowing
+ * Uses PathValue/PathArrayValue to verify the type at the path
+ */
+export type PathAsserted<T, P extends string | readonly string[]> =
+  T extends Record<string, unknown>
+    ? P extends string
+      ? PathValue<T, P> extends infer V
+        ? V extends Record<string, unknown>
+          ? T & Record<string, unknown>
+          : Record<string, unknown>
+        : Record<string, unknown>
+      : P extends readonly string[]
+        ? PathArrayValue<T, P> extends infer V
+          ? V extends Record<string, unknown>
+            ? T & Record<string, unknown>
+            : Record<string, unknown>
+          : Record<string, unknown>
+        : Record<string, unknown>
+    : Record<string, unknown>;
+
+/**
+ * Simplified version that preserves T when it's already a record
+ * Used by assertions like assertObjectWithPath
+ */
+export type PathAssertedSimple<T> = T & Record<string, unknown>;
+
+/**
+ * Helper type for asserting objects with a path of a specific type
+ * Uses PathValue or PathArrayValue for precise type checking
+ */
+export type AssertObjectWithPathOfType<
+  T,
+  P extends string | readonly string[],
+  V
+> = T extends Record<string, unknown>
+  ? P extends string
+    ? PathValue<T, P> extends V ? T & Record<string, unknown> : never
+    : P extends readonly string[]
+      ? PathArrayValue<T, P> extends V ? T & Record<string, unknown> : never
+      : never
+  : never;
