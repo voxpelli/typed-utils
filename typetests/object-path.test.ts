@@ -32,34 +32,54 @@ describe('isObjectWithPath', () => {
 });
 
 describe('isPathWithType', () => {
-  it('should work with string type', () => {
+  it('should narrow unknown to object when type matches', () => {
     const obj: unknown = { foo: { bar: 'test' } };
 
-    const result = isPathWithType(obj, 'foo.bar', 'string');
-    expect(result).type.toBe<boolean>();
+    if (isPathWithType(obj, 'foo.bar', 'string')) {
+      expect(obj).type.toBe<Record<string, unknown>>();
+    }
   });
 
   it('should work with number type', () => {
     const obj: unknown = { foo: { bar: 123 } };
 
-    const result = isPathWithType(obj, 'foo.bar', 'number');
-    expect(result).type.toBe<boolean>();
+    if (isPathWithType(obj, 'foo.bar', 'number')) {
+      expect(obj).type.toBe<Record<string, unknown>>();
+    }
+  });
+
+  it('should work with array path', () => {
+    const obj: unknown = { foo: { bar: true } };
+
+    if (isPathWithType(obj, ['foo', 'bar'], 'boolean')) {
+      expect(obj).type.toBe<Record<string, unknown>>();
+    }
   });
 });
 
 describe('isPathWithValue', () => {
-  it('should work with any value', () => {
+  it('should narrow unknown to object when value matches', () => {
     const obj: unknown = { foo: { bar: 'test' } };
 
-    const result = isPathWithValue(obj, 'foo.bar', 'test');
-    expect(result).type.toBe<boolean>();
+    if (isPathWithValue(obj, 'foo.bar', 'test')) {
+      expect(obj).type.toBe<Record<string, unknown>>();
+    }
   });
 
   it('should work with numeric value', () => {
     const obj: unknown = { foo: { bar: 123 } };
 
-    const result = isPathWithValue(obj, 'foo.bar', 123);
-    expect(result).type.toBe<boolean>();
+    if (isPathWithValue(obj, 'foo.bar', 123)) {
+      expect(obj).type.toBe<Record<string, unknown>>();
+    }
+  });
+
+  it('should work with array path', () => {
+    const obj: unknown = { foo: { bar: true } };
+
+    if (isPathWithValue(obj, ['foo', 'bar'], true)) {
+      expect(obj).type.toBe<Record<string, unknown>>();
+    }
   });
 });
 
