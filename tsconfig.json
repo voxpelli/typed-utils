@@ -5,8 +5,7 @@
   ],
   "include": [
     "lib/**/*",
-    "test/**/*",
-    "typetests/**/*"
+    "test/**/*"
   ],
   "compilerOptions": {
     "lib": ["es2022", "dom"],

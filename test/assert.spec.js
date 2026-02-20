@@ -158,6 +158,27 @@ describe('assert', () => {
     });
   });
 
+  describe('assertArrayOfLiteralType() with array of types', () => {
+    it('should not throw for arrays with elements matching any allowed type', () => {
+      expect(() => assertArrayOfLiteralType(['foo', 123, 'bar'], ['string', 'number'])).to.not.throw();
+      expect(() => assertArrayOfLiteralType([1, 'two', 3], ['string', 'number'])).to.not.throw();
+      expect(() => assertArrayOfLiteralType([true, 42, 'test'], ['boolean', 'number', 'string'])).to.not.throw();
+    });
+
+    it('should not throw for empty arrays with array of types', () => {
+      expect(() => assertArrayOfLiteralType([], ['string', 'number'])).to.not.throw();
+    });
+
+    it('should throw when array contains element not matching any allowed type', () => {
+      expect(() => assertArrayOfLiteralType(['foo', null], ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected type "string", "number"');
+      expect(() => assertArrayOfLiteralType([1, undefined], ['string', 'boolean'])).to.throw(TypeHelpersAssertionError);
+    });
+
+    it('should work with custom error message and array of types', () => {
+      expect(() => assertArrayOfLiteralType(['foo', null], ['string', 'number'], 'Custom message')).to.throw(TypeHelpersAssertionError, 'Custom message');
+    });
+  });
+
   describe('assertObjectValueType()', () => {
     it('should not throw for objects with all values of correct type', () => {
       expect(() => assertObjectValueType({ a: 'foo', b: 'bar' }, 'string')).to.not.throw();
@@ -184,6 +205,21 @@ describe('assert', () => {
     it('should validate that all keys are strings', () => {
       const obj = { a: 'foo', b: 'bar' };
       expect(() => assertObjectValueType(obj, 'string')).to.not.throw();
+    });
+
+    it('should not throw for objects with values of any allowed type (array)', () => {
+      expect(() => assertObjectValueType({ a: 'foo', b: 123, c: true }, ['string', 'number', 'boolean'])).to.not.throw();
+      expect(() => assertObjectValueType({ x: 1, y: 'two' }, ['string', 'number'])).to.not.throw();
+      expect(() => assertObjectValueType({ flag: true, count: 42 }, ['boolean', 'number'])).to.not.throw();
+    });
+
+    it('should not throw for empty objects with array of types', () => {
+      expect(() => assertObjectValueType({}, ['string', 'number'])).to.not.throw();
+    });
+
+    it('should throw when object contains value not matching any allowed type', () => {
+      expect(() => assertObjectValueType({ a: 'foo', b: null }, ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "string", "number"');
+      expect(() => assertObjectValueType({ x: 1, y: undefined }, ['string', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "string", "boolean"');
     });
   });
 });

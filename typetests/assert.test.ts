@@ -25,6 +25,49 @@ describe('assertType', () => {
   });
 });
 
+describe('assertType with array of types', () => {
+  it('should narrow unknown to union type', () => {
+    const unknownValue: unknown = 'test';
+
+    assertType(unknownValue, ['string', 'number']);
+    expect(unknownValue).type.toBe<string | number>();
+  });
+
+  it('should narrow unknown to multiple type union', () => {
+    const unknownValue: unknown = true;
+
+    assertType(unknownValue, ['string', 'number', 'boolean']);
+    expect(unknownValue).type.toBe<string | number | boolean>();
+  });
+
+  it('should work with single-element array', () => {
+    const unknownValue: unknown = 'test';
+
+    assertType(unknownValue, ['string']);
+    expect(unknownValue).type.toBe<string>();
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = 42;
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    assertType(unknownValue, types);
+    expect(unknownValue).type.toBe<string | number>();
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = 'test';
+
+    expect(assertType(unknownValue, 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = 42;
+
+    expect(assertType(unknownValue, ['string', 'invalid'])).type.toRaiseError();
+  });
+});
+
 describe('assertObjectWithKey', () => {
   it('should narrow unknown object with specific key', () => {
     const unknownValue: unknown = {};
@@ -85,6 +128,42 @@ describe('assertArrayOfLiteralType', () => {
   });
 });
 
+describe('assertArrayOfLiteralType with array of types', () => {
+  it('should narrow unknown to union array', () => {
+    const unknownValue: unknown = ['foo', 123, 'bar'];
+
+    assertArrayOfLiteralType(unknownValue, ['string', 'number']);
+    expect(unknownValue).type.toBe<Array<string | number>>();
+  });
+
+  it('should narrow unknown to multiple type union array', () => {
+    const unknownValue: unknown = [true, 42, 'test'];
+
+    assertArrayOfLiteralType(unknownValue, ['boolean', 'number', 'string']);
+    expect(unknownValue).type.toBe<Array<boolean | number | string>>();
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = [1, 'two'];
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    assertArrayOfLiteralType(unknownValue, types);
+    expect(unknownValue).type.toBe<Array<string | number>>();
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = ['foo', 'bar'];
+
+    expect(assertArrayOfLiteralType(unknownValue, 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = ['test'];
+
+    expect(assertArrayOfLiteralType(unknownValue, ['string', 'notAType'])).type.toRaiseError();
+  });
+});
+
 describe('assertObjectValueType', () => {
   it('should narrow unknown to string record', () => {
     const unknownValue8: unknown = { a: 'foo', b: 'bar' };
@@ -98,5 +177,39 @@ describe('assertObjectValueType', () => {
 
     assertObjectValueType(unknownValue9, 'number');
     expect(unknownValue9).type.toBe<Record<string, number>>();
+  });
+
+  it('should narrow unknown to union type record with array of types', () => {
+    const unknownValue10: unknown = { a: 'foo', b: 123, c: true };
+
+    assertObjectValueType(unknownValue10, ['string', 'number', 'boolean']);
+    expect(unknownValue10).type.toBe<Record<string, string | number | boolean>>();
+  });
+
+  it('should narrow unknown to string or number record', () => {
+    const unknownValue11: unknown = { x: 1, y: 'two' };
+
+    assertObjectValueType(unknownValue11, ['string', 'number']);
+    expect(unknownValue11).type.toBe<Record<string, string | number>>();
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue12: unknown = { a: true, b: false };
+    const types: ('boolean' | 'number')[] = ['boolean', 'number'];
+
+    assertObjectValueType(unknownValue12, types);
+    expect(unknownValue12).type.toBe<Record<string, boolean | number>>();
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = { a: 'foo' };
+
+    expect(assertObjectValueType(unknownValue, 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = { x: 1, y: 2 };
+
+    expect(assertObjectValueType(unknownValue, ['number', 'invalid'])).type.toRaiseError();
   });
 });

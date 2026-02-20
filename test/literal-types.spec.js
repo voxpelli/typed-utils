@@ -82,6 +82,38 @@ describe('Literal Types', () => {
     });
   });
 
+  describe('isType with array of types', () => {
+    it('should return true for values matching any allowed type', () => {
+      expect(isType('hello', ['string', 'number'])).to.equal(true);
+      expect(isType(42, ['string', 'number'])).to.equal(true);
+      expect(isType(true, ['boolean', 'number'])).to.equal(true);
+      expect(isType([], ['array', 'object'])).to.equal(true);
+    });
+
+    it('should return false for values matching none of the allowed types', () => {
+      expect(isType(true, ['string', 'number'])).to.equal(false);
+      expect(isType('hello', ['number', 'boolean'])).to.equal(false);
+      // eslint-disable-next-line unicorn/no-null
+      expect(isType(null, ['string', 'number', 'boolean'])).to.equal(false);
+    });
+
+    it('should work with single-element array', () => {
+      expect(isType('hello', ['string'])).to.equal(true);
+      expect(isType(42, ['string'])).to.equal(false);
+    });
+
+    it('should handle empty array (always returns false)', () => {
+      expect(isType('hello', [])).to.equal(false);
+      expect(isType(42, [])).to.equal(false);
+      expect(isType(true, [])).to.equal(false);
+    });
+
+    it('should work with all literal types in array', () => {
+      expect(isType('test', ['string', 'number', 'boolean', 'null', 'undefined', 'array', 'object', 'function', 'symbol', 'bigint'])).to.equal(true);
+      expect(isType(42, ['string', 'number', 'boolean'])).to.equal(true);
+    });
+  });
+
   describe('assertType', () => {
     it('passes for matching type - string', () => {
       const value = 'hello';
@@ -151,6 +183,55 @@ describe('Literal Types', () => {
       expect(() => assertType(0, 'number')).to.not.throw();
       expect(() => assertType('', 'string')).to.not.throw();
       expect(() => assertType(false, 'boolean')).to.not.throw();
+    });
+  });
+
+  describe('assertType with array of types', () => {
+    it('should not throw for values matching any allowed type', () => {
+      expect(() => assertType('hello', ['string', 'number'])).to.not.throw();
+      expect(() => assertType(42, ['string', 'number'])).to.not.throw();
+      expect(() => assertType(true, ['boolean', 'number'])).to.not.throw();
+      expect(() => assertType([], ['array', 'object'])).to.not.throw();
+    });
+
+    it('should throw when value matches none of the allowed types', () => {
+      expect(() => assertType(true, ['string', 'number'])).to.throw(TypeHelpersAssertionError);
+      expect(() => assertType('hello', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError);
+    });
+
+    it('should throw with error message including all types', () => {
+      try {
+        assertType(true, ['string', 'number']);
+        expect.fail('Should have thrown');
+      } catch (err) {
+        expect(err).to.be.instanceOf(TypeHelpersAssertionError);
+        if (err instanceof TypeHelpersAssertionError) {
+          expect(err.message).to.include('string');
+          expect(err.message).to.include('number');
+        }
+      }
+    });
+
+    it('should work with single-element array', () => {
+      expect(() => assertType('hello', ['string'])).to.not.throw();
+      expect(() => assertType(42, ['string'])).to.throw(TypeHelpersAssertionError);
+    });
+
+    it('should handle empty array (always throws)', () => {
+      expect(() => assertType('hello', [])).to.throw(TypeHelpersAssertionError);
+      expect(() => assertType(42, [])).to.throw(TypeHelpersAssertionError);
+    });
+
+    it('should work with custom error message', () => {
+      try {
+        assertType(true, ['string', 'number'], 'Custom error');
+        expect.fail('Should have thrown');
+      } catch (err) {
+        expect(err).to.be.instanceOf(TypeHelpersAssertionError);
+        if (err instanceof TypeHelpersAssertionError) {
+          expect(err.message).to.include('Custom error');
+        }
+      }
     });
   });
 
