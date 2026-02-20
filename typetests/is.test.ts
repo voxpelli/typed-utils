@@ -25,6 +25,53 @@ describe('isType', () => {
   });
 });
 
+describe('isType with array of types', () => {
+  it('should narrow unknown to union type', () => {
+    const unknownValue: unknown = 'test';
+
+    if (isType(unknownValue, ['string', 'number'])) {
+      expect(unknownValue).type.toBe<string | number>();
+    }
+  });
+
+  it('should narrow unknown to multiple type union', () => {
+    const unknownValue: unknown = true;
+
+    if (isType(unknownValue, ['string', 'number', 'boolean'])) {
+      expect(unknownValue).type.toBe<string | number | boolean>();
+    }
+  });
+
+  it('should work with single-element array', () => {
+    const unknownValue: unknown = 'test';
+
+    if (isType(unknownValue, ['string'])) {
+      expect(unknownValue).type.toBe<string>();
+    }
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = 42;
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    if (isType(unknownValue, types)) {
+      expect(unknownValue).type.toBe<string | number>();
+    }
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = 'test';
+
+    expect(isType(unknownValue, 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = 42;
+
+    expect(isType(unknownValue, ['string', 'invalid'])).type.toRaiseError();
+  });
+});
+
 describe('isObjectWithKey', () => {
   it('should narrow unknown object with specific key', () => {
     const unknownValue: unknown = {};

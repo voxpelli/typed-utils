@@ -103,6 +103,13 @@ Asserts that `obj` is an object and contains the property `key`. Throws an error
 
 Asserts that `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)). Throws an error if not. Optional custom error message.
 
+Supports union types by passing an array of type names:
+
+```javascript
+assertType(value, ['string', 'number']); // narrows to string | number
+assertType(value, ['string', 'boolean', 'null']); // narrows to string | boolean | null
+```
+
 #### `assertKeyWithType(obj, key, type)`
 
 Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is of the given `type`.
@@ -115,9 +122,22 @@ Asserts that `obj` is an object and either does not contain the property `key`, 
 
 Asserts that `value` is an array where every element is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'`). Throws an error if any element fails the type check. Optional custom error message.
 
+Supports union types by passing an array of type names:
+
+```javascript
+assertArrayOfLiteralType(value, ['string', 'number']); // narrows to Array<string | number>
+```
+
 #### `assertObjectValueType(obj, type)`
 
 Asserts that `obj` is an object where all values are of the given `type` and all keys are strings. This is useful for validating objects used as dictionaries/maps with homogeneous value types.
+
+Supports union types by passing an array of type names:
+
+```javascript
+assertObjectValueType(obj, 'string'); // narrows to Record<string, string>
+assertObjectValueType(obj, ['string', 'number', 'boolean']); // narrows to Record<string, string | number | boolean>
+```
 
 ### `is`-calls / Type Checks
 
@@ -128,6 +148,14 @@ Returns `true` if `obj` is an object and contains the property `key`.
 #### `isType(value, type)`
 
 Returns `true` if `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)).
+
+Supports union types by passing an array of type names:
+
+```javascript
+if (isType(value, ['string', 'number'])) {
+  // value is narrowed to string | number
+}
+```
 
 #### `isKeyWithType(obj, key, type)`
 
