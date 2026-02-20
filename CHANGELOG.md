@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.1.0](https://github.com/voxpelli/typed-utils/compare/v3.0.0...v3.1.0) (2026-02-20)
+
+
+### 🌟 Features
+
+* support arrays of types in many type checks ([#72](https://github.com/voxpelli/typed-utils/issues/72)) ([6418a2e](https://github.com/voxpelli/typed-utils/commit/6418a2e09911bcfe72360b33d24e3bbf7037fe21))
+
+
+### 📚 Documentation
+
+* add DeepWiki badge to README ([145a25c](https://github.com/voxpelli/typed-utils/commit/145a25c3ab9fdd10ddcb84954e0a15e2737a2275))
+
+
+### 🧹 Chores
+
+* update TSTyche to v6.2.0 ([#68](https://github.com/voxpelli/typed-utils/issues/68)) ([0698ed2](https://github.com/voxpelli/typed-utils/commit/0698ed2798af16a2d7d144d157fb8caf5f078189))
+
 ## [3.0.0](https://github.com/voxpelli/typed-utils/compare/v2.6.0...v3.0.0) (2026-01-29)
 
 
