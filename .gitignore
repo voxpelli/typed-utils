@@ -4,6 +4,7 @@
 /node_modules
 /.env
 /.nyc_output
+/.claude
 
 # We're a library, so please, no lock files
 /package-lock.json
