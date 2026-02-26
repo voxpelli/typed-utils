@@ -278,6 +278,10 @@ No-op function that validates at compile-time that `Superset` type is assignable
 
 No-op function that validates at compile-time that `Base` type is an empty object. Does nothing at runtime. Useful for type tests.
 
+#### `noopTypeIsNever(value)`
+
+No-op function that validates at compile-time that `value` is `never`. Does nothing at runtime. Useful for type tests and exhaustive switch/conditional checks where you want a non-throwing alternative to `assertTypeIsNever()`.
+
 ### Set
 
 #### `FrozenSet`
