@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.2.0](https://github.com/voxpelli/typed-utils/compare/v3.1.0...v3.2.0) (2026-02-26)
+
+
+### 🌟 Features
+
+* add `noopTypeIsNever` ([#73](https://github.com/voxpelli/typed-utils/issues/73)) ([78cd5d2](https://github.com/voxpelli/typed-utils/commit/78cd5d20103f5ef5334d22c820cd1b95373e2a4a))
+
+
+### 🧹 Chores
+
+* **deps:** update dependency @voxpelli/tstyche-reporters to ^1.1.0 ([#75](https://github.com/voxpelli/typed-utils/issues/75)) ([998af4a](https://github.com/voxpelli/typed-utils/commit/998af4ac25e56d83636ff2f1b6fe5b652d80b3da))
+* **deps:** update dependency c8 to v11 ([#76](https://github.com/voxpelli/typed-utils/issues/76)) ([0eba325](https://github.com/voxpelli/typed-utils/commit/0eba325b4fef527c1220b9e872472248ce497932))
+* **deps:** update linting dependencies ([#74](https://github.com/voxpelli/typed-utils/issues/74)) ([491c0e6](https://github.com/voxpelli/typed-utils/commit/491c0e6feca8681a2a624d9b37defcb5f50b466b))
+
 ## [3.1.0](https://github.com/voxpelli/typed-utils/compare/v3.0.0...v3.1.0) (2026-02-20)
 
 
