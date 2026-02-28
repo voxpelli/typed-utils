@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/voxpelli/typed-utils/compare/v3.2.0...v3.2.1) (2026-02-28)
+
+
+### 🩹 Fixes
+
+* remove TypeScript peer dependency ([#79](https://github.com/voxpelli/typed-utils/issues/79)) ([a62d99c](https://github.com/voxpelli/typed-utils/commit/a62d99ce57a8c4c2fa86baf7189c269dc313d303))
+
 ## [3.2.0](https://github.com/voxpelli/typed-utils/compare/v3.1.0...v3.2.0) (2026-02-26)
 
 
