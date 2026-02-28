@@ -48,14 +48,6 @@
     "test-ci": "run-s test:mocha",
     "test": "run-s check test:*"
   },
-  "peerDependencies": {
-    "typescript": ">=5.8.0"
-  },
-  "peerDependenciesMeta": {
-    "typescript": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@types/chai": "^4.3.20",
     "@types/mocha": "^10.0.10",
