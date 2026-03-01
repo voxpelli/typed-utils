@@ -141,6 +141,18 @@ assertObjectValueType(obj, ['string', 'number', 'boolean']); // narrows to Recor
 
 ### `is`-calls / Type Checks
 
+#### `isObject(value)`
+
+Returns `true` if `value` is a non-null, non-array object. Narrows the type to `Record<string, unknown>`, providing an index signature for property access patterns.
+
+Use this when you need indexed property access after the check (e.g., `value['key']` or `'key' in value`). For exhaustiveness narrowing in type discrimination chains, use [`isType(value, 'object')`](#istypevalue-type) instead, which narrows to `object`.
+
+```javascript
+if (isObject(value)) {
+  // value is Record<string, unknown> — can do value['key']
+}
+```
+
 #### `isObjectWithKey(obj, key)`
 
 Returns `true` if `obj` is an object and contains the property `key`.
@@ -318,6 +330,29 @@ Notes:
 ## Migration
 
 ### From 3.x to 4.x
+
+#### `LiteralTypes['object']` changed back from `Record<string, unknown>` to `object`
+
+`isType(value, 'object')` and `assertType(value, 'object')` now narrow to `object` instead of `Record<string, unknown>`, reverting to the original behavior from `@voxpelli/type-helpers`. The `Record<string, unknown>` mapping was introduced for convenience (indexed property access), but it broke exhaustiveness narrowing in the false branch — TypeScript could not eliminate concrete object types like `{ kind: string }` from unions, making `assertTypeIsNever()` fail.
+
+**If you relied on indexed property access after narrowing:**
+
+| Old pattern | Migration |
+|---|---|
+| `isType(x, 'object')` then `x['key']` | Use `isObject(x)` (new), or `isObjectWithKey(x, 'key')` |
+| `assertType(x, 'object')` then `x['key']` | Use `assertObject(x)` (unchanged, still `Record<string, unknown>`) |
+| `isType(x, 'object') && 'key' in x` | Use `isObject(x) && 'key' in x`, or `isObjectWithKey(x, 'key')` |
+
+**If you use exhaustiveness chains** — these now work correctly:
+
+```javascript
+function process(val: string | number | { key: string }): string {
+  if (isType(val, 'string')) return val;
+  if (isType(val, 'number')) return String(val);
+  if (isType(val, 'object')) return val.key;
+  assertTypeIsNever(val); // now works — val is never
+}
+```
 
 #### `LiteralTypes['function']` changed from `() => unknown` to `(...args: any[]) => unknown`
 

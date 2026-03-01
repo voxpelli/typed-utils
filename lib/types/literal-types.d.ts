@@ -20,6 +20,6 @@ export type LiteralTypes = {
   'undefined': undefined,
   'null': null,
   'array': unknown[],
-  'object': Record<string, unknown>,
+  'object': object,
   'function': (...args: any[]) => unknown,
 };
