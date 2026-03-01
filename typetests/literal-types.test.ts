@@ -37,7 +37,7 @@ describe('LiteralTypes', () => {
     expect<LiteralTypes[LiteralTypeOf<null>]>().type.toBe<null>();
     expect<LiteralTypes[LiteralTypeOf<[]>]>().type.toBe<unknown[]>();
     expect<LiteralTypes[LiteralTypeOf<{}>]>().type.toBe<Record<string, unknown>>();
-    expect<LiteralTypes[LiteralTypeOf<() => void>]>().type.toBe<() => unknown>();
+    expect<LiteralTypes[LiteralTypeOf<() => void>]>().type.toBe<(...args: any[]) => unknown>();
   });
 
   it('maps falsy values correctly', () => {
@@ -58,7 +58,7 @@ describe('isType', () => {
     // eslint-disable-next-line unicorn/no-null
     const nul: unknown = null;
     const arr: unknown = [];
-    const fn: unknown = (() => {}) as () => unknown;
+    const fn: unknown = (() => {}) as (...args: any[]) => unknown;
     const obj: unknown = {};
 
     if (isType(str, 'string')) expect(str).type.toBe<string>();
@@ -69,7 +69,7 @@ describe('isType', () => {
     if (isType(undef, 'undefined')) expect(undef).type.toBe<undefined>();
     if (isType(nul, 'null')) expect(nul).type.toBe<null>();
     if (isType(arr, 'array')) expect(arr).type.toBe<unknown[]>();
-    if (isType(fn, 'function')) expect(fn).type.toBe<() => unknown>();
+    if (isType(fn, 'function')) expect(fn).type.toBe<(...args: any[]) => unknown>();
     if (isType(obj, 'object')) expect(obj).type.toBe<Record<string, unknown>>();
   });
 
@@ -95,7 +95,7 @@ describe('assertType', () => {
     // eslint-disable-next-line unicorn/no-null
     const nul: unknown = null;
     const arr: unknown = [];
-    const fn: unknown = (() => {}) as () => unknown;
+    const fn: unknown = (() => {}) as (...args: any[]) => unknown;
     const obj: unknown = {};
 
     assertType(str, 'string');
@@ -123,7 +123,7 @@ describe('assertType', () => {
     expect(arr).type.toBe<unknown[]>();
 
     assertType(fn, 'function');
-    expect(fn).type.toBe<() => unknown>();
+    expect(fn).type.toBe<(...args: any[]) => unknown>();
 
     assertType(obj, 'object');
     expect(obj).type.toBe<Record<string, unknown>>();
@@ -179,5 +179,103 @@ describe('explainVariable', () => {
     expect(explainVariable(zero)).type.toBe<LiteralTypeOf<typeof zero>>();
     expect(explainVariable(emptyString)).type.toBe<LiteralTypeOf<typeof emptyString>>();
     expect(explainVariable(falseBool)).type.toBe<LiteralTypeOf<typeof falseBool>>();
+  });
+});
+
+// =============================================================================
+// Function type narrowing tests (issue #83)
+//
+// CONTEXT: LiteralTypes['function'] was previously mapped to `() => unknown`,
+// a zero-argument function type. This caused two problems:
+//
+// 1. CALL SIGNATURE LOSS: When using isType(x, 'function') on a value with a
+//    known callable signature (e.g., `(a: number) => string`), the narrowed
+//    type became `() => unknown`, losing all parameter info. By contrast,
+//    `typeof x === 'function'` preserves the original call signature because
+//    TypeScript has built-in narrowing for `typeof`.
+//
+// 2. ASSIGNABILITY: Not all functions extend `() => unknown`. Due to TypeScript's
+//    parameter contravariance rules, a function like `(a: number) => void` does
+//    NOT extend `() => unknown` in strict mode. This means narrowing could be
+//    unsound for functions with required parameters.
+//
+// The fix: `(...args: any[]) => unknown` accepts ALL callable types. We use
+// `any[]` for parameters (not `unknown[]`) because of contravariance — a
+// function `(a: number) => void` extends `(...args: any[]) => unknown` but
+// does NOT extend `(...args: unknown[]) => unknown`.
+// =============================================================================
+describe('isType function narrowing', () => {
+  it('should narrow to the widened function type that accepts any arguments', () => {
+    // Verify the base narrowing from unknown produces the correct widened type.
+    const fn: unknown = (() => {}) as (...args: any[]) => unknown;
+
+    if (isType(fn, 'function')) {
+      expect(fn).type.toBe<(...args: any[]) => unknown>();
+    }
+  });
+
+  it('should preserve specific callable types from unions, not widen to generic function', () => {
+    // When narrowing a union that contains a specific function type,
+    // the true branch should preserve that specific type — just like
+    // `typeof x === 'function'` does.
+    type Callback = (x: number) => string;
+    type MaybeCallback = string | Callback;
+
+    function handleCallback (val: MaybeCallback) {
+      if (isType(val, 'function')) {
+        // The specific `Callback` type should be preserved, not widened to
+        // `(...args: any[]) => unknown`. This is the same behavior as typeof.
+        expect(val).type.toBe<Callback>();
+        // Can call with the original signature
+        val(42);
+      }
+    }
+
+    expect(handleCallback).type.toBe<(val: MaybeCallback) => void>();
+  });
+
+  it('should work with assertType for function narrowing', () => {
+    const fn: unknown = (() => {}) as (...args: any[]) => unknown;
+
+    assertType(fn, 'function');
+    expect(fn).type.toBe<(...args: any[]) => unknown>();
+  });
+});
+
+// =============================================================================
+// LiteralTypeOf ordering tests
+//
+// CONTEXT: The order of checks in LiteralTypeOf matters because TypeScript
+// evaluates conditional types top-down. Functions are objects in JavaScript
+// (`typeof (() => {}) === 'function'` but also `(() => {}) instanceof Object`).
+// At the type level, `(() => void) extends object` is true.
+//
+// If the `object` check came BEFORE the `function` check in LiteralTypeOf,
+// then `LiteralTypeOf<() => void>` would incorrectly return `'object'`
+// instead of `'function'`. The array check must also come before object
+// for the same reason (`any[] extends object` is true).
+// =============================================================================
+describe('LiteralTypeOf ordering', () => {
+  it('should identify functions as function, not object', () => {
+    // Functions extend `object` at the type level, so the function check
+    // must come before the object check in the conditional chain.
+    expect<LiteralTypeOf<() => void>>().type.toBe<'function'>();
+    expect<LiteralTypeOf<(x: number) => string>>().type.toBe<'function'>();
+    expect<LiteralTypeOf<(...args: any[]) => unknown>>().type.toBe<'function'>();
+  });
+
+  it('should identify arrays as array, not object', () => {
+    // Arrays extend `object` at the type level, so the array check
+    // must come before the object check in the conditional chain.
+    expect<LiteralTypeOf<[]>>().type.toBe<'array'>();
+    expect<LiteralTypeOf<string[]>>().type.toBe<'array'>();
+    expect<LiteralTypeOf<[number, string]>>().type.toBe<'array'>();
+  });
+
+  it('should identify plain objects as object', () => {
+    // Only plain objects (not arrays, not functions) should map to 'object'.
+    expect<LiteralTypeOf<{}>>().type.toBe<'object'>();
+    expect<LiteralTypeOf<{ key: string }>>().type.toBe<'object'>();
+    expect<LiteralTypeOf<Record<string, unknown>>>().type.toBe<'object'>();
   });
 });

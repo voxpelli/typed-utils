@@ -315,6 +315,14 @@ Notes:
 * Throws eagerly on mutation attempts—no silent failures.
 * If you need deep immutability of nested values, freeze those separately; `FrozenSet` only prevents structural changes to the set itself.
 
+## Migration
+
+### From 3.x to 4.x
+
+#### `LiteralTypes['function']` changed from `() => unknown` to `(...args: any[]) => unknown`
+
+`isType(value, 'function')` and `assertType(value, 'function')` now narrow to `(...args: any[]) => unknown` instead of `() => unknown`. This is strictly more permissive — all existing code continues to work, and functions with parameters are now correctly accepted.
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
