@@ -9,6 +9,7 @@ import {
   assertOptionalKeyWithType,
   assertType,
 } from '../lib/assert.js';
+import { assertTypeIsNever } from '../lib/never.js';
 
 describe('assertType', () => {
   it('should narrow unknown to object type', () => {
@@ -259,5 +260,51 @@ describe('assertObject narrowing', () => {
 
     assertObject(value2);
     expect(value2).type.toBe<Record<string, unknown>>();
+  });
+});
+
+// =============================================================================
+// assertTypeIsNever terminal tests (issue #82)
+//
+// CONTEXT: assertTypeIsNever previously returned `void`. TypeScript's control
+// flow analysis did not recognize it as a terminal statement, so functions
+// using it for exhaustiveness still needed explicit return statements after
+// the call — defeating the ergonomic purpose of the helper.
+//
+// The fix: `@returns {never}` tells TypeScript the function always throws and
+// never returns, making all code after it unreachable.
+// =============================================================================
+describe('assertTypeIsNever as terminal statement', () => {
+  it('should make functions compile without a return after it in switch', () => {
+    // This test verifies the terminal behavior: if assertTypeIsNever
+    // returned void, this function would fail with:
+    //   "Function lacks ending return statement"
+    type Direction = 'up' | 'down' | 'left' | 'right';
+
+    function directionToVector (dir: Direction): [number, number] {
+      switch (dir) {
+      case 'up': return [0, 1];
+      case 'down': return [0, -1];
+      case 'left': return [-1, 0];
+      case 'right': return [1, 0];
+      default:
+        assertTypeIsNever(dir);
+      }
+    }
+
+    expect(directionToVector).type.toBe<(dir: Direction) => [number, number]>();
+  });
+
+  it('should make functions compile without a return after it in if-else chains', () => {
+    type Level = 'info' | 'warn' | 'error';
+
+    function levelToNumber (level: Level): number {
+      if (level === 'info') return 0;
+      if (level === 'warn') return 1;
+      if (level === 'error') return 2;
+      assertTypeIsNever(level);
+    }
+
+    expect(levelToNumber).type.toBe<(level: Level) => number>();
   });
 });

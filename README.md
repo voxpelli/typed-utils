@@ -358,6 +358,10 @@ function process(val: string | number | { key: string }): string {
 
 `isType(value, 'function')` and `assertType(value, 'function')` now narrow to `(...args: any[]) => unknown` instead of `() => unknown`. This is strictly more permissive — all existing code continues to work, and functions with parameters are now correctly accepted.
 
+#### `assertTypeIsNever` now returns `never`
+
+`assertTypeIsNever()` now has a return type of `never` instead of `void`. TypeScript recognizes it as a terminal statement (a function that never returns), so you no longer need a return statement after it in exhaustive switch/if chains.
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
