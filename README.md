@@ -362,6 +362,8 @@ function process(val: string | number | { key: string }): string {
 
 `assertTypeIsNever()` now has a return type of `never` instead of `void`. TypeScript recognizes it as a terminal statement (a function that never returns), so you no longer need a return statement after it in exhaustive switch/if chains.
 
+**`eslint-plugin-jsdoc` note:** The [`require-returns-check`](https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-returns-check.md) rule does not perform cross-function control flow analysis — it cannot know that a call to `assertTypeIsNever()` will always throw and never return. If you write a function with a `@returns` JSDoc that relies on `assertTypeIsNever()` as the terminal statement instead of a `return`, the rule may report "`@returns` declaration present but return expression not available in function." Suppress with `// eslint-disable-next-line jsdoc/require-returns-check` above the function's JSDoc block, or add an explicit `return` before the call (e.g., `return assertTypeIsNever(val)`). See [gajus/eslint-plugin-jsdoc#817](https://github.com/gajus/eslint-plugin-jsdoc/issues/817) for background.
+
 <!-- ## Used by
 
 * [`example`](https://example.com/) – used by this one to do X and Y
