@@ -1,4 +1,5 @@
 # Basic ones
+/.claude
 /coverage
 /coverage-ts
 /node_modules
