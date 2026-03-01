@@ -3,6 +3,7 @@ import { describe, it, expect } from 'tstyche';
 import type { LiteralTypeOf, LiteralTypes } from '../lib/types/literal-types.d.ts';
 import { isType } from '../lib/is.js';
 import { assertType } from '../lib/assert.js';
+import { assertTypeIsNever } from '../lib/never.js';
 import { explainVariable } from '../lib/misc.js';
 
 describe('LiteralTypeOf', () => {
@@ -36,7 +37,7 @@ describe('LiteralTypes', () => {
     expect<LiteralTypes[LiteralTypeOf<undefined>]>().type.toBe<undefined>();
     expect<LiteralTypes[LiteralTypeOf<null>]>().type.toBe<null>();
     expect<LiteralTypes[LiteralTypeOf<[]>]>().type.toBe<unknown[]>();
-    expect<LiteralTypes[LiteralTypeOf<{}>]>().type.toBe<Record<string, unknown>>();
+    expect<LiteralTypes[LiteralTypeOf<{}>]>().type.toBe<object>();
     expect<LiteralTypes[LiteralTypeOf<() => void>]>().type.toBe<(...args: any[]) => unknown>();
   });
 
@@ -70,7 +71,7 @@ describe('isType', () => {
     if (isType(nul, 'null')) expect(nul).type.toBe<null>();
     if (isType(arr, 'array')) expect(arr).type.toBe<unknown[]>();
     if (isType(fn, 'function')) expect(fn).type.toBe<(...args: any[]) => unknown>();
-    if (isType(obj, 'object')) expect(obj).type.toBe<Record<string, unknown>>();
+    if (isType(obj, 'object')) expect(obj).type.toBe<object>();
   });
 
   it('handles edge cases: falsy values', () => {
@@ -126,7 +127,7 @@ describe('assertType', () => {
     expect(fn).type.toBe<(...args: any[]) => unknown>();
 
     assertType(obj, 'object');
-    expect(obj).type.toBe<Record<string, unknown>>();
+    expect(obj).type.toBe<object>();
   });
 
   it('handles edge cases: falsy values', () => {
@@ -179,6 +180,116 @@ describe('explainVariable', () => {
     expect(explainVariable(zero)).type.toBe<LiteralTypeOf<typeof zero>>();
     expect(explainVariable(emptyString)).type.toBe<LiteralTypeOf<typeof emptyString>>();
     expect(explainVariable(falseBool)).type.toBe<LiteralTypeOf<typeof falseBool>>();
+  });
+});
+
+// =============================================================================
+// Exhaustiveness narrowing tests (issue #81)
+//
+// CONTEXT: LiteralTypes['object'] was previously mapped to Record<string, unknown>.
+// While this was convenient for property access after narrowing, it BROKE
+// exhaustiveness checking in the false branch of type guards.
+//
+// WHY: TypeScript's narrowing algorithm uses type compatibility to determine
+// what can be eliminated from the false branch. When a union member like
+// `{ kind: string }` is checked against `Record<string, unknown>`, TypeScript
+// determines that the member COULD match — but it does NOT eliminate it from
+// the false branch. This is because `Record<string, unknown>` is a structural
+// type with an index signature, and TypeScript's narrowing is conservative
+// about such types.
+//
+// With `object`, TypeScript DOES eliminate concrete object types from the false
+// branch, because `object` is a primitive-excluding type that TypeScript has
+// built-in narrowing logic for (similar to `typeof x === 'object'`).
+//
+// The fix: changing LiteralTypes['object'] from `Record<string, unknown>` to
+// `object` restores exhaustiveness behavior.
+// =============================================================================
+describe('isType exhaustiveness narrowing', () => {
+  it('should allow exhaustive narrowing with assertTypeIsNever after checking all types in a union', () => {
+    // This is the core regression test for issue #81.
+    // A union of string | number | { kind: string } should be fully narrowable
+    // using isType guards, leaving `never` in the default branch.
+    interface Tagged { kind: string; data: number }
+    type MyUnion = string | number | Tagged;
+
+    function exhaustiveCheck (item: MyUnion): string {
+      if (isType(item, 'string')) return item;
+      if (isType(item, 'number')) return String(item);
+      if (isType(item, 'object')) {
+        // After all non-object types are excluded, `item` should narrow to `Tagged`
+        return item.kind;
+      }
+      // If exhaustiveness works correctly, `item` is `never` here.
+      // With the old Record<string, unknown>, this line would fail because
+      // TypeScript couldn't eliminate Tagged from the false branch.
+      assertTypeIsNever(item);
+      return '';
+    }
+
+    expect(exhaustiveCheck).type.toBe<(item: MyUnion) => string>();
+  });
+
+  it('should narrow union members to their specific types in the true branch, not to the generic object type', () => {
+    // IMPORTANT: When narrowing a union, the true branch should preserve the
+    // specific union member type, not widen it to the LiteralTypes entry.
+    // For example, `{ kind: string }` should stay `{ kind: string }` in the
+    // true branch of isType(x, 'object'), not become `object`.
+    interface Specific { kind: string; data: number }
+    type MyUnion = string | Specific;
+
+    function checkTrueBranch (item: MyUnion) {
+      if (isType(item, 'string')) return;
+      if (isType(item, 'object')) {
+        // The true branch should preserve the specific type from the union,
+        // allowing direct property access without additional type assertions.
+        expect(item).type.toBe<Specific>();
+        expect(item.kind).type.toBe<string>();
+        expect(item.data).type.toBe<number>();
+      }
+    }
+
+    expect(checkTrueBranch).type.toBe<(item: MyUnion) => void>();
+  });
+
+  it('should work with multi-member object unions for exhaustiveness', () => {
+    // Exhaustiveness should work even when multiple object types exist in the union.
+    // All object-like members should be eliminated from the false branch of
+    // isType(x, 'object'), allowing assertTypeIsNever to succeed.
+    interface Circle { kind: 'circle'; radius: number }
+    interface Square { kind: 'square'; size: number }
+    type Shape = string | Circle | Square;
+
+    function processShape (shape: Shape): string {
+      if (isType(shape, 'string')) return shape;
+      if (isType(shape, 'object')) {
+        // Both Circle and Square should be narrowed into the true branch
+        return shape.kind;
+      }
+      assertTypeIsNever(shape);
+      return '';
+    }
+
+    expect(processShape).type.toBe<(shape: Shape) => string>();
+  });
+
+  it('should exhaust all primitive types in a complex union', () => {
+    // Verify that isType can exhaust a union containing many different
+    // LiteralTypes entries, not just the simple string | number | object case.
+    type Complex = string | number | boolean | null | undefined | { x: number };
+
+    function handleComplex (val: Complex): string {
+      if (isType(val, 'string')) return val;
+      if (isType(val, 'number')) return String(val);
+      if (isType(val, 'boolean')) return String(val);
+      if (isType(val, 'null')) return 'null';
+      if (isType(val, 'undefined')) return 'undefined';
+      if (isType(val, 'object')) return String(val.x);
+      assertTypeIsNever(val);
+      return '';
+    }
+
+    expect(handleComplex).type.toBe<(val: Complex) => string>();
   });
 });
 

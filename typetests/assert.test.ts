@@ -3,6 +3,7 @@ import { describe, it, expect } from 'tstyche';
 import {
   assertArrayOfLiteralType,
   assertKeyWithType,
+  assertObject,
   assertObjectValueType,
   assertObjectWithKey,
   assertOptionalKeyWithType,
@@ -14,7 +15,7 @@ describe('assertType', () => {
     const unknownValue: unknown = {};
 
     assertType(unknownValue, 'object');
-    expect(unknownValue).type.toBe<Record<string, unknown>>();
+    expect(unknownValue).type.toBe<object>();
   });
 
   it('should narrow string value', () => {
@@ -211,5 +212,52 @@ describe('assertObjectValueType', () => {
     const unknownValue: unknown = { x: 1, y: 2 };
 
     expect(assertObjectValueType(unknownValue, ['number', 'invalid'])).type.toRaiseError();
+  });
+});
+
+// =============================================================================
+// assertObject decoupling tests
+//
+// CONTEXT: assertObject was previously typed as:
+//   @returns {asserts obj is LiteralTypes['object']}
+// which meant its narrowing target changed whenever LiteralTypes['object'] did.
+//
+// When LiteralTypes['object'] was changed from Record<string, unknown> to object
+// (issue #81), assertObject's return type was decoupled to hardcode
+// Record<string, unknown>. This is intentional:
+//
+// WHY assertObject keeps Record<string, unknown>:
+// - assertObject's purpose is to assert something is a plain object that you
+//   can index into — e.g., `assertObject(x); x['key']` should work.
+// - `object` does NOT have an index signature, so `x['key']` would fail.
+// - Record<string, unknown> gives the index signature needed for property access.
+//
+// WHY LiteralTypes['object'] is `object` instead:
+// - `object` enables exhaustiveness narrowing in the false branch (issue #81).
+// - assertObject and isObject provide the Record<string, unknown> narrowing
+//   for users who need indexed property access.
+// =============================================================================
+describe('assertObject narrowing', () => {
+  it('should narrow to Record<string, unknown>, not object — enabling indexed property access', () => {
+    // assertObject is decoupled from LiteralTypes['object'] so it always
+    // provides Record<string, unknown>, regardless of what LiteralTypes maps to.
+    const value: unknown = {};
+
+    assertObject(value);
+    expect(value).type.toBe<Record<string, unknown>>();
+  });
+
+  it('should contrast with assertType which narrows to object from LiteralTypes', () => {
+    // assertType(x, 'object') narrows to LiteralTypes['object'] = object.
+    // assertObject(x) narrows to Record<string, unknown> (hardcoded).
+    // Users who need indexed access after asserting should use assertObject.
+    const value1: unknown = {};
+    const value2: unknown = {};
+
+    assertType(value1, 'object');
+    expect(value1).type.toBe<object>();
+
+    assertObject(value2);
+    expect(value2).type.toBe<Record<string, unknown>>();
   });
 });
