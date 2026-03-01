@@ -1,5 +1,28 @@
 # Changelog
 
+## [4.0.0](https://github.com/voxpelli/typed-utils/compare/v3.2.1...v4.0.0) (2026-03-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* `assertTypeIsNever()` now has return type `never` instead of `void`. Existing code continues to work; the only observable change is that return statements after it become unnecessary.
+* `isType(x, 'object')` and `assertType(x, 'object')` now narrow to `object` instead of `Record<string, unknown>`. Use `isObject(x)` or `assertObject(x)` if you need indexed property access after narrowing.
+
+### 🌟 Features
+
+* widen LiteralTypes['function'] to accept arguments ([5c2bf8b](https://github.com/voxpelli/typed-utils/commit/5c2bf8b72b647fde72c122fc1bbf7278869e86a4)), closes [#83](https://github.com/voxpelli/typed-utils/issues/83)
+
+
+### 🩹 Fixes
+
+* change LiteralTypes['object'] back to `object` for exhaustiveness ([74ef1b8](https://github.com/voxpelli/typed-utils/commit/74ef1b81f82a82bb5ca840cc7237383b7a27497b)), closes [#81](https://github.com/voxpelli/typed-utils/issues/81)
+* make assertTypeIsNever return `never` for terminal behavior ([dc6e69c](https://github.com/voxpelli/typed-utils/commit/dc6e69cf0eb50b400e17e11fca9deb792d3701cf)), closes [#82](https://github.com/voxpelli/typed-utils/issues/82)
+
+
+### 🧹 Chores
+
+* add .claude to .gitignore ([78f2c59](https://github.com/voxpelli/typed-utils/commit/78f2c59c1644bb8be2d1b122eeafaffdeca2f611))
+
 ## [3.2.1](https://github.com/voxpelli/typed-utils/compare/v3.2.0...v3.2.1) (2026-02-28)
 
 
