@@ -56,7 +56,7 @@ Similar to `Array.isArray()` but also checks that the array only contains values
 
 Alias: ~~`isUnknownArray(value)`~~ (deprecated)
 
-Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
+Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness in a positive type narrowing scenario (`if (typesafeIsArray(value))`) but doesn't work as well for negative type narrowing (prefer `if (!Array.isArray(value))` then).
 
 #### `guardedArrayIncludes(collection, searchElement)`
 
