@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.0.1](https://github.com/voxpelli/typed-utils/compare/v4.0.0...v4.0.1) (2026-03-02)
+
+
+### 📚 Documentation
+
+* add eslint-plugin-jsdoc note to assertTypeIsNever migration ([6663e2a](https://github.com/voxpelli/typed-utils/commit/6663e2a8dadc715511acd089c5dbc066ff5ea649))
+* update `typesafeIsArray` description ([2ccc8a2](https://github.com/voxpelli/typed-utils/commit/2ccc8a222edc5940064c28078e7b664abeb8258c))
+
 ## [4.0.0](https://github.com/voxpelli/typed-utils/compare/v3.2.1...v4.0.0) (2026-03-01)
 
 
