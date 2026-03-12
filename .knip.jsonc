@@ -4,9 +4,7 @@
     "index.d.ts"
   ],
   "ignore": ["**/typetests/**/*.test.ts"],
-  "ignoreFiles": [
-    "tstyche-mocha-reporter.js"
-  ],
+  "ignoreBinaries": ["jq"],
   "ignoreDependencies": [
     "@voxpelli/tstyche-reporters"
   ]
