@@ -91,9 +91,19 @@ const normalized = ensureArray(input); // always string[]
 
 Custom error class thrown by all assertion helpers in this module. You can catch this error type to specifically handle assertion failures from these utilities.
 
+#### `TypeHelpersAssertionEqualityError`
+
+Custom error class thrown by equality assertions such as [`assertStrictEqual(actual, expected, [message])`](#assertstrictequalactual-expected-message).
+
 #### `assert(condition, message)`
 
 Throws a `TypeHelpersAssertionError` if `condition` is falsy. Used internally by other assertion helpers, but can also be used directly for custom runtime assertions.
+
+#### `assertStrictEqual(actual, expected, [message])`
+
+Asserts strict equality (`===`) between `actual` and `expected`.
+
+If values differ, throws a `TypeHelpersAssertionEqualityError` with `actual` / `expected` metadata that many reporters can use for diff rendering.
 
 #### `assertObjectWithKey(obj, key)`
 
@@ -113,6 +123,10 @@ assertType(value, ['string', 'boolean', 'null']); // narrows to string | boolean
 #### `assertKeyWithType(obj, key, type)`
 
 Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is of the given `type`.
+
+#### `assertKeyWithValue(obj, key, value)`
+
+Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is strictly equal to the given `value`.
 
 #### `assertOptionalKeyWithType(obj, key, type)`
 
@@ -172,6 +186,10 @@ if (isType(value, ['string', 'number'])) {
 #### `isKeyWithType(obj, key, type)`
 
 Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]` is of the given `type`.
+
+#### `isKeyWithValue(obj, key, value)`
+
+Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]` is strictly equal to the given `value`.
 
 #### `isOptionalKeyWithType(obj, key, type)`
 

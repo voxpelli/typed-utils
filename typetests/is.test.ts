@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'tstyche';
 
 import {
+  isKeyWithValue,
   isObject,
   isObjectWithKey,
   isKeyWithType,
@@ -100,6 +101,44 @@ describe('isKeyWithType', () => {
 
     if (isKeyWithType(objWithoutKey1, 'foo', 'string')) {
       expect(objWithoutKey1).type.toBe<{ bar: boolean } & Record<'foo', string>>();
+    }
+  });
+});
+
+describe('isKeyWithValue', () => {
+  it('should narrow unknown object with key and widened string value for inline string literals', () => {
+    const unknownValue: unknown = {};
+    const key = 'foo';
+
+    if (isKeyWithValue(unknownValue, key, 'bar')) {
+      expect(unknownValue).type.toBe<Record<'foo', string>>();
+    }
+  });
+
+  it('should preserve a literal-typed value when provided through a literal-typed variable', () => {
+    const unknownValue: unknown = {};
+    const key = 'foo';
+    const value: 'bar' = 'bar';
+
+    if (isKeyWithValue(unknownValue, key, value)) {
+      expect(unknownValue).type.toBe<Record<'foo', 'bar'>>();
+    }
+  });
+
+  it('should narrow when key is missing with widened string value', () => {
+    const objWithoutKey1 = { bar: true };
+
+    if (isKeyWithValue(objWithoutKey1, 'foo', 'bar')) {
+      expect(objWithoutKey1).type.toBe<{ bar: boolean } & Record<'foo', string>>();
+    }
+  });
+
+  it('should preserve literal value when key is missing and value variable is literal-typed', () => {
+    const objWithoutKey1 = { bar: true };
+    const value: 'bar' = 'bar';
+
+    if (isKeyWithValue(objWithoutKey1, 'foo', value)) {
+      expect(objWithoutKey1).type.toBe<{ bar: boolean } & Record<'foo', 'bar'>>();
     }
   });
 });

@@ -2,14 +2,50 @@ import { describe, it, expect } from 'tstyche';
 
 import {
   assertArrayOfLiteralType,
+  assertKeyWithValue,
   assertKeyWithType,
   assertObject,
   assertObjectValueType,
   assertObjectWithKey,
   assertOptionalKeyWithType,
+  assertStrictEqual,
   assertType,
+  TypeHelpersAssertionEqualityError,
 } from '../lib/assert.js';
 import { assertTypeIsNever } from '../lib/never.js';
+
+describe('assertStrictEqual', () => {
+  it('should narrow unknown actual to expected literal type', () => {
+    const value: unknown = 'foo';
+
+    assertStrictEqual(value, 'foo');
+    expect(value).type.toBe<'foo'>();
+  });
+
+  it('should narrow to the expected union type', () => {
+    const value: unknown = Math.random() > 0.5 ? 'foo' : 123;
+    const expected: string | number = Math.random() > 0.5 ? 'foo' : 123;
+
+    assertStrictEqual(value, expected);
+    expect(value).type.toBe<string | number>();
+  });
+});
+
+describe('TypeHelpersAssertionEqualityError', () => {
+  it('should expose typed metadata fields', () => {
+    const actual: number = 1;
+    const expected: number = 2;
+    const operator: 'strictEqual' = 'strictEqual';
+
+    const error = new TypeHelpersAssertionEqualityError(actual, expected, operator, 'Mismatch');
+
+    expect(error.actual).type.toBe<number>();
+    expect(error.expected).type.toBe<number>();
+    expect(error.operator).type.toBe<'strictEqual'>();
+    expect(error.diff).type.toBe<'simple' | 'full'>();
+    expect(error.showDiff).type.toBe<boolean>();
+  });
+});
 
 describe('assertType', () => {
   it('should narrow unknown to object type', () => {
@@ -94,6 +130,40 @@ describe('assertKeyWithType', () => {
 
     assertKeyWithType(objWithoutKey1, 'foo', 'string');
     expect(objWithoutKey1).type.toBe<{ bar: boolean } & Record<'foo', string>>();
+  });
+});
+
+describe('assertKeyWithValue', () => {
+  it('should narrow unknown object with key and widened string value for inline string literals', () => {
+    const unknownValue: unknown = {};
+    const key = 'foo';
+
+    assertKeyWithValue(unknownValue, key, 'bar');
+    expect(unknownValue).type.toBe<Record<'foo', string>>();
+  });
+
+  it('should preserve a literal-typed value when provided through a literal-typed variable', () => {
+    const unknownValue: unknown = {};
+    const key = 'foo';
+    const value: 'bar' = 'bar';
+
+    assertKeyWithValue(unknownValue, key, value);
+    expect(unknownValue).type.toBe<Record<'foo', 'bar'>>();
+  });
+
+  it('should add key with widened string value when key is missing', () => {
+    const objWithoutKey1 = { bar: true };
+
+    assertKeyWithValue(objWithoutKey1, 'foo', 'bar');
+    expect(objWithoutKey1).type.toBe<{ bar: boolean } & Record<'foo', string>>();
+  });
+
+  it('should add key with preserved literal value when the value variable is literal-typed', () => {
+    const objWithoutKey1 = { bar: true };
+    const value: 'bar' = 'bar';
+
+    assertKeyWithValue(objWithoutKey1, 'foo', value);
+    expect(objWithoutKey1).type.toBe<{ bar: boolean } & Record<'foo', 'bar'>>();
   });
 });
 
