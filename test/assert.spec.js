@@ -5,12 +5,15 @@ import chai from 'chai';
 import {
   assert,
   assertArrayOfLiteralType,
+  assertKeyWithValue,
+  assertStrictEqual,
   assertObject,
   assertObjectValueType,
   assertObjectWithKey,
   assertKeyWithType,
   assertOptionalKeyWithType,
   assertType,
+  TypeHelpersAssertionEqualityError,
   TypeHelpersAssertionError,
 } from '../lib/assert.js';
 
@@ -32,6 +35,21 @@ describe('assert', () => {
     });
   });
 
+  describe('TypeHelpersAssertionEqualityError', () => {
+    it('should be an Error instance with interoperable metadata fields', () => {
+      const error = new TypeHelpersAssertionEqualityError(1, 2, 'strictEqual', 'test');
+
+      expect(error).to.be.instanceOf(Error);
+      expect(error.name).to.equal('TypeHelpersAssertionEqualityError');
+      expect(error.message).to.equal('test');
+      expect(error.actual).to.equal(1);
+      expect(error.expected).to.equal(2);
+      expect(error.operator).to.equal('strictEqual');
+      expect(error.diff).to.equal('simple');
+      expect(error.showDiff).to.equal(true);
+    });
+  });
+
   describe('assert()', () => {
     it('should not throw when condition is true', () => {
       expect(() => assert(true, 'should not throw')).to.not.throw();
@@ -39,6 +57,48 @@ describe('assert', () => {
 
     it('should throw TypeHelpersAssertionError when condition is false', () => {
       expect(() => assert(false, 'test message')).to.throw(TypeHelpersAssertionError, 'test message');
+    });
+  });
+
+  describe('assertStrictEqual()', () => {
+    it('should not throw when values are strictly equal', () => {
+      expect(() => assertStrictEqual('foo', 'foo')).to.not.throw();
+      expect(() => assertStrictEqual(123, 123)).to.not.throw();
+    });
+
+    it('should throw TypeHelpersAssertionEqualityError with expected metadata when unequal', () => {
+      let thrownError;
+
+      try {
+        assertStrictEqual(1, 2);
+      } catch (err) {
+        thrownError = err;
+      }
+
+      expect(thrownError).to.be.instanceOf(TypeHelpersAssertionEqualityError);
+      const equalityError = /** @type {TypeHelpersAssertionEqualityError} */ (thrownError);
+
+      expect(equalityError.actual).to.equal(1);
+      expect(equalityError.expected).to.equal(2);
+      expect(equalityError.operator).to.equal('strictEqual');
+      expect(equalityError.diff).to.equal('simple');
+      expect(equalityError.showDiff).to.equal(true);
+      expect(equalityError.stack).to.include('test/assert.spec.js');
+    });
+
+    it('should use provided custom message', () => {
+      let thrownError;
+
+      try {
+        assertStrictEqual(1, 2, 'Custom message');
+      } catch (err) {
+        thrownError = err;
+      }
+
+      expect(thrownError).to.be.instanceOf(TypeHelpersAssertionEqualityError);
+      const equalityError = /** @type {TypeHelpersAssertionEqualityError} */ (thrownError);
+
+      expect(equalityError.message).to.equal('Custom message');
     });
   });
 
@@ -103,6 +163,21 @@ describe('assert', () => {
 
     it('should throw when key exists but has wrong type', () => {
       expect(() => assertKeyWithType({ foo: 'bar' }, 'foo', 'number')).to.throw(TypeHelpersAssertionError, 'Expected key "foo" to have type "number"');
+    });
+  });
+
+  describe('assertKeyWithValue()', () => {
+    it('should not throw when key exists with matching value', () => {
+      expect(() => assertKeyWithValue({ foo: 'bar' }, 'foo', 'bar')).to.not.throw();
+      expect(() => assertKeyWithValue({ num: 123 }, 'num', 123)).to.not.throw();
+    });
+
+    it('should throw when key does not exist', () => {
+      expect(() => assertKeyWithValue({ foo: 'bar' }, 'baz', 'bar')).to.throw(TypeHelpersAssertionError, 'Expected key "baz" to exist');
+    });
+
+    it('should throw when key exists but has wrong value', () => {
+      expect(() => assertKeyWithValue({ foo: 'bar' }, 'foo', 'baz')).to.throw(TypeHelpersAssertionError, 'Expected key "foo" to be strictly equal to provided value');
     });
   });
 
