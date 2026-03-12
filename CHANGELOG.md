@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.1.0](https://github.com/voxpelli/typed-utils/compare/v4.0.0...v4.1.0) (2026-03-12)
+
+
+### 🌟 Features
+
+* add `assertKeyWithValue` / `isKeyWithValue` ([ac794ed](https://github.com/voxpelli/typed-utils/commit/ac794ed770edb60d9b332f63c0c171d2c391a74b))
+
+
+### 📚 Documentation
+
+* add eslint-plugin-jsdoc note to assertTypeIsNever migration ([6663e2a](https://github.com/voxpelli/typed-utils/commit/6663e2a8dadc715511acd089c5dbc066ff5ea649))
+* update `typesafeIsArray` description ([2ccc8a2](https://github.com/voxpelli/typed-utils/commit/2ccc8a222edc5940064c28078e7b664abeb8258c))
+
+
+### 🧹 Chores
+
+* **deps:** update dev dependencies ([90eaa85](https://github.com/voxpelli/typed-utils/commit/90eaa855496de750f3db891c678381c1e74c63af))
+
 ## [4.0.0](https://github.com/voxpelli/typed-utils/compare/v3.2.1...v4.0.0) (2026-03-01)
 
 
