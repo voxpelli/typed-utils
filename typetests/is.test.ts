@@ -105,6 +105,53 @@ describe('isKeyWithType', () => {
   });
 });
 
+describe('isKeyWithType with array of types', () => {
+  it('should narrow to union type', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    if (isKeyWithType(unknownValue, 'x', ['string', 'number'])) {
+      expect(unknownValue).type.toBe<Record<'x', string | number>>();
+    }
+  });
+
+  it('should narrow unknown to multiple type union', () => {
+    const unknownValue: unknown = { x: true };
+
+    if (isKeyWithType(unknownValue, 'x', ['string', 'number', 'boolean'])) {
+      expect(unknownValue).type.toBe<Record<'x', string | number | boolean>>();
+    }
+  });
+
+  it('should work with single-element array', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    if (isKeyWithType(unknownValue, 'x', ['string'])) {
+      expect(unknownValue).type.toBe<Record<'x', string>>();
+    }
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = { x: 42 };
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    if (isKeyWithType(unknownValue, 'x', types)) {
+      expect(unknownValue).type.toBe<Record<'x', string | number>>();
+    }
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    expect(isKeyWithType(unknownValue, 'x', 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = { x: 42 };
+
+    expect(isKeyWithType(unknownValue, 'x', ['string', 'invalid'])).type.toRaiseError();
+  });
+});
+
 describe('isKeyWithValue', () => {
   it('should narrow unknown object with key and widened string value for inline string literals', () => {
     const unknownValue: unknown = {};
@@ -166,6 +213,63 @@ describe('isOptionalKeyWithType', () => {
 
     if (isOptionalKeyWithType(objWithUndefined, 'foo', 'string')) {
       expect(objWithUndefined).type.toBe<{ bar: boolean; foo: undefined; } & Partial<Record<'foo', string>>>();
+    }
+  });
+});
+
+describe('isOptionalKeyWithType with array of types', () => {
+  it('should narrow to union type', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    if (isOptionalKeyWithType(unknownValue, 'x', ['string', 'number'])) {
+      expect(unknownValue).type.toBe<Partial<Record<'x', string | number>>>();
+    }
+  });
+
+  it('should narrow unknown to multiple type union', () => {
+    const unknownValue: unknown = { x: true };
+
+    if (isOptionalKeyWithType(unknownValue, 'x', ['string', 'number', 'boolean'])) {
+      expect(unknownValue).type.toBe<Partial<Record<'x', string | number | boolean>>>();
+    }
+  });
+
+  it('should work with single-element array', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    if (isOptionalKeyWithType(unknownValue, 'x', ['string'])) {
+      expect(unknownValue).type.toBe<Partial<Record<'x', string>>>();
+    }
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = { x: 42 };
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    if (isOptionalKeyWithType(unknownValue, 'x', types)) {
+      expect(unknownValue).type.toBe<Partial<Record<'x', string | number>>>();
+    }
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    expect(isOptionalKeyWithType(unknownValue, 'x', 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = { x: 42 };
+
+    expect(isOptionalKeyWithType(unknownValue, 'x', ['string', 'invalid'])).type.toRaiseError();
+  });
+
+  it('should work with null as an allowed type', () => {
+    // eslint-disable-next-line unicorn/no-null
+    const unknownValue: unknown = { x: null };
+
+    // eslint-disable-next-line unicorn/no-null
+    if (isOptionalKeyWithType(unknownValue, 'x', ['string', 'null'])) {
+      expect(unknownValue).type.toBe<Partial<Record<'x', string | null>>>();
     }
   });
 });

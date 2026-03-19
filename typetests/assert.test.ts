@@ -133,6 +133,49 @@ describe('assertKeyWithType', () => {
   });
 });
 
+describe('assertKeyWithType with array of types', () => {
+  it('should narrow to union type', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    assertKeyWithType(unknownValue, 'x', ['string', 'number']);
+    expect(unknownValue).type.toBe<Record<'x', string | number>>();
+  });
+
+  it('should narrow unknown to multiple type union', () => {
+    const unknownValue: unknown = { x: true };
+
+    assertKeyWithType(unknownValue, 'x', ['string', 'number', 'boolean']);
+    expect(unknownValue).type.toBe<Record<'x', string | number | boolean>>();
+  });
+
+  it('should work with single-element array', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    assertKeyWithType(unknownValue, 'x', ['string']);
+    expect(unknownValue).type.toBe<Record<'x', string>>();
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = { x: 42 };
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    assertKeyWithType(unknownValue, 'x', types);
+    expect(unknownValue).type.toBe<Record<'x', string | number>>();
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    expect(assertKeyWithType(unknownValue, 'x', 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = { x: 42 };
+
+    expect(assertKeyWithType(unknownValue, 'x', ['string', 'invalid'])).type.toRaiseError();
+  });
+});
+
 describe('assertKeyWithValue', () => {
   it('should narrow unknown object with key and widened string value for inline string literals', () => {
     const unknownValue: unknown = {};
@@ -181,6 +224,58 @@ describe('assertOptionalKeyWithType', () => {
 
     assertOptionalKeyWithType(objWithoutKey, 'foo', 'string');
     expect(objWithoutKey).type.toBe<{ bar: boolean } & Partial<Record<'foo', string>>>();
+  });
+});
+
+describe('assertOptionalKeyWithType with array of types', () => {
+  it('should narrow to union type', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    assertOptionalKeyWithType(unknownValue, 'x', ['string', 'number']);
+    expect(unknownValue).type.toBe<Partial<Record<'x', string | number>>>();
+  });
+
+  it('should narrow unknown to multiple type union', () => {
+    const unknownValue: unknown = { x: true };
+
+    assertOptionalKeyWithType(unknownValue, 'x', ['string', 'number', 'boolean']);
+    expect(unknownValue).type.toBe<Partial<Record<'x', string | number | boolean>>>();
+  });
+
+  it('should work with single-element array', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    assertOptionalKeyWithType(unknownValue, 'x', ['string']);
+    expect(unknownValue).type.toBe<Partial<Record<'x', string>>>();
+  });
+
+  it('should work with regular array of types', () => {
+    const unknownValue: unknown = { x: 42 };
+    const types: ('string' | 'number')[] = ['string', 'number'];
+
+    assertOptionalKeyWithType(unknownValue, 'x', types);
+    expect(unknownValue).type.toBe<Partial<Record<'x', string | number>>>();
+  });
+
+  it('should raise error for invalid type literal', () => {
+    const unknownValue: unknown = { x: 'test' };
+
+    expect(assertOptionalKeyWithType(unknownValue, 'x', 'invalid')).type.toRaiseError();
+  });
+
+  it('should raise error for array with invalid type literal', () => {
+    const unknownValue: unknown = { x: 42 };
+
+    expect(assertOptionalKeyWithType(unknownValue, 'x', ['string', 'invalid'])).type.toRaiseError();
+  });
+
+  it('should work with null as an allowed type', () => {
+    // eslint-disable-next-line unicorn/no-null
+    const unknownValue: unknown = { x: null };
+
+    // eslint-disable-next-line unicorn/no-null
+    assertOptionalKeyWithType(unknownValue, 'x', ['string', 'null']);
+    expect(unknownValue).type.toBe<Partial<Record<'x', string | null>>>();
   });
 });
 

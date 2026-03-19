@@ -297,4 +297,81 @@ describe('assert', () => {
       expect(() => assertObjectValueType({ x: 1, y: undefined }, ['string', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "string", "boolean"');
     });
   });
+
+  describe('assertKeyWithType() with array of types', () => {
+    it('should not throw when value matches any allowed type', () => {
+      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.not.throw();
+      expect(() => assertKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.not.throw();
+      expect(() => assertKeyWithType({ x: true }, 'x', ['boolean', 'number'])).to.not.throw();
+    });
+
+    it('should throw when value matches none of the allowed types', () => {
+      expect(() => assertKeyWithType({ x: true }, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "string", "number"');
+      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "number", "boolean"');
+    });
+
+    it('should throw when key does not exist', () => {
+      expect(() => assertKeyWithType({ y: 'hello' }, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to exist in object');
+    });
+
+    it('should throw when object is not an object', () => {
+      expect(() => assertKeyWithType(undefined, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      expect(() => assertKeyWithType('not an object', 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
+    });
+
+    it('should work with single-element array', () => {
+      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string'])).to.not.throw();
+      expect(() => assertKeyWithType({ x: 42 }, 'x', ['string'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "string"');
+    });
+
+    // eslint-disable-next-line unicorn/no-null
+    it('should work with null as an allowed type', () => {
+      // eslint-disable-next-line unicorn/no-null
+      expect(() => assertKeyWithType({ x: null }, 'x', ['string', 'null'])).to.not.throw();
+      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.not.throw();
+      // eslint-disable-next-line unicorn/no-null
+      expect(() => assertKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "number", "boolean"');
+    });
+  });
+
+  describe('assertOptionalKeyWithType() with array of types', () => {
+    it('should not throw when key is absent', () => {
+      expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'number'])).to.not.throw();
+    });
+
+    it('should not throw when key exists with value matching any allowed type', () => {
+      expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.not.throw();
+      expect(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.not.throw();
+    });
+
+    it('should not throw when key exists and is undefined', () => {
+      expect(() => assertOptionalKeyWithType({ x: undefined }, 'x', ['string', 'number'])).to.not.throw();
+    });
+
+    it('should throw when key exists with value matching none of the allowed types', () => {
+      expect(() => assertOptionalKeyWithType({ x: true }, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string", "number"');
+      expect(() => assertOptionalKeyWithType({ x: Symbol('sym') }, 'x', ['string', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string", "boolean"');
+    });
+
+    it('should throw when object is not an object', () => {
+      expect(() => assertOptionalKeyWithType(undefined, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      expect(() => assertOptionalKeyWithType('not an object', 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
+    });
+
+    it('should work with single-element array', () => {
+      expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string'])).to.not.throw();
+      expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string'])).to.not.throw();
+      expect(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string"');
+    });
+
+    // eslint-disable-next-line unicorn/no-null
+    it('should work with null as an allowed type', () => {
+      // eslint-disable-next-line unicorn/no-null
+      expect(() => assertOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.not.throw();
+      expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.not.throw();
+      expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null'])).to.not.throw();
+      // eslint-disable-next-line unicorn/no-null
+      expect(() => assertOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "number", "boolean"');
+    });
+  });
 });
