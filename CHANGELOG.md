@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/voxpelli/typed-utils/compare/v4.1.0...v4.2.0) (2026-03-19)
+
+
+### 🌟 Features
+
+* allow array of types in `*KeyWithType` ([#89](https://github.com/voxpelli/typed-utils/issues/89)) ([df4a1bf](https://github.com/voxpelli/typed-utils/commit/df4a1bfe9eece9201c9892b5c2a56b2a76524c1f))
+
 ## [4.1.0](https://github.com/voxpelli/typed-utils/compare/v4.0.0...v4.1.0) (2026-03-12)
 
 
