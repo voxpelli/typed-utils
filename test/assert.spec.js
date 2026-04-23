@@ -1,17 +1,17 @@
 /* eslint-disable unicorn/no-null, unicorn/no-useless-undefined */
-import { describe, it } from 'mocha';
 import chai from 'chai';
+import { describe, it } from 'mocha';
 
 import {
   assert,
   assertArrayOfLiteralType,
+  assertKeyWithType,
   assertKeyWithValue,
-  assertStrictEqual,
   assertObject,
   assertObjectValueType,
   assertObjectWithKey,
-  assertKeyWithType,
   assertOptionalKeyWithType,
+  assertStrictEqual,
   assertType,
   TypeHelpersAssertionEqualityError,
   TypeHelpersAssertionError,
@@ -324,12 +324,10 @@ describe('assert', () => {
       expect(() => assertKeyWithType({ x: 42 }, 'x', ['string'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "string"');
     });
 
-    // eslint-disable-next-line unicorn/no-null
     it('should work with null as an allowed type', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(() => assertKeyWithType({ x: null }, 'x', ['string', 'null'])).to.not.throw();
       expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.not.throw();
-      // eslint-disable-next-line unicorn/no-null
+
       expect(() => assertKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "number", "boolean"');
     });
   });
@@ -364,13 +362,11 @@ describe('assert', () => {
       expect(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string"');
     });
 
-    // eslint-disable-next-line unicorn/no-null
     it('should work with null as an allowed type', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(() => assertOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.not.throw();
       expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.not.throw();
       expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null'])).to.not.throw();
-      // eslint-disable-next-line unicorn/no-null
+
       expect(() => assertOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "number", "boolean"');
     });
   });

@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'tstyche';
+import { describe, expect, it } from 'tstyche';
 
-import type { LiteralTypeOf, LiteralTypes } from '../lib/types/literal-types.d.ts';
-import { isType } from '../lib/is.js';
 import { assertType } from '../lib/assert.js';
-import { assertTypeIsNever } from '../lib/never.js';
+import { isType } from '../lib/is.js';
 import { explainVariable } from '../lib/misc.js';
+import { assertTypeIsNever } from '../lib/never.js';
+import type { LiteralTypeOf, LiteralTypes } from '../lib/types/literal-types.d.ts';
 
 describe('LiteralTypeOf', () => {
   it('correctly identifies all core types', () => {

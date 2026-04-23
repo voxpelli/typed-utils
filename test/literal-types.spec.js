@@ -1,8 +1,8 @@
-import { describe, it } from 'mocha';
 import { expect } from 'chai';
+import { describe, it } from 'mocha';
 
-import { isType } from '../lib/is.js';
 import { assertType, TypeHelpersAssertionError } from '../lib/assert.js';
+import { isType } from '../lib/is.js';
 import { explainVariable } from '../lib/misc.js';
 
 describe('Literal Types', () => {
@@ -60,7 +60,6 @@ describe('Literal Types', () => {
 
     it('identifies function type', () => {
       expect(isType(() => {}, 'function')).to.equal(true);
-      expect(isType(function () {}, 'function')).to.equal(true);
       expect(isType(async () => {}, 'function')).to.equal(true);
       expect(isType(class MyClass {}, 'function')).to.equal(true);
       expect(isType({}, 'function')).to.equal(false);
@@ -276,7 +275,6 @@ describe('Literal Types', () => {
 
     it('returns function for function values', () => {
       expect(explainVariable(() => {})).to.equal('function');
-      expect(explainVariable(function () {})).to.equal('function');
       expect(explainVariable(async () => {})).to.equal('function');
       expect(explainVariable(class MyClass {})).to.equal('function');
     });

@@ -1,7 +1,7 @@
-import { describe, it } from 'mocha';
 import chai from 'chai';
+import { describe, it } from 'mocha';
 
-import { isKeyWithValue, isKeyWithType, isOptionalKeyWithType } from '../lib/is.js';
+import { isKeyWithType, isKeyWithValue, isOptionalKeyWithType } from '../lib/is.js';
 
 const { expect } = chai;
 
@@ -47,7 +47,6 @@ describe('is', () => {
       expect(isKeyWithType('not an object', 'x', ['string', 'number'])).to.equal(false);
     });
 
-    // eslint-disable-next-line unicorn/no-null
     it('should work with null as an allowed type', () => {
       // eslint-disable-next-line unicorn/no-null
       expect(isKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
@@ -87,7 +86,6 @@ describe('is', () => {
       expect(isOptionalKeyWithType({ x: 42 }, 'x', ['string'])).to.equal(false);
     });
 
-    // eslint-disable-next-line unicorn/no-null
     it('should work with null as an allowed type', () => {
       // eslint-disable-next-line unicorn/no-null
       expect(isOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);

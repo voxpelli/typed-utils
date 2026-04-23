@@ -1,14 +1,14 @@
-import { describe, it, expect } from 'tstyche';
+import { describe, expect, it } from 'tstyche';
 
+import { assertTypeIsNever } from '../lib/never.js';
 import {
+  isKeyWithType,
   isKeyWithValue,
   isObject,
   isObjectWithKey,
-  isKeyWithType,
   isOptionalKeyWithType,
   isType,
 } from '../lib/is.js';
-import { assertTypeIsNever } from '../lib/never.js';
 
 describe('isType', () => {
   it('should narrow unknown to object type', () => {
@@ -267,7 +267,6 @@ describe('isOptionalKeyWithType with array of types', () => {
     // eslint-disable-next-line unicorn/no-null
     const unknownValue: unknown = { x: null };
 
-    // eslint-disable-next-line unicorn/no-null
     if (isOptionalKeyWithType(unknownValue, 'x', ['string', 'null'])) {
       expect(unknownValue).type.toBe<Partial<Record<'x', string | null>>>();
     }

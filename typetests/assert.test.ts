@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'tstyche';
+import { describe, expect, it } from 'tstyche';
 
+import { assertTypeIsNever } from '../lib/never.js';
 import {
   assertArrayOfLiteralType,
-  assertKeyWithValue,
   assertKeyWithType,
+  assertKeyWithValue,
   assertObject,
   assertObjectValueType,
   assertObjectWithKey,
@@ -12,7 +13,6 @@ import {
   assertType,
   TypeHelpersAssertionEqualityError,
 } from '../lib/assert.js';
-import { assertTypeIsNever } from '../lib/never.js';
 
 describe('assertStrictEqual', () => {
   it('should narrow unknown actual to expected literal type', () => {
@@ -273,7 +273,6 @@ describe('assertOptionalKeyWithType with array of types', () => {
     // eslint-disable-next-line unicorn/no-null
     const unknownValue: unknown = { x: null };
 
-    // eslint-disable-next-line unicorn/no-null
     assertOptionalKeyWithType(unknownValue, 'x', ['string', 'null']);
     expect(unknownValue).type.toBe<Partial<Record<'x', string | null>>>();
   });
