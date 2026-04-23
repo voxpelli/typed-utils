@@ -199,6 +199,21 @@ Returns `true` if `obj` is an object and either does not contain the property `k
 
 Runtime guard that returns `true` when `value` is a valid `PropertyKey` (`string | number | symbol`). Used internally by `hasOwn()` helpers; exported for external guard composition.
 
+### Getters
+
+#### `getValueOfKeyWithType(obj, key, type)`
+
+Returns `obj[key]` when `obj` is an object, contains the property `key`, and the value at that key is of the given `type`. Returns `undefined` otherwise.
+
+Supports union types by passing an array of type names:
+
+```javascript
+const value = getValueOfKeyWithType({ count: 1 }, 'count', ['string', 'number']);
+// value: string | number | undefined
+```
+
+Useful when you want to both validate and retrieve a typed property in one step, without first calling [`isKeyWithType()`](#iskeywithtypeobj-key-type).
+
 ### Miscellaneous
 
 #### `explainVariable(value)`
