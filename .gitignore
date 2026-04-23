@@ -1,5 +1,7 @@
 # Basic ones
 /.claude
+/CLAUDE.md
+/UPSTREAM-*.md
 /coverage
 /coverage-ts
 /node_modules
