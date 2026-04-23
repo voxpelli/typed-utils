@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.0.0](https://github.com/voxpelli/typed-utils/compare/v4.3.0...v5.0.0) (2026-04-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* require node >=20.19.0 / TS >=5.9
+
+### 🧹 Chores
+
+* **deps:** update linting ([c365951](https://github.com/voxpelli/typed-utils/commit/c3659518901ce100c3f959ec88f356fdb3e1bef7))
+* require node &gt;=20.19.0 / TS &gt;=5.9 ([d8533bc](https://github.com/voxpelli/typed-utils/commit/d8533bc00028c37c305411366ba6db5bcc3b3159))
+
 ## [4.3.0](https://github.com/voxpelli/typed-utils/compare/v4.2.0...v4.3.0) (2026-04-23)
 
 
