@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.0](https://github.com/voxpelli/typed-utils/compare/v4.2.0...v4.3.0) (2026-04-23)
+
+
+### 🌟 Features
+
+* add `getValueOfKeyWithType()` ([#92](https://github.com/voxpelli/typed-utils/issues/92)) ([dd872bb](https://github.com/voxpelli/typed-utils/commit/dd872bb8c1d1d012b73a217e706a3d0b00ad7dc3))
+* add CLAUDE.md and UPSTREAM markdown files to .gitignore ([da22867](https://github.com/voxpelli/typed-utils/commit/da22867316c614d5617398287896017e0b13f4a2))
+
 ## [4.2.0](https://github.com/voxpelli/typed-utils/compare/v4.1.0...v4.2.0) (2026-03-19)
 
 
