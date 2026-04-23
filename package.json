@@ -11,8 +11,8 @@
   "author": "Pelle Wessman <pelle@kodfabrik.se> (http://kodfabrik.se/)",
   "license": "MIT",
   "engines": {
-    "node": "^20.11.0 || >=22.0.0",
-    "typescript": ">=5.8"
+    "node": "^20.19.0 || ^22.13.0 || >=24.0.0",
+    "typescript": ">=5.9"
   },
   "type": "module",
   "exports": "./index.js",
@@ -30,7 +30,7 @@
     "build:1-declaration": "tsc -p declaration.tsconfig.json",
     "build": "run-s build:*",
     "check:0": "run-s clean",
-    "check:1:installed-check": "installed-check --engine-check --version-check -i tstyche -i @voxpelli/tstyche-reporters -i typescript -i installed-check -i @voxpelli/tsconfig -i knip",
+    "check:1:installed-check": "installed-check --engine-check --version-check -i tstyche -i @voxpelli/tstyche-reporters",
     "check:1:knip": "knip",
     "check:1:lint": "eslint",
     "check:1:tsc": "tsc",
