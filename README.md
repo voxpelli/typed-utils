@@ -195,6 +195,30 @@ Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]
 
 Returns `true` if `obj` is an object and either does not contain the property `key`, or if present, `obj[key]` is of the given `type` or `undefined`.
 
+#### `isArrayOfLiteralType(value, type)`
+
+Returns `true` if `value` is an array where every element is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'`).
+
+Supports union types by passing an array of type names:
+
+```javascript
+if (isArrayOfLiteralType(value, ['string', 'number'])) {
+  // value is narrowed to Array<string | number>
+}
+```
+
+#### `isObjectValueType(obj, type)`
+
+Returns `true` if `obj` is an object where all values are of the given `type` and all keys are strings.
+
+Supports union types by passing an array of type names:
+
+```javascript
+if (isObjectValueType(obj, 'string')) {
+  // obj is narrowed to Record<string, string>
+}
+```
+
 #### `isPropertyKey(value)`
 
 Runtime guard that returns `true` when `value` is a valid `PropertyKey` (`string | number | symbol`). Used internally by `hasOwn()` helpers; exported for external guard composition.
