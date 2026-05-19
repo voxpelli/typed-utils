@@ -1,12 +1,11 @@
 {
-  "extends": "@voxpelli/tsconfig/node18.json",
+  "extends": "@voxpelli/tsconfig/node20.json",
   "files": [
     "index.js"
   ],
   "include": [
     "lib/**/*",
-    "test/**/*",
-    "typetests/**/*"
+    "test/**/*"
   ],
   "compilerOptions": {
     "lib": ["es2022", "dom"],

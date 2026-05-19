@@ -1,107 +1,203 @@
 /* eslint-disable unicorn/no-null, unicorn/no-useless-undefined */
 import chai from 'chai';
+import { describe, it } from 'mocha';
 
 import {
   isObjectWithKey,
   isKeyWithType,
+  isKeyWithValue,
   isOptionalKeyWithType,
   isPropertyKey,
 } from '../lib/is.js';
 
-chai.should();
+const { expect } = chai;
 
-describe('is helpers', () => {
+describe('is', () => {
   describe('isObjectWithKey()', () => {
     it('should return true when key exists on object', () => {
-      isObjectWithKey({ foo: 'bar' }, 'foo').should.be.ok;
-      isObjectWithKey({ foo: undefined }, 'foo').should.be.ok;
+      expect(isObjectWithKey({ foo: 'bar' }, 'foo')).to.equal(true);
+      expect(isObjectWithKey({ foo: undefined }, 'foo')).to.equal(true);
     });
 
     it('should return false when key does not exist', () => {
-      isObjectWithKey({ foo: 'bar' }, 'baz').should.not.be.ok;
-      isObjectWithKey({}, 'foo').should.not.be.ok;
+      expect(isObjectWithKey({ foo: 'bar' }, 'baz')).to.equal(false);
+      expect(isObjectWithKey({}, 'foo')).to.equal(false);
     });
 
     it('should return false for non-objects', () => {
-      isObjectWithKey(null, 'foo').should.not.be.ok;
-      isObjectWithKey(undefined, 'foo').should.not.be.ok;
-      isObjectWithKey('string', 'foo').should.not.be.ok;
-      isObjectWithKey(123, 'foo').should.not.be.ok;
+      // eslint-disable-next-line unicorn/no-null
+      expect(isObjectWithKey(null, 'foo')).to.equal(false);
+      expect(isObjectWithKey(undefined, 'foo')).to.equal(false);
+      expect(isObjectWithKey('string', 'foo')).to.equal(false);
+      expect(isObjectWithKey(123, 'foo')).to.equal(false);
+    });
+  });
+
+  describe('isKeyWithValue()', () => {
+    it('should return true when key exists with matching value', () => {
+      expect(isKeyWithValue({ foo: 'bar' }, 'foo', 'bar')).to.equal(true);
+      expect(isKeyWithValue({ num: 123 }, 'num', 123)).to.equal(true);
+    });
+
+    it('should return false when key does not exist', () => {
+      expect(isKeyWithValue({ foo: 'bar' }, 'baz', 'bar')).to.equal(false);
+    });
+
+    it('should return false when key exists but has wrong value', () => {
+      expect(isKeyWithValue({ foo: 'bar' }, 'foo', 'baz')).to.equal(false);
     });
   });
 
   describe('isKeyWithType()', () => {
     it('should return true when key exists with matching type', () => {
-      isKeyWithType({ foo: 'bar' }, 'foo', 'string').should.be.ok;
-      isKeyWithType({ num: 42 }, 'num', 'number').should.be.ok;
-      isKeyWithType({ flag: true }, 'flag', 'boolean').should.be.ok;
-      isKeyWithType({ arr: [] }, 'arr', 'array').should.be.ok;
-      isKeyWithType({ obj: {} }, 'obj', 'object').should.be.ok;
+      expect(isKeyWithType({ foo: 'bar' }, 'foo', 'string')).to.equal(true);
+      expect(isKeyWithType({ num: 42 }, 'num', 'number')).to.equal(true);
+      expect(isKeyWithType({ flag: true }, 'flag', 'boolean')).to.equal(true);
+      expect(isKeyWithType({ arr: [] }, 'arr', 'array')).to.equal(true);
+      expect(isKeyWithType({ obj: {} }, 'obj', 'object')).to.equal(true);
     });
 
     it('should return false when key does not exist', () => {
-      isKeyWithType({ foo: 'bar' }, 'baz', 'string').should.not.be.ok;
+      expect(isKeyWithType({ foo: 'bar' }, 'baz', 'string')).to.equal(false);
     });
 
     it('should return false when key exists but type does not match', () => {
-      isKeyWithType({ foo: 'bar' }, 'foo', 'number').should.not.be.ok;
-      isKeyWithType({ num: 42 }, 'num', 'string').should.not.be.ok;
+      expect(isKeyWithType({ foo: 'bar' }, 'foo', 'number')).to.equal(false);
+      expect(isKeyWithType({ num: 42 }, 'num', 'string')).to.equal(false);
     });
 
     it('should return false for non-objects', () => {
-      isKeyWithType(null, 'foo', 'string').should.not.be.ok;
-      isKeyWithType('string', 'foo', 'string').should.not.be.ok;
+      // eslint-disable-next-line unicorn/no-null
+      expect(isKeyWithType(null, 'foo', 'string')).to.equal(false);
+      expect(isKeyWithType('string', 'foo', 'string')).to.equal(false);
+    });
+  });
+
+  describe('isKeyWithType() with array of types', () => {
+    it('should return true when value matches any allowed type', () => {
+      expect(isKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.equal(true);
+      expect(isKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.equal(true);
+      expect(isKeyWithType({ x: true }, 'x', ['boolean', 'number'])).to.equal(true);
+    });
+
+    it('should return false when value matches none of the allowed types', () => {
+      expect(isKeyWithType({ x: true }, 'x', ['string', 'number'])).to.equal(false);
+      expect(isKeyWithType({ x: 'hello' }, 'x', ['number', 'boolean'])).to.equal(false);
+    });
+
+    it('should work with single-element array', () => {
+      expect(isKeyWithType({ x: 'hello' }, 'x', ['string'])).to.equal(true);
+      expect(isKeyWithType({ x: 42 }, 'x', ['string'])).to.equal(false);
+    });
+
+    it('should return false for key not in object', () => {
+      expect(isKeyWithType({ x: 'hello' }, 'y', ['string', 'number'])).to.equal(false);
+    });
+
+    it('should return false when object is not an object', () => {
+      expect(isKeyWithType(undefined, 'x', ['string', 'number'])).to.equal(false);
+      expect(isKeyWithType('not an object', 'x', ['string', 'number'])).to.equal(false);
+    });
+
+    it('should work with null as an allowed type', () => {
+      // eslint-disable-next-line unicorn/no-null
+      expect(isKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
+      // eslint-disable-next-line unicorn/no-null
+      expect(isKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.equal(false);
+      expect(isKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.equal(true);
     });
   });
 
   describe('isOptionalKeyWithType()', () => {
     it('should return true when key is absent', () => {
-      isOptionalKeyWithType({ foo: 'bar' }, 'baz', 'string').should.be.ok;
-      isOptionalKeyWithType({}, 'foo', 'string').should.be.ok;
+      expect(isOptionalKeyWithType({ foo: 'bar' }, 'baz', 'string')).to.equal(true);
+      expect(isOptionalKeyWithType({}, 'foo', 'string')).to.equal(true);
     });
 
     it('should return true when key is present but undefined', () => {
-      isOptionalKeyWithType({ foo: undefined }, 'foo', 'string').should.be.ok;
+      expect(isOptionalKeyWithType({ foo: undefined }, 'foo', 'string')).to.equal(true);
     });
 
     it('should return true when key is present with matching type', () => {
-      isOptionalKeyWithType({ foo: 'bar' }, 'foo', 'string').should.be.ok;
-      isOptionalKeyWithType({ num: 42 }, 'num', 'number').should.be.ok;
+      expect(isOptionalKeyWithType({ foo: 'bar' }, 'foo', 'string')).to.equal(true);
+      expect(isOptionalKeyWithType({ num: 42 }, 'num', 'number')).to.equal(true);
     });
 
     it('should return false when key is present with wrong type', () => {
-      isOptionalKeyWithType({ foo: 123 }, 'foo', 'string').should.not.be.ok;
-      isOptionalKeyWithType({ foo: 'bar' }, 'foo', 'number').should.not.be.ok;
+      expect(isOptionalKeyWithType({ foo: 123 }, 'foo', 'string')).to.equal(false);
+      expect(isOptionalKeyWithType({ foo: 'bar' }, 'foo', 'number')).to.equal(false);
     });
 
     it('should return false for non-objects', () => {
-      isOptionalKeyWithType(null, 'foo', 'string').should.not.be.ok;
-      isOptionalKeyWithType(undefined, 'foo', 'string').should.not.be.ok;
-      isOptionalKeyWithType('string', 'foo', 'string').should.not.be.ok;
+      // eslint-disable-next-line unicorn/no-null
+      expect(isOptionalKeyWithType(null, 'foo', 'string')).to.equal(false);
+      expect(isOptionalKeyWithType(undefined, 'foo', 'string')).to.equal(false);
+      expect(isOptionalKeyWithType('string', 'foo', 'string')).to.equal(false);
+    });
+  });
+
+  describe('isOptionalKeyWithType() with array of types', () => {
+    it('should return true when key is absent', () => {
+      expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'number'])).to.equal(true);
+    });
+
+    it('should return true when key exists with value matching any allowed type', () => {
+      expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.equal(true);
+      expect(isOptionalKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.equal(true);
+    });
+
+    it('should return true when key exists and is undefined', () => {
+      expect(isOptionalKeyWithType({ x: undefined }, 'x', ['string', 'number'])).to.equal(true);
+    });
+
+    it('should return false when key exists with value matching none of the allowed types', () => {
+      expect(isOptionalKeyWithType({ x: true }, 'x', ['string', 'number'])).to.equal(false);
+      expect(isOptionalKeyWithType({ x: Symbol('sym') }, 'x', ['string', 'boolean'])).to.equal(false);
+    });
+
+    it('should return false when object is not an object', () => {
+      expect(isOptionalKeyWithType(undefined, 'x', ['string', 'number'])).to.equal(false);
+      expect(isOptionalKeyWithType('not an object', 'x', ['string', 'number'])).to.equal(false);
+    });
+
+    it('should work with single-element array', () => {
+      expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string'])).to.equal(true);
+      expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string'])).to.equal(true);
+      expect(isOptionalKeyWithType({ x: 42 }, 'x', ['string'])).to.equal(false);
+    });
+
+    it('should work with null as an allowed type', () => {
+      // eslint-disable-next-line unicorn/no-null
+      expect(isOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
+      // eslint-disable-next-line unicorn/no-null
+      expect(isOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.equal(false);
+      expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.equal(true);
+      expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null'])).to.equal(true);
     });
   });
 
   describe('isPropertyKey()', () => {
     it('should return true for strings', () => {
-      isPropertyKey('foo').should.be.ok;
-      isPropertyKey('').should.be.ok;
+      expect(isPropertyKey('foo')).to.equal(true);
+      expect(isPropertyKey('')).to.equal(true);
     });
 
     it('should return true for numbers', () => {
-      isPropertyKey(0).should.be.ok;
-      isPropertyKey(42).should.be.ok;
+      expect(isPropertyKey(0)).to.equal(true);
+      expect(isPropertyKey(42)).to.equal(true);
     });
 
     it('should return true for symbols', () => {
-      isPropertyKey(Symbol('test')).should.be.ok;
+      expect(isPropertyKey(Symbol('test'))).to.equal(true);
     });
 
     it('should return false for non-PropertyKey values', () => {
-      isPropertyKey(null).should.not.be.ok;
-      isPropertyKey(undefined).should.not.be.ok;
-      isPropertyKey({}).should.not.be.ok;
-      isPropertyKey([]).should.not.be.ok;
-      isPropertyKey(true).should.not.be.ok;
+      // eslint-disable-next-line unicorn/no-null
+      expect(isPropertyKey(null)).to.equal(false);
+      expect(isPropertyKey(undefined)).to.equal(false);
+      expect(isPropertyKey({})).to.equal(false);
+      expect(isPropertyKey([])).to.equal(false);
+      expect(isPropertyKey(true)).to.equal(false);
     });
   });
 });

@@ -56,7 +56,7 @@ Similar to `Array.isArray()` but also checks that the array only contains values
 
 Alias: ~~`isUnknownArray(value)`~~ (deprecated)
 
-Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness.
+Does the exact same thing as `Array.isArray()` but derives the type `unknown[]` rather than `any[]`, which improves strictness in a positive type narrowing scenario (`if (typesafeIsArray(value))`) but doesn't work as well for negative type narrowing (prefer `if (!Array.isArray(value))` then).
 
 #### `guardedArrayIncludes(collection, searchElement)`
 
@@ -91,9 +91,19 @@ const normalized = ensureArray(input); // always string[]
 
 Custom error class thrown by all assertion helpers in this module. You can catch this error type to specifically handle assertion failures from these utilities.
 
+#### `TypeHelpersAssertionEqualityError`
+
+Custom error class thrown by equality assertions such as [`assertStrictEqual(actual, expected, [message])`](#assertstrictequalactual-expected-message).
+
 #### `assert(condition, message)`
 
 Throws a `TypeHelpersAssertionError` if `condition` is falsy. Used internally by other assertion helpers, but can also be used directly for custom runtime assertions.
+
+#### `assertStrictEqual(actual, expected, [message])`
+
+Asserts strict equality (`===`) between `actual` and `expected`.
+
+If values differ, throws a `TypeHelpersAssertionEqualityError` with `actual` / `expected` metadata that many reporters can use for diff rendering.
 
 #### `assertObjectWithKey(obj, key)`
 
@@ -103,9 +113,20 @@ Asserts that `obj` is an object and contains the property `key`. Throws an error
 
 Asserts that `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)). Throws an error if not. Optional custom error message.
 
+Supports union types by passing an array of type names:
+
+```javascript
+assertType(value, ['string', 'number']); // narrows to string | number
+assertType(value, ['string', 'boolean', 'null']); // narrows to string | boolean | null
+```
+
 #### `assertKeyWithType(obj, key, type)`
 
 Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is of the given `type`.
+
+#### `assertKeyWithValue(obj, key, value)`
+
+Asserts that `obj` is an object, contains the property `key`, and that `obj[key]` is strictly equal to the given `value`.
 
 #### `assertOptionalKeyWithType(obj, key, type)`
 
@@ -115,11 +136,36 @@ Asserts that `obj` is an object and either does not contain the property `key`, 
 
 Asserts that `value` is an array where every element is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'`). Throws an error if any element fails the type check. Optional custom error message.
 
+Supports union types by passing an array of type names:
+
+```javascript
+assertArrayOfLiteralType(value, ['string', 'number']); // narrows to Array<string | number>
+```
+
 #### `assertObjectValueType(obj, type)`
 
 Asserts that `obj` is an object where all values are of the given `type` and all keys are strings. This is useful for validating objects used as dictionaries/maps with homogeneous value types.
 
+Supports union types by passing an array of type names:
+
+```javascript
+assertObjectValueType(obj, 'string'); // narrows to Record<string, string>
+assertObjectValueType(obj, ['string', 'number', 'boolean']); // narrows to Record<string, string | number | boolean>
+```
+
 ### `is`-calls / Type Checks
+
+#### `isObject(value)`
+
+Returns `true` if `value` is a non-null, non-array object. Narrows the type to `Record<string, unknown>`, providing an index signature for property access patterns.
+
+Use this when you need indexed property access after the check (e.g., `value['key']` or `'key' in value`). For exhaustiveness narrowing in type discrimination chains, use [`isType(value, 'object')`](#istypevalue-type) instead, which narrows to `object`.
+
+```javascript
+if (isObject(value)) {
+  // value is Record<string, unknown> — can do value['key']
+}
+```
 
 #### `isObjectWithKey(obj, key)`
 
@@ -129,9 +175,21 @@ Returns `true` if `obj` is an object and contains the property `key`.
 
 Returns `true` if `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)).
 
+Supports union types by passing an array of type names:
+
+```javascript
+if (isType(value, ['string', 'number'])) {
+  // value is narrowed to string | number
+}
+```
+
 #### `isKeyWithType(obj, key, type)`
 
 Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]` is of the given `type`.
+
+#### `isKeyWithValue(obj, key, value)`
+
+Returns `true` if `obj` is an object, contains the property `key`, and `obj[key]` is strictly equal to the given `value`.
 
 #### `isOptionalKeyWithType(obj, key, type)`
 
@@ -140,6 +198,21 @@ Returns `true` if `obj` is an object and either does not contain the property `k
 #### `isPropertyKey(value)`
 
 Runtime guard that returns `true` when `value` is a valid `PropertyKey` (`string | number | symbol`). Used internally by `hasOwn()` helpers; exported for external guard composition.
+
+### Getters
+
+#### `getValueOfKeyWithType(obj, key, type)`
+
+Returns `obj[key]` when `obj` is an object, contains the property `key`, and the value at that key is of the given `type`. Returns `undefined` otherwise.
+
+Supports union types by passing an array of type names:
+
+```javascript
+const value = getValueOfKeyWithType({ count: 1 }, 'count', ['string', 'number']);
+// value: string | number | undefined
+```
+
+Useful when you want to both validate and retrieve a typed property in one step, without first calling [`isKeyWithType()`](#iskeywithtypeobj-key-type).
 
 ### Miscellaneous
 
@@ -250,6 +323,10 @@ No-op function that validates at compile-time that `Superset` type is assignable
 
 No-op function that validates at compile-time that `Base` type is an empty object. Does nothing at runtime. Useful for type tests.
 
+#### `noopTypeIsNever(value)`
+
+No-op function that validates at compile-time that `value` is `never`. Does nothing at runtime. Useful for type tests and exhaustive switch/conditional checks where you want a non-throwing alternative to `assertTypeIsNever()`.
+
 ### Set
 
 #### `FrozenSet`
@@ -282,6 +359,43 @@ Notes:
 * Still inherits all read-only / iteration behavior from `Set` (eg. `for...of`, spread, `keys()`, `values()`).
 * Throws eagerly on mutation attempts—no silent failures.
 * If you need deep immutability of nested values, freeze those separately; `FrozenSet` only prevents structural changes to the set itself.
+
+## Migration
+
+### From 3.x to 4.x
+
+#### `LiteralTypes['object']` changed back from `Record<string, unknown>` to `object`
+
+`isType(value, 'object')` and `assertType(value, 'object')` now narrow to `object` instead of `Record<string, unknown>`, reverting to the original behavior from `@voxpelli/type-helpers`. The `Record<string, unknown>` mapping was introduced for convenience (indexed property access), but it broke exhaustiveness narrowing in the false branch — TypeScript could not eliminate concrete object types like `{ kind: string }` from unions, making `assertTypeIsNever()` fail.
+
+**If you relied on indexed property access after narrowing:**
+
+| Old pattern | Migration |
+|---|---|
+| `isType(x, 'object')` then `x['key']` | Use `isObject(x)` (new), or `isObjectWithKey(x, 'key')` |
+| `assertType(x, 'object')` then `x['key']` | Use `assertObject(x)` (unchanged, still `Record<string, unknown>`) |
+| `isType(x, 'object') && 'key' in x` | Use `isObject(x) && 'key' in x`, or `isObjectWithKey(x, 'key')` |
+
+**If you use exhaustiveness chains** — these now work correctly:
+
+```javascript
+function process(val: string | number | { key: string }): string {
+  if (isType(val, 'string')) return val;
+  if (isType(val, 'number')) return String(val);
+  if (isType(val, 'object')) return val.key;
+  assertTypeIsNever(val); // now works — val is never
+}
+```
+
+#### `LiteralTypes['function']` changed from `() => unknown` to `(...args: any[]) => unknown`
+
+`isType(value, 'function')` and `assertType(value, 'function')` now narrow to `(...args: any[]) => unknown` instead of `() => unknown`. This is strictly more permissive — all existing code continues to work, and functions with parameters are now correctly accepted.
+
+#### `assertTypeIsNever` now returns `never`
+
+`assertTypeIsNever()` now has a return type of `never` instead of `void`. TypeScript recognizes it as a terminal statement (a function that never returns), so you no longer need a return statement after it in exhaustive switch/if chains.
+
+**`eslint-plugin-jsdoc` note:** The [`require-returns-check`](https://github.com/gajus/eslint-plugin-jsdoc/blob/main/docs/rules/require-returns-check.md) rule does not perform cross-function control flow analysis — it cannot know that a call to `assertTypeIsNever()` will always throw and never return. If you write a function with a `@returns` JSDoc that relies on `assertTypeIsNever()` as the terminal statement instead of a `return`, the rule may report "`@returns` declaration present but return expression not available in function." Suppress with `// eslint-disable-next-line jsdoc/require-returns-check` above the function's JSDoc block, or add an explicit `return` before the call (e.g., `return assertTypeIsNever(val)`). See [gajus/eslint-plugin-jsdoc#817](https://github.com/gajus/eslint-plugin-jsdoc/issues/817) for background.
 
 <!-- ## Used by
 

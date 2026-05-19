@@ -1,5 +1,99 @@
 # Changelog
 
+## [4.3.0](https://github.com/voxpelli/typed-utils/compare/v4.2.0...v4.3.0) (2026-04-23)
+
+
+### 🌟 Features
+
+* add `getValueOfKeyWithType()` ([#92](https://github.com/voxpelli/typed-utils/issues/92)) ([dd872bb](https://github.com/voxpelli/typed-utils/commit/dd872bb8c1d1d012b73a217e706a3d0b00ad7dc3))
+* add CLAUDE.md and UPSTREAM markdown files to .gitignore ([da22867](https://github.com/voxpelli/typed-utils/commit/da22867316c614d5617398287896017e0b13f4a2))
+
+## [4.2.0](https://github.com/voxpelli/typed-utils/compare/v4.1.0...v4.2.0) (2026-03-19)
+
+
+### 🌟 Features
+
+* allow array of types in `*KeyWithType` ([#89](https://github.com/voxpelli/typed-utils/issues/89)) ([df4a1bf](https://github.com/voxpelli/typed-utils/commit/df4a1bfe9eece9201c9892b5c2a56b2a76524c1f))
+
+## [4.1.0](https://github.com/voxpelli/typed-utils/compare/v4.0.0...v4.1.0) (2026-03-12)
+
+
+### 🌟 Features
+
+* add `assertKeyWithValue` / `isKeyWithValue` ([ac794ed](https://github.com/voxpelli/typed-utils/commit/ac794ed770edb60d9b332f63c0c171d2c391a74b))
+
+
+### 📚 Documentation
+
+* add eslint-plugin-jsdoc note to assertTypeIsNever migration ([6663e2a](https://github.com/voxpelli/typed-utils/commit/6663e2a8dadc715511acd089c5dbc066ff5ea649))
+* update `typesafeIsArray` description ([2ccc8a2](https://github.com/voxpelli/typed-utils/commit/2ccc8a222edc5940064c28078e7b664abeb8258c))
+
+
+### 🧹 Chores
+
+* **deps:** update dev dependencies ([90eaa85](https://github.com/voxpelli/typed-utils/commit/90eaa855496de750f3db891c678381c1e74c63af))
+
+## [4.0.0](https://github.com/voxpelli/typed-utils/compare/v3.2.1...v4.0.0) (2026-03-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* `assertTypeIsNever()` now has return type `never` instead of `void`. Existing code continues to work; the only observable change is that return statements after it become unnecessary.
+* `isType(x, 'object')` and `assertType(x, 'object')` now narrow to `object` instead of `Record<string, unknown>`. Use `isObject(x)` or `assertObject(x)` if you need indexed property access after narrowing.
+
+### 🌟 Features
+
+* widen LiteralTypes['function'] to accept arguments ([5c2bf8b](https://github.com/voxpelli/typed-utils/commit/5c2bf8b72b647fde72c122fc1bbf7278869e86a4)), closes [#83](https://github.com/voxpelli/typed-utils/issues/83)
+
+
+### 🩹 Fixes
+
+* change LiteralTypes['object'] back to `object` for exhaustiveness ([74ef1b8](https://github.com/voxpelli/typed-utils/commit/74ef1b81f82a82bb5ca840cc7237383b7a27497b)), closes [#81](https://github.com/voxpelli/typed-utils/issues/81)
+* make assertTypeIsNever return `never` for terminal behavior ([dc6e69c](https://github.com/voxpelli/typed-utils/commit/dc6e69cf0eb50b400e17e11fca9deb792d3701cf)), closes [#82](https://github.com/voxpelli/typed-utils/issues/82)
+
+
+### 🧹 Chores
+
+* add .claude to .gitignore ([78f2c59](https://github.com/voxpelli/typed-utils/commit/78f2c59c1644bb8be2d1b122eeafaffdeca2f611))
+
+## [3.2.1](https://github.com/voxpelli/typed-utils/compare/v3.2.0...v3.2.1) (2026-02-28)
+
+
+### 🩹 Fixes
+
+* remove TypeScript peer dependency ([#79](https://github.com/voxpelli/typed-utils/issues/79)) ([a62d99c](https://github.com/voxpelli/typed-utils/commit/a62d99ce57a8c4c2fa86baf7189c269dc313d303))
+
+## [3.2.0](https://github.com/voxpelli/typed-utils/compare/v3.1.0...v3.2.0) (2026-02-26)
+
+
+### 🌟 Features
+
+* add `noopTypeIsNever` ([#73](https://github.com/voxpelli/typed-utils/issues/73)) ([78cd5d2](https://github.com/voxpelli/typed-utils/commit/78cd5d20103f5ef5334d22c820cd1b95373e2a4a))
+
+
+### 🧹 Chores
+
+* **deps:** update dependency @voxpelli/tstyche-reporters to ^1.1.0 ([#75](https://github.com/voxpelli/typed-utils/issues/75)) ([998af4a](https://github.com/voxpelli/typed-utils/commit/998af4ac25e56d83636ff2f1b6fe5b652d80b3da))
+* **deps:** update dependency c8 to v11 ([#76](https://github.com/voxpelli/typed-utils/issues/76)) ([0eba325](https://github.com/voxpelli/typed-utils/commit/0eba325b4fef527c1220b9e872472248ce497932))
+* **deps:** update linting dependencies ([#74](https://github.com/voxpelli/typed-utils/issues/74)) ([491c0e6](https://github.com/voxpelli/typed-utils/commit/491c0e6feca8681a2a624d9b37defcb5f50b466b))
+
+## [3.1.0](https://github.com/voxpelli/typed-utils/compare/v3.0.0...v3.1.0) (2026-02-20)
+
+
+### 🌟 Features
+
+* support arrays of types in many type checks ([#72](https://github.com/voxpelli/typed-utils/issues/72)) ([6418a2e](https://github.com/voxpelli/typed-utils/commit/6418a2e09911bcfe72360b33d24e3bbf7037fe21))
+
+
+### 📚 Documentation
+
+* add DeepWiki badge to README ([145a25c](https://github.com/voxpelli/typed-utils/commit/145a25c3ab9fdd10ddcb84954e0a15e2737a2275))
+
+
+### 🧹 Chores
+
+* update TSTyche to v6.2.0 ([#68](https://github.com/voxpelli/typed-utils/issues/68)) ([0698ed2](https://github.com/voxpelli/typed-utils/commit/0698ed2798af16a2d7d144d157fb8caf5f078189))
+
 ## [3.0.0](https://github.com/voxpelli/typed-utils/compare/v2.6.0...v3.0.0) (2026-01-29)
 
 

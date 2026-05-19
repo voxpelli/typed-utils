@@ -7,7 +7,7 @@ export type LiteralTypeOf<T> =
   T extends undefined ? 'undefined' :
   T extends null ? 'null' :
   T extends any[] ? 'array' :
-  T extends () => any ? 'function' :
+  T extends (...args: any[]) => any ? 'function' :
   T extends object ? 'object' :
   never;
 
@@ -20,6 +20,6 @@ export type LiteralTypes = {
   'undefined': undefined,
   'null': null,
   'array': unknown[],
-  'object': Record<string, unknown>,
-  'function': () => unknown,
+  'object': object,
+  'function': (...args: any[]) => unknown,
 };
