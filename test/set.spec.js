@@ -17,7 +17,6 @@ describe('set helpers', () => {
 
     it('should construct from another Set', () => {
       const source = new Set([1, 2, 3]);
-      // @ts-ignore — runtime accepts any Iterable; type widened to Iterable<T>
       (() => new FrozenSet(source)).should.not.throw();
     });
 

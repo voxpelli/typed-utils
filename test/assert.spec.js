@@ -18,6 +18,7 @@ import {
 } from '../lib/assert.js';
 
 chai.should();
+const { expect } = chai;
 
 describe('assert', () => {
   describe('TypeHelpersAssertionError', () => {
