@@ -2,12 +2,12 @@
 import chai from 'chai';
 
 import {
+  hasOwn,
+  hasOwnAll,
   omit,
   pick,
   typedObjectKeys,
   typedObjectKeysAll,
-  hasOwn,
-  hasOwnAll,
 } from '../lib/object.js';
 
 const should = chai.should();

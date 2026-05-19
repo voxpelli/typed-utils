@@ -6,8 +6,8 @@ import {
   isArrayOfLiteralType,
   isKeyWithType,
   isKeyWithValue,
-  isObjectWithKey,
   isObjectValueType,
+  isObjectWithKey,
   isOptionalKeyWithType,
   isPropertyKey,
 } from '../lib/is.js';
@@ -27,7 +27,6 @@ describe('is', () => {
     });
 
     it('should return false for non-objects', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isObjectWithKey(null, 'foo')).to.equal(false);
       expect(isObjectWithKey(undefined, 'foo')).to.equal(false);
       expect(isObjectWithKey('string', 'foo')).to.equal(false);
@@ -69,7 +68,6 @@ describe('is', () => {
     });
 
     it('should return false for non-objects', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isKeyWithType(null, 'foo', 'string')).to.equal(false);
       expect(isKeyWithType('string', 'foo', 'string')).to.equal(false);
     });
@@ -102,9 +100,8 @@ describe('is', () => {
     });
 
     it('should work with null as an allowed type', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
-      // eslint-disable-next-line unicorn/no-null
+
       expect(isKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.equal(false);
       expect(isKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.equal(true);
     });
@@ -130,7 +127,7 @@ describe('is', () => {
 
     it('should return false for non-array values', () => {
       expect(isArrayOfLiteralType('not an array', 'string')).to.equal(false);
-      // eslint-disable-next-line unicorn/no-null
+
       expect(isArrayOfLiteralType(null, 'string')).to.equal(false);
       expect(isArrayOfLiteralType(undefined, 'string')).to.equal(false);
     });
@@ -144,7 +141,6 @@ describe('is', () => {
     });
 
     it('should return false when array contains element not matching any allowed type', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isArrayOfLiteralType(['foo', null], ['string', 'number'])).to.equal(false);
       expect(isArrayOfLiteralType([1, undefined], ['string', 'boolean'])).to.equal(false);
     });
@@ -169,7 +165,7 @@ describe('is', () => {
 
     it('should return false for non-object values', () => {
       expect(isObjectValueType('string', 'string')).to.equal(false);
-      // eslint-disable-next-line unicorn/no-null
+
       expect(isObjectValueType(null, 'string')).to.equal(false);
       expect(isObjectValueType(123, 'string')).to.equal(false);
     });
@@ -183,7 +179,6 @@ describe('is', () => {
     });
 
     it('should return false when object contains value not matching any allowed type', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isObjectValueType({ a: 'foo', b: null }, ['string', 'number'])).to.equal(false);
       expect(isObjectValueType({ x: 1, y: undefined }, ['string', 'boolean'])).to.equal(false);
     });
@@ -210,7 +205,6 @@ describe('is', () => {
     });
 
     it('should return false for non-objects', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isOptionalKeyWithType(null, 'foo', 'string')).to.equal(false);
       expect(isOptionalKeyWithType(undefined, 'foo', 'string')).to.equal(false);
       expect(isOptionalKeyWithType('string', 'foo', 'string')).to.equal(false);
@@ -248,9 +242,8 @@ describe('is', () => {
     });
 
     it('should work with null as an allowed type', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
-      // eslint-disable-next-line unicorn/no-null
+
       expect(isOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.equal(false);
       expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.equal(true);
       expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null'])).to.equal(true);
@@ -273,7 +266,6 @@ describe('is', () => {
     });
 
     it('should return false for non-PropertyKey values', () => {
-      // eslint-disable-next-line unicorn/no-null
       expect(isPropertyKey(null)).to.equal(false);
       expect(isPropertyKey(undefined)).to.equal(false);
       expect(isPropertyKey({})).to.equal(false);
