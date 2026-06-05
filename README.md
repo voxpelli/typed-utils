@@ -171,9 +171,9 @@ if (isObject(value)) {
 
 Returns `true` if `obj` is an object and contains the property `key`.
 
-#### `isPartOfCollection(key, collection)`
+#### `isKeyOf(key, obj)`
 
-Returns `true` if `key` is a non-empty string and an own key in `collection`. Narrows `key` to the string-literal key union of `collection`.
+Returns `true` if `key` is a non-empty string and an own key in `obj`. Narrows `key` to the string-literal key union of `obj`.
 
 #### `isType(value, type)`
 

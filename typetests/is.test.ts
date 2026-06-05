@@ -9,7 +9,7 @@ import {
   isObjectValueType,
   isObjectWithKey,
   isOptionalKeyWithType,
-  isPartOfCollection,
+  isKeyOf,
   isType,
 } from '../lib/is.js';
 
@@ -89,12 +89,12 @@ describe('isObjectWithKey', () => {
   });
 });
 
-describe('isPartOfCollection', () => {
+describe('isKeyOf', () => {
   it('should narrow unknown key to collection key union', () => {
     const key: unknown = 'foo';
     const collection = { foo: true, bar: true } as const;
 
-    if (isPartOfCollection(key, collection)) {
+    if (isKeyOf(key, collection)) {
       expect(key).type.toBe<'foo' | 'bar'>();
     }
   });
