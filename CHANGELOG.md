@@ -1,5 +1,24 @@
 # Changelog
 
+## [5.0.0](https://github.com/voxpelli/typed-utils/compare/v4.3.0...v5.0.0) (2026-06-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* require node >=20.19.0 / TS >=5.9
+
+### 🌟 Features
+
+* add `isArrayOfLiteralType` + `isObjectValueType`  ([#95](https://github.com/voxpelli/typed-utils/issues/95)) ([504ffb6](https://github.com/voxpelli/typed-utils/commit/504ffb6a9dcaad7eab09729f86c0fca5773c8643))
+
+
+### 🧹 Chores
+
+* **deps:** update dependency knip to ^6.14.1 ([#96](https://github.com/voxpelli/typed-utils/issues/96)) ([1b95a74](https://github.com/voxpelli/typed-utils/commit/1b95a74a3ea8aac6d1352f8580b28e19c330e8b2))
+* **deps:** update dependency knip to ^6.15.0 ([#99](https://github.com/voxpelli/typed-utils/issues/99)) ([c56f600](https://github.com/voxpelli/typed-utils/commit/c56f6007313e3337b54d3c2f1bc4e86b81ac4617))
+* **deps:** update linting ([c365951](https://github.com/voxpelli/typed-utils/commit/c3659518901ce100c3f959ec88f356fdb3e1bef7))
+* require node &gt;=20.19.0 / TS &gt;=5.9 ([d8533bc](https://github.com/voxpelli/typed-utils/commit/d8533bc00028c37c305411366ba6db5bcc3b3159))
+
 ## [4.3.0](https://github.com/voxpelli/typed-utils/compare/v4.2.0...v4.3.0) (2026-04-23)
 
 
