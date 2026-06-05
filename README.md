@@ -171,6 +171,10 @@ if (isObject(value)) {
 
 Returns `true` if `obj` is an object and contains the property `key`.
 
+#### `isPartOfCollection(key, collection)`
+
+Returns `true` if `key` is a non-empty string and an own key in `collection`. Narrows `key` to the string-literal key union of `collection`.
+
 #### `isType(value, type)`
 
 Returns `true` if `value` is of the given `type` (string literal, eg. `'string'`, `'number'`, `'array'`, `'null'` – same as returned by [`explainVariable()`](#explainvariablevalue)).

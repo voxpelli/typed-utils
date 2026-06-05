@@ -1,11 +1,31 @@
 import chai from 'chai';
 import { describe, it } from 'mocha';
 
-import { isArrayOfLiteralType, isKeyWithType, isKeyWithValue, isObjectValueType, isOptionalKeyWithType } from '../lib/is.js';
+import { isArrayOfLiteralType, isKeyWithType, isKeyWithValue, isObjectValueType, isOptionalKeyWithType, isPartOfCollection } from '../lib/is.js';
 
 const { expect } = chai;
 
 describe('is', () => {
+  describe('isPartOfCollection()', () => {
+    /** @type {Record<'red' | 'blue', true>} */
+    const colors = { red: true, blue: true };
+
+    it('should return true when key is part of collection', () => {
+      expect(isPartOfCollection('red', colors)).to.equal(true);
+      expect(isPartOfCollection('blue', colors)).to.equal(true);
+    });
+
+    it('should return false when key is not a non-empty string', () => {
+      expect(isPartOfCollection('', colors)).to.equal(false);
+      expect(isPartOfCollection(123, colors)).to.equal(false);
+      expect(isPartOfCollection(undefined, colors)).to.equal(false);
+    });
+
+    it('should return false when key is not part of collection', () => {
+      expect(isPartOfCollection('green', colors)).to.equal(false);
+    });
+  });
+
   describe('isKeyWithValue()', () => {
     it('should return true when key exists with matching value', () => {
       expect(isKeyWithValue({ foo: 'bar' }, 'foo', 'bar')).to.equal(true);
