@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/voxpelli/typed-utils/compare/v5.0.0...v5.0.1) (2026-06-15)
+
+
+### 📚 Documentation
+
+* keep README.md in sync with engines version ([112258f](https://github.com/voxpelli/typed-utils/commit/112258f69b727f7eb1c74874bfbc1d2f6319fe74))
+
 ## [5.0.0](https://github.com/voxpelli/typed-utils/compare/v4.3.0...v5.0.0) (2026-06-05)
 
 
