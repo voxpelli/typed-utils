@@ -1,12 +1,11 @@
-import chai from 'chai';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import {
   assertTypeIsNever,
   noopTypeIsAssignableToBase,
   noopTypeIsEmptyObject,
 } from '../index.js';
-
-chai.should();
 
 /**
  * @param {'red' | 'green' | 'blue'} color
@@ -27,41 +26,41 @@ function handleColor (color) {
 describe('never', () => {
   describe('assertTypeIsNever', () => {
     it('should throw with default message', () => {
-      (() => {
+      assert.throws(() => {
         // @ts-expect-error -- testing runtime behavior
         assertTypeIsNever('not never');
-      }).should.throw('Expected value to not exist');
+      }, /Expected value to not exist/);
     });
 
     it('should throw with custom message', () => {
-      (() => {
+      assert.throws(() => {
         // @ts-expect-error -- testing runtime behavior
         assertTypeIsNever('not never', 'Custom error message');
-      }).should.throw('Custom error message');
+      }, /Custom error message/);
     });
 
     it('should be useful in exhaustive switch checks', () => {
-      handleColor('red').should.equal('#f00');
-      handleColor('green').should.equal('#0f0');
-      handleColor('blue').should.equal('#00f');
+      assert.strictEqual(handleColor('red'), '#f00');
+      assert.strictEqual(handleColor('green'), '#0f0');
+      assert.strictEqual(handleColor('blue'), '#00f');
     });
   });
 
   describe('noopTypeIsAssignableToBase', () => {
     it('should do nothing at runtime', () => {
-      (() => {
+      assert.doesNotThrow(() => {
         noopTypeIsAssignableToBase({}, {});
         noopTypeIsAssignableToBase({ a: 1 }, { a: 1, b: 2 });
-      }).should.not.throw();
+      });
     });
   });
 
   describe('noopTypeIsEmptyObject', () => {
     it('should do nothing at runtime', () => {
-      (() => {
+      assert.doesNotThrow(() => {
         noopTypeIsEmptyObject({}, true);
         noopTypeIsEmptyObject({ a: 1 }, false);
-      }).should.not.throw();
+      });
     });
   });
 });

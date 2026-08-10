@@ -1,10 +1,10 @@
 /* eslint-disable unicorn/no-null, unicorn/no-useless-undefined */
-import chai from 'chai';
-import { describe, it } from 'mocha';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import {
-  assert,
   assertArrayOfLiteralType,
+  assert as assertHelper,
   assertKeyWithType,
   assertKeyWithValue,
   assertObject,
@@ -17,21 +17,20 @@ import {
   TypeHelpersAssertionError,
 } from '../lib/assert.js';
 
-const { expect } = chai;
-
 describe('assert', () => {
   describe('TypeHelpersAssertionError', () => {
     it('should be an Error instance', () => {
       const error = new TypeHelpersAssertionError('test');
-      expect(error).to.be.instanceOf(Error);
-      expect(error.name).to.equal('TypeHelpersAssertionError');
-      expect(error.message).to.equal('test');
+      assert.ok(error instanceof Error);
+      assert.strictEqual(error.name, 'TypeHelpersAssertionError');
+      assert.strictEqual(error.message, 'test');
     });
 
     it('should capture stack trace', () => {
       const error = new TypeHelpersAssertionError('test');
-      expect(error.stack).to.be.a('string');
-      expect(error.stack).to.include('TypeHelpersAssertionError');
+      const { stack } = error;
+      assert.ok(typeof stack === 'string');
+      assert.match(stack, /TypeHelpersAssertionError/);
     });
   });
 
@@ -39,31 +38,31 @@ describe('assert', () => {
     it('should be an Error instance with interoperable metadata fields', () => {
       const error = new TypeHelpersAssertionEqualityError(1, 2, 'strictEqual', 'test');
 
-      expect(error).to.be.instanceOf(Error);
-      expect(error.name).to.equal('TypeHelpersAssertionEqualityError');
-      expect(error.message).to.equal('test');
-      expect(error.actual).to.equal(1);
-      expect(error.expected).to.equal(2);
-      expect(error.operator).to.equal('strictEqual');
-      expect(error.diff).to.equal('simple');
-      expect(error.showDiff).to.equal(true);
+      assert.ok(error instanceof Error);
+      assert.strictEqual(error.name, 'TypeHelpersAssertionEqualityError');
+      assert.strictEqual(error.message, 'test');
+      assert.strictEqual(error.actual, 1);
+      assert.strictEqual(error.expected, 2);
+      assert.strictEqual(error.operator, 'strictEqual');
+      assert.strictEqual(error.diff, 'simple');
+      assert.strictEqual(error.showDiff, true);
     });
   });
 
   describe('assert()', () => {
     it('should not throw when condition is true', () => {
-      expect(() => assert(true, 'should not throw')).to.not.throw();
+      assert.doesNotThrow(() => assertHelper(true, 'should not throw'));
     });
 
     it('should throw TypeHelpersAssertionError when condition is false', () => {
-      expect(() => assert(false, 'test message')).to.throw(TypeHelpersAssertionError, 'test message');
+      assert.throws(() => assertHelper(false, 'test message'), { name: 'TypeHelpersAssertionError', message: /test message/ });
     });
   });
 
   describe('assertStrictEqual()', () => {
     it('should not throw when values are strictly equal', () => {
-      expect(() => assertStrictEqual('foo', 'foo')).to.not.throw();
-      expect(() => assertStrictEqual(123, 123)).to.not.throw();
+      assert.doesNotThrow(() => assertStrictEqual('foo', 'foo'));
+      assert.doesNotThrow(() => assertStrictEqual(123, 123));
     });
 
     it('should throw TypeHelpersAssertionEqualityError with expected metadata when unequal', () => {
@@ -75,15 +74,17 @@ describe('assert', () => {
         thrownError = err;
       }
 
-      expect(thrownError).to.be.instanceOf(TypeHelpersAssertionEqualityError);
+      assert.ok(thrownError instanceof TypeHelpersAssertionEqualityError);
       const equalityError = /** @type {TypeHelpersAssertionEqualityError} */ (thrownError);
 
-      expect(equalityError.actual).to.equal(1);
-      expect(equalityError.expected).to.equal(2);
-      expect(equalityError.operator).to.equal('strictEqual');
-      expect(equalityError.diff).to.equal('simple');
-      expect(equalityError.showDiff).to.equal(true);
-      expect(equalityError.stack).to.include('test/assert.spec.js');
+      assert.strictEqual(equalityError.actual, 1);
+      assert.strictEqual(equalityError.expected, 2);
+      assert.strictEqual(equalityError.operator, 'strictEqual');
+      assert.strictEqual(equalityError.diff, 'simple');
+      assert.strictEqual(equalityError.showDiff, true);
+      const { stack } = equalityError;
+      assert.ok(typeof stack === 'string');
+      assert.match(stack, /test[\\/]assert\.spec\.js/);
     });
 
     it('should use provided custom message', () => {
@@ -95,279 +96,279 @@ describe('assert', () => {
         thrownError = err;
       }
 
-      expect(thrownError).to.be.instanceOf(TypeHelpersAssertionEqualityError);
+      assert.ok(thrownError instanceof TypeHelpersAssertionEqualityError);
       const equalityError = /** @type {TypeHelpersAssertionEqualityError} */ (thrownError);
 
-      expect(equalityError.message).to.equal('Custom message');
+      assert.strictEqual(equalityError.message, 'Custom message');
     });
   });
 
   describe('assertObject()', () => {
     it('should not throw for valid objects', () => {
-      expect(() => assertObject({})).to.not.throw();
-      expect(() => assertObject({ foo: 'bar' })).to.not.throw();
-      expect(() => assertObject([])).to.not.throw();
+      assert.doesNotThrow(() => assertObject({}));
+      assert.doesNotThrow(() => assertObject({ foo: 'bar' }));
+      assert.doesNotThrow(() => assertObject([]));
     });
 
     it('should throw for non-objects', () => {
-      expect(() => assertObject(null)).to.throw(TypeHelpersAssertionError);
-      expect(() => assertObject(undefined)).to.throw(TypeHelpersAssertionError);
-      expect(() => assertObject('string')).to.throw(TypeHelpersAssertionError);
-      expect(() => assertObject(123)).to.throw(TypeHelpersAssertionError);
+      assert.throws(() => assertObject(null), TypeHelpersAssertionError);
+      assert.throws(() => assertObject(undefined), TypeHelpersAssertionError);
+      assert.throws(() => assertObject('string'), TypeHelpersAssertionError);
+      assert.throws(() => assertObject(123), TypeHelpersAssertionError);
     });
   });
 
   describe('assertObjectWithKey()', () => {
     it('should not throw when key exists', () => {
-      expect(() => assertObjectWithKey({ foo: 'bar' }, 'foo')).to.not.throw();
+      assert.doesNotThrow(() => assertObjectWithKey({ foo: 'bar' }, 'foo'));
     });
 
     it('should throw when key does not exist', () => {
-      expect(() => assertObjectWithKey({ foo: 'bar' }, 'baz')).to.throw(TypeHelpersAssertionError, 'Expected key "baz" to exist');
+      assert.throws(() => assertObjectWithKey({ foo: 'bar' }, 'baz'), { name: 'TypeHelpersAssertionError', message: /Expected key "baz" to exist/ });
     });
 
     it('should throw when value is not an object', () => {
-      expect(() => assertObjectWithKey('string', 'foo')).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      assert.throws(() => assertObjectWithKey('string', 'foo'), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
     });
   });
 
   describe('assertType()', () => {
     it('should not throw for correct types', () => {
-      expect(() => assertType('foo', 'string')).to.not.throw();
-      expect(() => assertType(123, 'number')).to.not.throw();
-      expect(() => assertType(true, 'boolean')).to.not.throw();
-      expect(() => assertType([], 'array')).to.not.throw();
-      expect(() => assertType({}, 'object')).to.not.throw();
-      expect(() => assertType(null, 'null')).to.not.throw();
+      assert.doesNotThrow(() => assertType('foo', 'string'));
+      assert.doesNotThrow(() => assertType(123, 'number'));
+      assert.doesNotThrow(() => assertType(true, 'boolean'));
+      assert.doesNotThrow(() => assertType([], 'array'));
+      assert.doesNotThrow(() => assertType({}, 'object'));
+      assert.doesNotThrow(() => assertType(null, 'null'));
     });
 
     it('should throw for incorrect types', () => {
-      expect(() => assertType('foo', 'number')).to.throw(TypeHelpersAssertionError, 'Expected type "number"');
-      expect(() => assertType(123, 'string')).to.throw(TypeHelpersAssertionError, 'Expected type "string"');
+      assert.throws(() => assertType('foo', 'number'), { name: 'TypeHelpersAssertionError', message: /Expected type "number"/ });
+      assert.throws(() => assertType(123, 'string'), { name: 'TypeHelpersAssertionError', message: /Expected type "string"/ });
     });
 
     it('should accept custom error message', () => {
-      expect(() => assertType('foo', 'number', 'Custom error')).to.throw(TypeHelpersAssertionError, 'Custom error');
+      assert.throws(() => assertType('foo', 'number', 'Custom error'), { name: 'TypeHelpersAssertionError', message: /Custom error/ });
     });
   });
 
   describe('assertKeyWithType()', () => {
     it('should not throw when key exists with correct type', () => {
-      expect(() => assertKeyWithType({ foo: 'bar' }, 'foo', 'string')).to.not.throw();
-      expect(() => assertKeyWithType({ num: 123 }, 'num', 'number')).to.not.throw();
+      assert.doesNotThrow(() => assertKeyWithType({ foo: 'bar' }, 'foo', 'string'));
+      assert.doesNotThrow(() => assertKeyWithType({ num: 123 }, 'num', 'number'));
     });
 
     it('should throw when key does not exist', () => {
-      expect(() => assertKeyWithType({ foo: 'bar' }, 'baz', 'string')).to.throw(TypeHelpersAssertionError, 'Expected key "baz" to exist');
+      assert.throws(() => assertKeyWithType({ foo: 'bar' }, 'baz', 'string'), { name: 'TypeHelpersAssertionError', message: /Expected key "baz" to exist/ });
     });
 
     it('should throw when key exists but has wrong type', () => {
-      expect(() => assertKeyWithType({ foo: 'bar' }, 'foo', 'number')).to.throw(TypeHelpersAssertionError, 'Expected key "foo" to have type "number"');
+      assert.throws(() => assertKeyWithType({ foo: 'bar' }, 'foo', 'number'), { name: 'TypeHelpersAssertionError', message: /Expected key "foo" to have type "number"/ });
     });
   });
 
   describe('assertKeyWithValue()', () => {
     it('should not throw when key exists with matching value', () => {
-      expect(() => assertKeyWithValue({ foo: 'bar' }, 'foo', 'bar')).to.not.throw();
-      expect(() => assertKeyWithValue({ num: 123 }, 'num', 123)).to.not.throw();
+      assert.doesNotThrow(() => assertKeyWithValue({ foo: 'bar' }, 'foo', 'bar'));
+      assert.doesNotThrow(() => assertKeyWithValue({ num: 123 }, 'num', 123));
     });
 
     it('should throw when key does not exist', () => {
-      expect(() => assertKeyWithValue({ foo: 'bar' }, 'baz', 'bar')).to.throw(TypeHelpersAssertionError, 'Expected key "baz" to exist');
+      assert.throws(() => assertKeyWithValue({ foo: 'bar' }, 'baz', 'bar'), { name: 'TypeHelpersAssertionError', message: /Expected key "baz" to exist/ });
     });
 
     it('should throw when key exists but has wrong value', () => {
-      expect(() => assertKeyWithValue({ foo: 'bar' }, 'foo', 'baz')).to.throw(TypeHelpersAssertionError, 'Expected key "foo" to be strictly equal to provided value');
+      assert.throws(() => assertKeyWithValue({ foo: 'bar' }, 'foo', 'baz'), (err) => err instanceof TypeHelpersAssertionError && err.message.includes('Expected key "foo" to be strictly equal to provided value'));
     });
   });
 
   describe('assertOptionalKeyWithType()', () => {
     it('should not throw when key does not exist', () => {
-      expect(() => assertOptionalKeyWithType({ foo: 'bar' }, 'baz', 'string')).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ foo: 'bar' }, 'baz', 'string'));
     });
 
     it('should not throw when key is undefined', () => {
-      expect(() => assertOptionalKeyWithType({ foo: undefined }, 'foo', 'string')).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ foo: undefined }, 'foo', 'string'));
     });
 
     it('should not throw when key exists with correct type', () => {
-      expect(() => assertOptionalKeyWithType({ foo: 'bar' }, 'foo', 'string')).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ foo: 'bar' }, 'foo', 'string'));
     });
 
     it('should throw when key exists with wrong type', () => {
-      expect(() => assertOptionalKeyWithType({ foo: 123 }, 'foo', 'string')).to.throw(TypeHelpersAssertionError, 'Expected existing key "foo" to be undefined or have type "string"');
+      assert.throws(() => assertOptionalKeyWithType({ foo: 123 }, 'foo', 'string'), { name: 'TypeHelpersAssertionError', message: /Expected existing key "foo" to be undefined or have type "string"/ });
     });
 
     it('should throw when value is not an object', () => {
-      expect(() => assertOptionalKeyWithType('string', 'foo', 'string')).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      assert.throws(() => assertOptionalKeyWithType('string', 'foo', 'string'), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
     });
   });
 
   describe('assertArrayOfLiteralType()', () => {
     it('should not throw for arrays with all elements of correct type', () => {
-      expect(() => assertArrayOfLiteralType(['foo', 'bar', 'baz'], 'string')).to.not.throw();
-      expect(() => assertArrayOfLiteralType([1, 2, 3], 'number')).to.not.throw();
-      expect(() => assertArrayOfLiteralType([true, false], 'boolean')).to.not.throw();
-      expect(() => assertArrayOfLiteralType([[], [1], [2, 3]], 'array')).to.not.throw();
+      assert.doesNotThrow(() => assertArrayOfLiteralType(['foo', 'bar', 'baz'], 'string'));
+      assert.doesNotThrow(() => assertArrayOfLiteralType([1, 2, 3], 'number'));
+      assert.doesNotThrow(() => assertArrayOfLiteralType([true, false], 'boolean'));
+      assert.doesNotThrow(() => assertArrayOfLiteralType([[], [1], [2, 3]], 'array'));
     });
 
     it('should not throw for empty arrays', () => {
-      expect(() => assertArrayOfLiteralType([], 'string')).to.not.throw();
-      expect(() => assertArrayOfLiteralType([], 'number')).to.not.throw();
+      assert.doesNotThrow(() => assertArrayOfLiteralType([], 'string'));
+      assert.doesNotThrow(() => assertArrayOfLiteralType([], 'number'));
     });
 
     it('should throw when array contains element of wrong type', () => {
-      expect(() => assertArrayOfLiteralType(['foo', 123, 'bar'], 'string')).to.throw(TypeHelpersAssertionError, 'Expected type "string"');
-      expect(() => assertArrayOfLiteralType([1, 2, 'three'], 'number')).to.throw(TypeHelpersAssertionError, 'Expected type "number"');
+      assert.throws(() => assertArrayOfLiteralType(['foo', 123, 'bar'], 'string'), { name: 'TypeHelpersAssertionError', message: /Expected type "string"/ });
+      assert.throws(() => assertArrayOfLiteralType([1, 2, 'three'], 'number'), { name: 'TypeHelpersAssertionError', message: /Expected type "number"/ });
     });
 
     it('should accept custom error message', () => {
-      expect(() => assertArrayOfLiteralType(['foo', 123], 'string', 'Custom message')).to.throw(TypeHelpersAssertionError, 'Custom message');
+      assert.throws(() => assertArrayOfLiteralType(['foo', 123], 'string', 'Custom message'), { name: 'TypeHelpersAssertionError', message: /Custom message/ });
     });
 
     it('should handle non-array values gracefully', () => {
       // Non-arrays should not throw (iterates over empty array)
-      expect(() => assertArrayOfLiteralType('not an array', 'string')).to.not.throw();
-      expect(() => assertArrayOfLiteralType(null, 'string')).to.not.throw();
-      expect(() => assertArrayOfLiteralType(undefined, 'string')).to.not.throw();
+      assert.doesNotThrow(() => assertArrayOfLiteralType('not an array', 'string'));
+      assert.doesNotThrow(() => assertArrayOfLiteralType(null, 'string'));
+      assert.doesNotThrow(() => assertArrayOfLiteralType(undefined, 'string'));
     });
   });
 
   describe('assertArrayOfLiteralType() with array of types', () => {
     it('should not throw for arrays with elements matching any allowed type', () => {
-      expect(() => assertArrayOfLiteralType(['foo', 123, 'bar'], ['string', 'number'])).to.not.throw();
-      expect(() => assertArrayOfLiteralType([1, 'two', 3], ['string', 'number'])).to.not.throw();
-      expect(() => assertArrayOfLiteralType([true, 42, 'test'], ['boolean', 'number', 'string'])).to.not.throw();
+      assert.doesNotThrow(() => assertArrayOfLiteralType(['foo', 123, 'bar'], ['string', 'number']));
+      assert.doesNotThrow(() => assertArrayOfLiteralType([1, 'two', 3], ['string', 'number']));
+      assert.doesNotThrow(() => assertArrayOfLiteralType([true, 42, 'test'], ['boolean', 'number', 'string']));
     });
 
     it('should not throw for empty arrays with array of types', () => {
-      expect(() => assertArrayOfLiteralType([], ['string', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertArrayOfLiteralType([], ['string', 'number']));
     });
 
     it('should throw when array contains element not matching any allowed type', () => {
-      expect(() => assertArrayOfLiteralType(['foo', null], ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected type "string", "number"');
-      expect(() => assertArrayOfLiteralType([1, undefined], ['string', 'boolean'])).to.throw(TypeHelpersAssertionError);
+      assert.throws(() => assertArrayOfLiteralType(['foo', null], ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected type "string", "number"/ });
+      assert.throws(() => assertArrayOfLiteralType([1, undefined], ['string', 'boolean']), TypeHelpersAssertionError);
     });
 
     it('should work with custom error message and array of types', () => {
-      expect(() => assertArrayOfLiteralType(['foo', null], ['string', 'number'], 'Custom message')).to.throw(TypeHelpersAssertionError, 'Custom message');
+      assert.throws(() => assertArrayOfLiteralType(['foo', null], ['string', 'number'], 'Custom message'), { name: 'TypeHelpersAssertionError', message: /Custom message/ });
     });
   });
 
   describe('assertObjectValueType()', () => {
     it('should not throw for objects with all values of correct type', () => {
-      expect(() => assertObjectValueType({ a: 'foo', b: 'bar' }, 'string')).to.not.throw();
-      expect(() => assertObjectValueType({ x: 1, y: 2, z: 3 }, 'number')).to.not.throw();
-      expect(() => assertObjectValueType({ flag1: true, flag2: false }, 'boolean')).to.not.throw();
+      assert.doesNotThrow(() => assertObjectValueType({ a: 'foo', b: 'bar' }, 'string'));
+      assert.doesNotThrow(() => assertObjectValueType({ x: 1, y: 2, z: 3 }, 'number'));
+      assert.doesNotThrow(() => assertObjectValueType({ flag1: true, flag2: false }, 'boolean'));
     });
 
     it('should not throw for empty objects', () => {
-      expect(() => assertObjectValueType({}, 'string')).to.not.throw();
-      expect(() => assertObjectValueType({}, 'number')).to.not.throw();
+      assert.doesNotThrow(() => assertObjectValueType({}, 'string'));
+      assert.doesNotThrow(() => assertObjectValueType({}, 'number'));
     });
 
     it('should throw when object contains value of wrong type', () => {
-      expect(() => assertObjectValueType({ a: 'foo', b: 123 }, 'string')).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "string"');
-      expect(() => assertObjectValueType({ x: 1, y: 'two' }, 'number')).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "number"');
+      assert.throws(() => assertObjectValueType({ a: 'foo', b: 123 }, 'string'), { name: 'TypeHelpersAssertionError', message: /Expected object values to have type "string"/ });
+      assert.throws(() => assertObjectValueType({ x: 1, y: 'two' }, 'number'), { name: 'TypeHelpersAssertionError', message: /Expected object values to have type "number"/ });
     });
 
     it('should throw when value is not an object', () => {
-      expect(() => assertObjectValueType('string', 'string')).to.throw(TypeHelpersAssertionError, 'Expected an object');
-      expect(() => assertObjectValueType(null, 'string')).to.throw(TypeHelpersAssertionError, 'Expected an object');
-      expect(() => assertObjectValueType(123, 'string')).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      assert.throws(() => assertObjectValueType('string', 'string'), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
+      assert.throws(() => assertObjectValueType(null, 'string'), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
+      assert.throws(() => assertObjectValueType(123, 'string'), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
     });
 
     it('should validate that all keys are strings', () => {
       const obj = { a: 'foo', b: 'bar' };
-      expect(() => assertObjectValueType(obj, 'string')).to.not.throw();
+      assert.doesNotThrow(() => assertObjectValueType(obj, 'string'));
     });
 
     it('should not throw for objects with values of any allowed type (array)', () => {
-      expect(() => assertObjectValueType({ a: 'foo', b: 123, c: true }, ['string', 'number', 'boolean'])).to.not.throw();
-      expect(() => assertObjectValueType({ x: 1, y: 'two' }, ['string', 'number'])).to.not.throw();
-      expect(() => assertObjectValueType({ flag: true, count: 42 }, ['boolean', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertObjectValueType({ a: 'foo', b: 123, c: true }, ['string', 'number', 'boolean']));
+      assert.doesNotThrow(() => assertObjectValueType({ x: 1, y: 'two' }, ['string', 'number']));
+      assert.doesNotThrow(() => assertObjectValueType({ flag: true, count: 42 }, ['boolean', 'number']));
     });
 
     it('should not throw for empty objects with array of types', () => {
-      expect(() => assertObjectValueType({}, ['string', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertObjectValueType({}, ['string', 'number']));
     });
 
     it('should throw when object contains value not matching any allowed type', () => {
-      expect(() => assertObjectValueType({ a: 'foo', b: null }, ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "string", "number"');
-      expect(() => assertObjectValueType({ x: 1, y: undefined }, ['string', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected object values to have type "string", "boolean"');
+      assert.throws(() => assertObjectValueType({ a: 'foo', b: null }, ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected object values to have type "string", "number"/ });
+      assert.throws(() => assertObjectValueType({ x: 1, y: undefined }, ['string', 'boolean']), { name: 'TypeHelpersAssertionError', message: /Expected object values to have type "string", "boolean"/ });
     });
   });
 
   describe('assertKeyWithType() with array of types', () => {
     it('should not throw when value matches any allowed type', () => {
-      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.not.throw();
-      expect(() => assertKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.not.throw();
-      expect(() => assertKeyWithType({ x: true }, 'x', ['boolean', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'number']));
+      assert.doesNotThrow(() => assertKeyWithType({ x: 42 }, 'x', ['string', 'number']));
+      assert.doesNotThrow(() => assertKeyWithType({ x: true }, 'x', ['boolean', 'number']));
     });
 
     it('should throw when value matches none of the allowed types', () => {
-      expect(() => assertKeyWithType({ x: true }, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "string", "number"');
-      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "number", "boolean"');
+      assert.throws(() => assertKeyWithType({ x: true }, 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected key "x" to have type "string", "number"/ });
+      assert.throws(() => assertKeyWithType({ x: 'hello' }, 'x', ['number', 'boolean']), { name: 'TypeHelpersAssertionError', message: /Expected key "x" to have type "number", "boolean"/ });
     });
 
     it('should throw when key does not exist', () => {
-      expect(() => assertKeyWithType({ y: 'hello' }, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to exist in object');
+      assert.throws(() => assertKeyWithType({ y: 'hello' }, 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected key "x" to exist in object/ });
     });
 
     it('should throw when object is not an object', () => {
-      expect(() => assertKeyWithType(undefined, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
-      expect(() => assertKeyWithType('not an object', 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      assert.throws(() => assertKeyWithType(undefined, 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
+      assert.throws(() => assertKeyWithType('not an object', 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
     });
 
     it('should work with single-element array', () => {
-      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string'])).to.not.throw();
-      expect(() => assertKeyWithType({ x: 42 }, 'x', ['string'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "string"');
+      assert.doesNotThrow(() => assertKeyWithType({ x: 'hello' }, 'x', ['string']));
+      assert.throws(() => assertKeyWithType({ x: 42 }, 'x', ['string']), { name: 'TypeHelpersAssertionError', message: /Expected key "x" to have type "string"/ });
     });
 
     it('should work with null as an allowed type', () => {
-      expect(() => assertKeyWithType({ x: null }, 'x', ['string', 'null'])).to.not.throw();
-      expect(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.not.throw();
+      assert.doesNotThrow(() => assertKeyWithType({ x: null }, 'x', ['string', 'null']));
+      assert.doesNotThrow(() => assertKeyWithType({ x: 'hello' }, 'x', ['string', 'null']));
 
-      expect(() => assertKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected key "x" to have type "number", "boolean"');
+      assert.throws(() => assertKeyWithType({ x: null }, 'x', ['number', 'boolean']), { name: 'TypeHelpersAssertionError', message: /Expected key "x" to have type "number", "boolean"/ });
     });
   });
 
   describe('assertOptionalKeyWithType() with array of types', () => {
     it('should not throw when key is absent', () => {
-      expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'number']));
     });
 
     it('should not throw when key exists with value matching any allowed type', () => {
-      expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.not.throw();
-      expect(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'number']));
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string', 'number']));
     });
 
     it('should not throw when key exists and is undefined', () => {
-      expect(() => assertOptionalKeyWithType({ x: undefined }, 'x', ['string', 'number'])).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ x: undefined }, 'x', ['string', 'number']));
     });
 
     it('should throw when key exists with value matching none of the allowed types', () => {
-      expect(() => assertOptionalKeyWithType({ x: true }, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string", "number"');
-      expect(() => assertOptionalKeyWithType({ x: Symbol('sym') }, 'x', ['string', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string", "boolean"');
+      assert.throws(() => assertOptionalKeyWithType({ x: true }, 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected existing key "x" to be undefined or have type "string", "number"/ });
+      assert.throws(() => assertOptionalKeyWithType({ x: Symbol('sym') }, 'x', ['string', 'boolean']), { name: 'TypeHelpersAssertionError', message: /Expected existing key "x" to be undefined or have type "string", "boolean"/ });
     });
 
     it('should throw when object is not an object', () => {
-      expect(() => assertOptionalKeyWithType(undefined, 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
-      expect(() => assertOptionalKeyWithType('not an object', 'x', ['string', 'number'])).to.throw(TypeHelpersAssertionError, 'Expected an object');
+      assert.throws(() => assertOptionalKeyWithType(undefined, 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
+      assert.throws(() => assertOptionalKeyWithType('not an object', 'x', ['string', 'number']), { name: 'TypeHelpersAssertionError', message: /Expected an object/ });
     });
 
     it('should work with single-element array', () => {
-      expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string'])).to.not.throw();
-      expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string'])).to.not.throw();
-      expect(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "string"');
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string']));
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string']));
+      assert.throws(() => assertOptionalKeyWithType({ x: 42 }, 'x', ['string']), { name: 'TypeHelpersAssertionError', message: /Expected existing key "x" to be undefined or have type "string"/ });
     });
 
     it('should work with null as an allowed type', () => {
-      expect(() => assertOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.not.throw();
-      expect(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.not.throw();
-      expect(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null'])).to.not.throw();
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ x: null }, 'x', ['string', 'null']));
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null']));
+      assert.doesNotThrow(() => assertOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null']));
 
-      expect(() => assertOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError, 'Expected existing key "x" to be undefined or have type "number", "boolean"');
+      assert.throws(() => assertOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean']), { name: 'TypeHelpersAssertionError', message: /Expected existing key "x" to be undefined or have type "number", "boolean"/ });
     });
   });
 });

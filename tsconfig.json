@@ -1,5 +1,5 @@
 {
-  "extends": "@voxpelli/tsconfig/node20.json",
+  "extends": "@voxpelli/tsconfig/node22.json",
   "files": [
     "index.js"
   ],
@@ -9,6 +9,6 @@
   ],
   "compilerOptions": {
     "lib": ["es2022", "dom"],
-    "types": ["mocha"]
+    "types": ["node"]
   }
 }

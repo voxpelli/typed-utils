@@ -14,7 +14,7 @@ My personal (type-enabled) utils / helpers
 > [!NOTE]
 > Check the `"engines"` field in [`package.json`](./package.json) for the definitive version requirements, as they may be updated independently of this README.
 
-- **Node.js**: ^20.19.0 or ^22.13.0 or >=24.0.0
+- **Node.js**: ^22.22.2 or ^24.15.0 or >=26.0.0
 - **TypeScript**: >=5.9
 
 ## Usage

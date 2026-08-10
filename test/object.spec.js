@@ -1,8 +1,7 @@
-import chai from 'chai';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import { omit, pick } from '../lib/object.js';
-
-const should = chai.should();
 
 const referenceObject = Object.freeze({
   abc: 123,
@@ -15,15 +14,14 @@ describe('object helpers', () => {
     it('should omit specified keys', () => {
       const result = omit(referenceObject, ['abc', 'xyz']);
 
-      should.exist(result);
-
-      result.should.eql({ def: 456 });
+      assert.deepStrictEqual(result, { def: 456 });
     });
 
     it('should return a new object', () => {
-      omit(referenceObject, [])
-        .should.eql(referenceObject)
-        .but.not.equal(referenceObject);
+      const result = omit(referenceObject, []);
+
+      assert.deepStrictEqual(result, referenceObject);
+      assert.notStrictEqual(result, referenceObject);
     });
   });
 
@@ -31,15 +29,14 @@ describe('object helpers', () => {
     it('should pick specified keys', () => {
       const result = pick(referenceObject, ['abc', 'xyz']);
 
-      should.exist(result);
-
-      result.should.eql({ abc: 123, xyz: 789 });
+      assert.deepStrictEqual(result, { abc: 123, xyz: 789 });
     });
 
     it('should return a new object', () => {
-      pick(referenceObject, ['abc', 'def', 'xyz'])
-        .should.eql(referenceObject)
-        .but.not.equal(referenceObject);
+      const result = pick(referenceObject, ['abc', 'def', 'xyz']);
+
+      assert.deepStrictEqual(result, referenceObject);
+      assert.notStrictEqual(result, referenceObject);
     });
   });
 });

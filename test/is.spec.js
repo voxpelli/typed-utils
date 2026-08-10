@@ -1,177 +1,177 @@
-import chai from 'chai';
-import { describe, it } from 'mocha';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
-import { isArrayOfLiteralType, isKeyWithType, isKeyWithValue, isObjectValueType, isOptionalKeyWithType } from '../lib/is.js';
-
-const { expect } = chai;
+import {
+  isArrayOfLiteralType, isKeyWithType, isKeyWithValue, isObjectValueType, isOptionalKeyWithType,
+} from '../lib/is.js';
 
 describe('is', () => {
   describe('isKeyWithValue()', () => {
     it('should return true when key exists with matching value', () => {
-      expect(isKeyWithValue({ foo: 'bar' }, 'foo', 'bar')).to.equal(true);
-      expect(isKeyWithValue({ num: 123 }, 'num', 123)).to.equal(true);
+      assert.strictEqual(isKeyWithValue({ foo: 'bar' }, 'foo', 'bar'), true);
+      assert.strictEqual(isKeyWithValue({ num: 123 }, 'num', 123), true);
     });
 
     it('should return false when key does not exist', () => {
-      expect(isKeyWithValue({ foo: 'bar' }, 'baz', 'bar')).to.equal(false);
+      assert.strictEqual(isKeyWithValue({ foo: 'bar' }, 'baz', 'bar'), false);
     });
 
     it('should return false when key exists but has wrong value', () => {
-      expect(isKeyWithValue({ foo: 'bar' }, 'foo', 'baz')).to.equal(false);
+      assert.strictEqual(isKeyWithValue({ foo: 'bar' }, 'foo', 'baz'), false);
     });
   });
 
   describe('isKeyWithType() with array of types', () => {
     it('should return true when value matches any allowed type', () => {
-      expect(isKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.equal(true);
-      expect(isKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.equal(true);
-      expect(isKeyWithType({ x: true }, 'x', ['boolean', 'number'])).to.equal(true);
+      assert.strictEqual(isKeyWithType({ x: 'hello' }, 'x', ['string', 'number']), true);
+      assert.strictEqual(isKeyWithType({ x: 42 }, 'x', ['string', 'number']), true);
+      assert.strictEqual(isKeyWithType({ x: true }, 'x', ['boolean', 'number']), true);
     });
 
     it('should return false when value matches none of the allowed types', () => {
-      expect(isKeyWithType({ x: true }, 'x', ['string', 'number'])).to.equal(false);
-      expect(isKeyWithType({ x: 'hello' }, 'x', ['number', 'boolean'])).to.equal(false);
+      assert.strictEqual(isKeyWithType({ x: true }, 'x', ['string', 'number']), false);
+      assert.strictEqual(isKeyWithType({ x: 'hello' }, 'x', ['number', 'boolean']), false);
     });
 
     it('should work with single-element array', () => {
-      expect(isKeyWithType({ x: 'hello' }, 'x', ['string'])).to.equal(true);
-      expect(isKeyWithType({ x: 42 }, 'x', ['string'])).to.equal(false);
+      assert.strictEqual(isKeyWithType({ x: 'hello' }, 'x', ['string']), true);
+      assert.strictEqual(isKeyWithType({ x: 42 }, 'x', ['string']), false);
     });
 
     it('should return false for key not in object', () => {
-      expect(isKeyWithType({ x: 'hello' }, 'y', ['string', 'number'])).to.equal(false);
+      assert.strictEqual(isKeyWithType({ x: 'hello' }, 'y', ['string', 'number']), false);
     });
 
     it('should return false when object is not an object', () => {
-      expect(isKeyWithType(undefined, 'x', ['string', 'number'])).to.equal(false);
-      expect(isKeyWithType('not an object', 'x', ['string', 'number'])).to.equal(false);
+      assert.strictEqual(isKeyWithType(undefined, 'x', ['string', 'number']), false);
+      assert.strictEqual(isKeyWithType('not an object', 'x', ['string', 'number']), false);
     });
 
     it('should work with null as an allowed type', () => {
       // eslint-disable-next-line unicorn/no-null
-      expect(isKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
+      assert.strictEqual(isKeyWithType({ x: null }, 'x', ['string', 'null']), true);
       // eslint-disable-next-line unicorn/no-null
-      expect(isKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.equal(false);
-      expect(isKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.equal(true);
+      assert.strictEqual(isKeyWithType({ x: null }, 'x', ['number', 'boolean']), false);
+      assert.strictEqual(isKeyWithType({ x: 'hello' }, 'x', ['string', 'null']), true);
     });
   });
 
   describe('isOptionalKeyWithType() with array of types', () => {
     it('should return true when key is absent', () => {
-      expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'number'])).to.equal(true);
+      assert.strictEqual(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'number']), true);
     });
 
     it('should return true when key exists with value matching any allowed type', () => {
-      expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'number'])).to.equal(true);
-      expect(isOptionalKeyWithType({ x: 42 }, 'x', ['string', 'number'])).to.equal(true);
+      assert.strictEqual(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'number']), true);
+      assert.strictEqual(isOptionalKeyWithType({ x: 42 }, 'x', ['string', 'number']), true);
     });
 
     it('should return true when key exists and is undefined', () => {
-      expect(isOptionalKeyWithType({ x: undefined }, 'x', ['string', 'number'])).to.equal(true);
+      assert.strictEqual(isOptionalKeyWithType({ x: undefined }, 'x', ['string', 'number']), true);
     });
 
     it('should return false when key exists with value matching none of the allowed types', () => {
-      expect(isOptionalKeyWithType({ x: true }, 'x', ['string', 'number'])).to.equal(false);
-      expect(isOptionalKeyWithType({ x: Symbol('sym') }, 'x', ['string', 'boolean'])).to.equal(false);
+      assert.strictEqual(isOptionalKeyWithType({ x: true }, 'x', ['string', 'number']), false);
+      assert.strictEqual(isOptionalKeyWithType({ x: Symbol('sym') }, 'x', ['string', 'boolean']), false);
     });
 
     it('should return false when object is not an object', () => {
-      expect(isOptionalKeyWithType(undefined, 'x', ['string', 'number'])).to.equal(false);
-      expect(isOptionalKeyWithType('not an object', 'x', ['string', 'number'])).to.equal(false);
+      assert.strictEqual(isOptionalKeyWithType(undefined, 'x', ['string', 'number']), false);
+      assert.strictEqual(isOptionalKeyWithType('not an object', 'x', ['string', 'number']), false);
     });
 
     it('should work with single-element array', () => {
-      expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string'])).to.equal(true);
-      expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string'])).to.equal(true);
-      expect(isOptionalKeyWithType({ x: 42 }, 'x', ['string'])).to.equal(false);
+      assert.strictEqual(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string']), true);
+      assert.strictEqual(isOptionalKeyWithType({ y: 'other' }, 'x', ['string']), true);
+      assert.strictEqual(isOptionalKeyWithType({ x: 42 }, 'x', ['string']), false);
     });
 
     it('should work with null as an allowed type', () => {
       // eslint-disable-next-line unicorn/no-null
-      expect(isOptionalKeyWithType({ x: null }, 'x', ['string', 'null'])).to.equal(true);
+      assert.strictEqual(isOptionalKeyWithType({ x: null }, 'x', ['string', 'null']), true);
       // eslint-disable-next-line unicorn/no-null
-      expect(isOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean'])).to.equal(false);
-      expect(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null'])).to.equal(true);
-      expect(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null'])).to.equal(true);
+      assert.strictEqual(isOptionalKeyWithType({ x: null }, 'x', ['number', 'boolean']), false);
+      assert.strictEqual(isOptionalKeyWithType({ x: 'hello' }, 'x', ['string', 'null']), true);
+      assert.strictEqual(isOptionalKeyWithType({ y: 'other' }, 'x', ['string', 'null']), true);
     });
   });
 
   describe('isArrayOfLiteralType()', () => {
     it('should return true for arrays with all elements of correct type', () => {
-      expect(isArrayOfLiteralType(['foo', 'bar', 'baz'], 'string')).to.equal(true);
-      expect(isArrayOfLiteralType([1, 2, 3], 'number')).to.equal(true);
-      expect(isArrayOfLiteralType([true, false], 'boolean')).to.equal(true);
-      expect(isArrayOfLiteralType([[], [1], [2, 3]], 'array')).to.equal(true);
+      assert.strictEqual(isArrayOfLiteralType(['foo', 'bar', 'baz'], 'string'), true);
+      assert.strictEqual(isArrayOfLiteralType([1, 2, 3], 'number'), true);
+      assert.strictEqual(isArrayOfLiteralType([true, false], 'boolean'), true);
+      assert.strictEqual(isArrayOfLiteralType([[], [1], [2, 3]], 'array'), true);
     });
 
     it('should return true for empty arrays', () => {
-      expect(isArrayOfLiteralType([], 'string')).to.equal(true);
-      expect(isArrayOfLiteralType([], 'number')).to.equal(true);
+      assert.strictEqual(isArrayOfLiteralType([], 'string'), true);
+      assert.strictEqual(isArrayOfLiteralType([], 'number'), true);
     });
 
     it('should return false when array contains element of wrong type', () => {
-      expect(isArrayOfLiteralType(['foo', 123, 'bar'], 'string')).to.equal(false);
-      expect(isArrayOfLiteralType([1, 2, 'three'], 'number')).to.equal(false);
+      assert.strictEqual(isArrayOfLiteralType(['foo', 123, 'bar'], 'string'), false);
+      assert.strictEqual(isArrayOfLiteralType([1, 2, 'three'], 'number'), false);
     });
 
     it('should return false for non-array values', () => {
-      expect(isArrayOfLiteralType('not an array', 'string')).to.equal(false);
+      assert.strictEqual(isArrayOfLiteralType('not an array', 'string'), false);
       // eslint-disable-next-line unicorn/no-null
-      expect(isArrayOfLiteralType(null, 'string')).to.equal(false);
-      expect(isArrayOfLiteralType(undefined, 'string')).to.equal(false);
+      assert.strictEqual(isArrayOfLiteralType(null, 'string'), false);
+      assert.strictEqual(isArrayOfLiteralType(undefined, 'string'), false);
     });
   });
 
   describe('isArrayOfLiteralType() with array of types', () => {
     it('should return true for arrays with elements matching any allowed type', () => {
-      expect(isArrayOfLiteralType(['foo', 123, 'bar'], ['string', 'number'])).to.equal(true);
-      expect(isArrayOfLiteralType([1, 'two', 3], ['string', 'number'])).to.equal(true);
-      expect(isArrayOfLiteralType([true, 42, 'test'], ['boolean', 'number', 'string'])).to.equal(true);
+      assert.strictEqual(isArrayOfLiteralType(['foo', 123, 'bar'], ['string', 'number']), true);
+      assert.strictEqual(isArrayOfLiteralType([1, 'two', 3], ['string', 'number']), true);
+      assert.strictEqual(isArrayOfLiteralType([true, 42, 'test'], ['boolean', 'number', 'string']), true);
     });
 
     it('should return false when array contains element not matching any allowed type', () => {
       // eslint-disable-next-line unicorn/no-null
-      expect(isArrayOfLiteralType(['foo', null], ['string', 'number'])).to.equal(false);
-      expect(isArrayOfLiteralType([1, undefined], ['string', 'boolean'])).to.equal(false);
+      assert.strictEqual(isArrayOfLiteralType(['foo', null], ['string', 'number']), false);
+      assert.strictEqual(isArrayOfLiteralType([1, undefined], ['string', 'boolean']), false);
     });
   });
 
   describe('isObjectValueType()', () => {
     it('should return true for objects with all values of correct type', () => {
-      expect(isObjectValueType({ a: 'foo', b: 'bar' }, 'string')).to.equal(true);
-      expect(isObjectValueType({ x: 1, y: 2, z: 3 }, 'number')).to.equal(true);
-      expect(isObjectValueType({ flag1: true, flag2: false }, 'boolean')).to.equal(true);
+      assert.strictEqual(isObjectValueType({ a: 'foo', b: 'bar' }, 'string'), true);
+      assert.strictEqual(isObjectValueType({ x: 1, y: 2, z: 3 }, 'number'), true);
+      assert.strictEqual(isObjectValueType({ flag1: true, flag2: false }, 'boolean'), true);
     });
 
     it('should return true for empty objects', () => {
-      expect(isObjectValueType({}, 'string')).to.equal(true);
-      expect(isObjectValueType({}, 'number')).to.equal(true);
+      assert.strictEqual(isObjectValueType({}, 'string'), true);
+      assert.strictEqual(isObjectValueType({}, 'number'), true);
     });
 
     it('should return false when object contains value of wrong type', () => {
-      expect(isObjectValueType({ a: 'foo', b: 123 }, 'string')).to.equal(false);
-      expect(isObjectValueType({ x: 1, y: 'two' }, 'number')).to.equal(false);
+      assert.strictEqual(isObjectValueType({ a: 'foo', b: 123 }, 'string'), false);
+      assert.strictEqual(isObjectValueType({ x: 1, y: 'two' }, 'number'), false);
     });
 
     it('should return false when value is not an object', () => {
-      expect(isObjectValueType('string', 'string')).to.equal(false);
+      assert.strictEqual(isObjectValueType('string', 'string'), false);
       // eslint-disable-next-line unicorn/no-null
-      expect(isObjectValueType(null, 'string')).to.equal(false);
-      expect(isObjectValueType(123, 'string')).to.equal(false);
+      assert.strictEqual(isObjectValueType(null, 'string'), false);
+      assert.strictEqual(isObjectValueType(123, 'string'), false);
     });
   });
 
   describe('isObjectValueType() with array of types', () => {
     it('should return true for objects with values of any allowed type', () => {
-      expect(isObjectValueType({ a: 'foo', b: 123, c: true }, ['string', 'number', 'boolean'])).to.equal(true);
-      expect(isObjectValueType({ x: 1, y: 'two' }, ['string', 'number'])).to.equal(true);
-      expect(isObjectValueType({ flag: true, count: 42 }, ['boolean', 'number'])).to.equal(true);
+      assert.strictEqual(isObjectValueType({ a: 'foo', b: 123, c: true }, ['string', 'number', 'boolean']), true);
+      assert.strictEqual(isObjectValueType({ x: 1, y: 'two' }, ['string', 'number']), true);
+      assert.strictEqual(isObjectValueType({ flag: true, count: 42 }, ['boolean', 'number']), true);
     });
 
     it('should return false when object contains value not matching any allowed type', () => {
       // eslint-disable-next-line unicorn/no-null
-      expect(isObjectValueType({ a: 'foo', b: null }, ['string', 'number'])).to.equal(false);
-      expect(isObjectValueType({ x: 1, y: undefined }, ['string', 'boolean'])).to.equal(false);
+      assert.strictEqual(isObjectValueType({ a: 'foo', b: null }, ['string', 'number']), false);
+      assert.strictEqual(isObjectValueType({ x: 1, y: undefined }, ['string', 'boolean']), false);
     });
   });
 });
