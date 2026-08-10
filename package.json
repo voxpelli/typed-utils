@@ -59,7 +59,7 @@
     "installed-check": "^10.0.1",
     "knip": "^6.15.0",
     "npm-run-all2": "^8.0.4",
-    "tstyche": "^6.2.0",
+    "tstyche": "^7.2.2",
     "type-coverage": "^2.29.7",
     "typescript": "~6.0.3",
     "validate-conventional-commit": "^1.0.4"
