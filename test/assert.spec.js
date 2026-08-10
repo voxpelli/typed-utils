@@ -84,7 +84,7 @@ describe('assert', () => {
       assert.strictEqual(equalityError.showDiff, true);
       const { stack } = equalityError;
       assert.ok(typeof stack === 'string');
-      assert.match(stack, /test\/assert\.spec\.js/);
+      assert.match(stack, /test[\\/]assert\.spec\.js/);
     });
 
     it('should use provided custom message', () => {

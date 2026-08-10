@@ -97,7 +97,7 @@ describe('object path helpers', () => {
     it('should get string value by array path', () => {
       const result = getStringValueByPath(referenceObject(), ['foo', 'xyz', 'bcd']);
 
-      assert.deepStrictEqual(result, 'test');
+      assert.strictEqual(result, 'test');
     });
 
     it('should get string value by single segment path', () => {
