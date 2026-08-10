@@ -1,5 +1,21 @@
 # Changelog
 
+## [6.0.0](https://github.com/voxpelli/typed-utils/compare/v5.0.0...v6.0.0) (2026-08-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* minimum Node.js version raised to 22.22.2; Node 20 is no longer supported. `engines.typescript` remains `>=5.9` but `tstyche` now requires v7.2.2+.
+
+### 📚 Documentation
+
+* keep README.md in sync with engines version ([112258f](https://github.com/voxpelli/typed-utils/commit/112258f69b727f7eb1c74874bfbc1d2f6319fe74))
+
+
+### 🧹 Chores
+
+* drop Node 20, migrate tests to node:test ([#104](https://github.com/voxpelli/typed-utils/issues/104)) ([0a66bd8](https://github.com/voxpelli/typed-utils/commit/0a66bd8a5bcbf36fcffa28cf83c95b62bff93096))
+
 ## [5.0.0](https://github.com/voxpelli/typed-utils/compare/v4.3.0...v5.0.0) (2026-06-05)
 
 
