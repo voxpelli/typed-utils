@@ -1,8 +1,7 @@
-import chai from 'chai';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import { getObjectValueByPath, getStringValueByPath, getValueByPath } from '../lib/object-path.js';
-
-const should = chai.should();
 
 const referenceObject = () => ({
   foo: {
@@ -21,58 +20,50 @@ describe('object path helpers', () => {
     it('should get object value by key path', () => {
       const result = getObjectValueByPath(referenceObject(), 'foo.xyz');
 
-      should.exist(result);
-
-      result?.should.deep.equal({ bcd: 'test' });
+      assert.deepStrictEqual(result, { bcd: 'test' });
     });
 
     it('should get object value by array path', () => {
       const result = getObjectValueByPath(referenceObject(), ['foo', 'xyz']);
 
-      should.exist(result);
-
-      result?.should.deep.equal({ bcd: 'test' });
+      assert.deepStrictEqual(result, { bcd: 'test' });
     });
 
     it('should return false when value is not an object', () => {
       const result = getObjectValueByPath(referenceObject(), 'foo.bar');
 
-      should.exist(result);
-
-      result?.should.equal(false);
+      assert.strictEqual(result, false);
     });
 
     it('should return undefined when value path does not exist', () => {
       const result = getObjectValueByPath(referenceObject(), 'foo.nonexisting');
 
-      should.not.exist(result);
+      assert.strictEqual(result, undefined);
     });
 
     it('should return false when sent in object is not an object', () => {
       const result = getObjectValueByPath(true, 'foo.nonexisting');
 
-      should.exist(result);
-
-      result?.should.equal(false);
+      assert.strictEqual(result, false);
     });
 
     it('should return undefined when empty path', () => {
       const result = getObjectValueByPath(referenceObject(), '');
 
-      should.not.exist(result);
+      assert.strictEqual(result, undefined);
     });
 
     it('should throw on prototype pollution', () => {
       for (const key of ['__proto__', 'constructor', 'prototype']) {
-        should.Throw(() => {
+        assert.throws(() => {
           getObjectValueByPath(referenceObject(), `foo.${key}`);
-        }, `Do not include "${key}" in your path`);
-        should.Throw(() => {
+        }, (err) => err instanceof Error && err.message.includes(`Do not include "${key}" in your path`));
+        assert.throws(() => {
           getObjectValueByPath(referenceObject(), key);
-        }, `Do not include "${key}" in your path`);
-        should.Throw(() => {
+        }, (err) => err instanceof Error && err.message.includes(`Do not include "${key}" in your path`));
+        assert.throws(() => {
           getObjectValueByPath(referenceObject(), `foo.${key}`, true);
-        }, `Do not include "${key}" in your path`);
+        }, (err) => err instanceof Error && err.message.includes(`Do not include "${key}" in your path`));
       }
     });
 
@@ -80,14 +71,13 @@ describe('object path helpers', () => {
       const obj = referenceObject();
 
       const result = getObjectValueByPath(obj, 'foo.added');
-      should.not.exist(result);
+      assert.strictEqual(result, undefined);
 
-      obj.should.deep.equal(referenceObject());
+      assert.deepStrictEqual(obj, referenceObject());
 
       const result2 = getObjectValueByPath(obj, 'foo.added', true);
-      should.exist(result2);
-      result2.should.deep.equal({});
-      obj.should.deep.equal({
+      assert.deepStrictEqual(result2, {});
+      assert.deepStrictEqual(obj, {
         ...referenceObject(),
         foo: {
           ...referenceObject().foo,
@@ -101,87 +91,71 @@ describe('object path helpers', () => {
     it('should get string value by key path', () => {
       const result = getStringValueByPath(referenceObject(), 'foo.xyz.bcd');
 
-      should.exist(result);
-
-      result?.should.equal('test');
+      assert.strictEqual(result, 'test');
     });
 
     it('should get string value by array path', () => {
       const result = getStringValueByPath(referenceObject(), ['foo', 'xyz', 'bcd']);
 
-      should.exist(result);
-
-      result?.should.deep.equal('test');
+      assert.deepStrictEqual(result, 'test');
     });
 
     it('should get string value by single segment path', () => {
       const result = getStringValueByPath(referenceObject(), 'cde');
 
-      should.exist(result);
-
-      result?.should.equal('yay');
+      assert.strictEqual(result, 'yay');
     });
 
     it('should return empty string', () => {
       const result = getStringValueByPath(referenceObject(), 'def');
 
-      should.exist(result);
-
-      result?.should.equal('');
+      assert.strictEqual(result, '');
     });
 
     it('should return false when value is not a string', () => {
       const result = getStringValueByPath(referenceObject(), 'foo.bar');
 
-      should.exist(result);
-
-      result?.should.equal(false);
+      assert.strictEqual(result, false);
     });
 
     it('should return false when value is an object', () => {
       const result = getStringValueByPath(referenceObject(), 'foo.xyz');
 
-      should.exist(result);
-
-      result?.should.equal(false);
+      assert.strictEqual(result, false);
     });
 
     it('should return false when path is not an object all the way', () => {
       const result = getStringValueByPath(referenceObject(), 'foo.bar.xyz');
 
-      should.exist(result);
-
-      result?.should.equal(false);
+      assert.strictEqual(result, false);
     });
 
     it('should return undefined when value path does not exist', () => {
       const result = getStringValueByPath(referenceObject(), 'foo.nonexisting');
 
-      should.not.exist(result);
+      assert.strictEqual(result, undefined);
     });
 
     it('should return undefined when empty path', () => {
       const result = getStringValueByPath(referenceObject(), '');
 
-      should.not.exist(result);
+      assert.strictEqual(result, undefined);
     });
 
     it('should return false when sent in value is not an object', () => {
       const result = getStringValueByPath(true, 'foo.nonexisting');
 
-      should.exist(result);
-
-      result?.should.equal(false);
+      assert.strictEqual(result, false);
     });
 
     it('should throw on prototype pollution', () => {
       for (const key of ['__proto__', 'constructor', 'prototype']) {
-        should.Throw(() => {
+        assert.throws(() => {
           getStringValueByPath(referenceObject(), `foo.${key}`);
-        }, `Do not include "${key}" in your path`);
-        should.Throw(() => {
+        }, (err) => err instanceof Error && err.message.includes(`Do not include "${key}" in your path`));
+        assert.throws(() => {
           getStringValueByPath(referenceObject(), key);
-        }, `Do not include "${key}" in your path`);
+        }, (err) => err instanceof Error && err.message.includes(`Do not include "${key}" in your path`));
       }
     });
   });
@@ -190,34 +164,26 @@ describe('object path helpers', () => {
     it('should get value by key path', () => {
       const result = getValueByPath(referenceObject(), 'foo.bar');
 
-      should.exist(result);
-
-      result?.should.deep.equal({ value: 123 });
+      assert.deepStrictEqual(result, { value: 123 });
     });
 
     it('should get value by array path', () => {
       const result = getValueByPath(referenceObject(), ['foo', 'bar']);
 
-      should.exist(result);
-
-      result?.should.deep.equal({ value: 123 });
+      assert.deepStrictEqual(result, { value: 123 });
     });
 
     it('should resolve empty strings', () => {
       const result = getValueByPath(referenceObject(), 'def');
 
-      should.exist(result);
-
-      result?.should.deep.equal({ value: '' });
+      assert.deepStrictEqual(result, { value: '' });
     });
 
     it('should resolve null', () => {
       const result = getValueByPath(referenceObject(), 'efg');
 
-      should.exist(result);
-
       // eslint-disable-next-line unicorn/no-null
-      result?.should.deep.equal({ value: null });
+      assert.deepStrictEqual(result, { value: null });
     });
   });
 });

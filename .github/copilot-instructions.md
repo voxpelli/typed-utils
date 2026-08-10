@@ -44,8 +44,8 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 ## Testing
 
 1. **Test Framework**
-   - Use Mocha for test runner
-   - Use Chai for assertions
+   - Use node:test for test runner
+   - Use node:assert/strict for assertions
    - Place tests in `test/` directory with `.spec.js` extension
    - Add runtime spec (`test/*.spec.js`) and type test (`typetests/*.test.ts`) with positive + `// @ts-expect-error` cases
 
@@ -56,7 +56,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 
 3. **Running Tests**
    - `npm test` - Full test suite with checks
-   - `npm run test:mocha` - Just the tests
+   - `npm run test:node` - Just the tests
    - `npm run check` - Linting and type checking only
 
 ## Implementation Rules
@@ -96,7 +96,7 @@ Focus: preserve existing runtime + type guarantees, stay minimal, be humane (HUG
 
 ## Scripts & Quality Gates
 - Fast verify: `npm run check` (clean, lint, types, knip, type-coverage, tsd build cycle).
-- Full tests: `npm test` (adds mocha + coverage). CI relies on `check` + `test-ci`.
+- Full tests: `npm test` (adds node:test + coverage). CI relies on `check` + `test-ci`.
 - Only run `npm run build` for generating `.d.ts` (prepack). Do NOT commit extraneous build artifacts.
 
 ## Dependencies

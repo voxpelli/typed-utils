@@ -1,30 +1,29 @@
-import chai from 'chai';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import { ensureArray } from '../index.js';
 
-chai.should();
-
 describe('ensureArray', () => {
   it('should wrap non-array values in an array', () => {
-    ensureArray('single').should.deep.equal(['single']);
-    ensureArray(42).should.deep.equal([42]);
-    ensureArray({ key: 'value' }).should.deep.equal([{ key: 'value' }]);
+    assert.deepStrictEqual(ensureArray('single'), ['single']);
+    assert.deepStrictEqual(ensureArray(42), [42]);
+    assert.deepStrictEqual(ensureArray({ key: 'value' }), [{ key: 'value' }]);
   });
 
   it('should return arrays as-is', () => {
     const arr = ['already', 'array'];
-    ensureArray(arr).should.equal(arr);
-    ensureArray([]).should.deep.equal([]);
-    ensureArray([1, 2, 3]).should.deep.equal([1, 2, 3]);
+    assert.strictEqual(ensureArray(arr), arr);
+    assert.deepStrictEqual(ensureArray([]), []);
+    assert.deepStrictEqual(ensureArray([1, 2, 3]), [1, 2, 3]);
   });
 
   it('should handle empty arrays', () => {
-    ensureArray([]).should.deep.equal([]);
+    assert.deepStrictEqual(ensureArray([]), []);
   });
 
   it('should preserve array identity', () => {
     const original = [1, 2, 3];
     const result = ensureArray(original);
-    result.should.equal(original);
+    assert.strictEqual(result, original);
   });
 });

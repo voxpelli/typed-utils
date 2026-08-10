@@ -1,5 +1,5 @@
-import { expect } from 'chai';
-import { describe, it } from 'mocha';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import { assertType, TypeHelpersAssertionError } from '../lib/assert.js';
 import { isType } from '../lib/is.js';
@@ -8,227 +8,227 @@ import { explainVariable } from '../lib/misc.js';
 describe('Literal Types', () => {
   describe('isType', () => {
     it('identifies string type', () => {
-      expect(isType('hello', 'string')).to.equal(true);
-      expect(isType(42, 'string')).to.equal(false);
-      expect(isType(undefined, 'string')).to.equal(false);
+      assert.strictEqual(isType('hello', 'string'), true);
+      assert.strictEqual(isType(42, 'string'), false);
+      assert.strictEqual(isType(undefined, 'string'), false);
     });
 
     it('identifies number type', () => {
-      expect(isType(42, 'number')).to.equal(true);
-      expect(isType(0, 'number')).to.equal(true);
-      expect(isType('42', 'number')).to.equal(false);
-      expect(isType(42n, 'number')).to.equal(false);
+      assert.strictEqual(isType(42, 'number'), true);
+      assert.strictEqual(isType(0, 'number'), true);
+      assert.strictEqual(isType('42', 'number'), false);
+      assert.strictEqual(isType(42n, 'number'), false);
     });
 
     it('identifies bigint type', () => {
-      expect(isType(42n, 'bigint')).to.equal(true);
-      expect(isType(42, 'bigint')).to.equal(false);
-      expect(isType('42', 'bigint')).to.equal(false);
+      assert.strictEqual(isType(42n, 'bigint'), true);
+      assert.strictEqual(isType(42, 'bigint'), false);
+      assert.strictEqual(isType('42', 'bigint'), false);
     });
 
     it('identifies boolean type', () => {
-      expect(isType(true, 'boolean')).to.equal(true);
-      expect(isType(false, 'boolean')).to.equal(true);
-      expect(isType(1, 'boolean')).to.equal(false);
-      expect(isType('true', 'boolean')).to.equal(false);
+      assert.strictEqual(isType(true, 'boolean'), true);
+      assert.strictEqual(isType(false, 'boolean'), true);
+      assert.strictEqual(isType(1, 'boolean'), false);
+      assert.strictEqual(isType('true', 'boolean'), false);
     });
 
     it('identifies symbol type', () => {
-      expect(isType(Symbol('test'), 'symbol')).to.equal(true);
-      expect(isType('symbol', 'symbol')).to.equal(false);
-      expect(isType({}, 'symbol')).to.equal(false);
+      assert.strictEqual(isType(Symbol('test'), 'symbol'), true);
+      assert.strictEqual(isType('symbol', 'symbol'), false);
+      assert.strictEqual(isType({}, 'symbol'), false);
     });
 
     it('identifies undefined type', () => {
-      expect(isType(undefined, 'undefined')).to.equal(true);
-      expect(isType(undefined, 'undefined')).to.equal(true);
+      assert.strictEqual(isType(undefined, 'undefined'), true);
+      assert.strictEqual(isType(undefined, 'undefined'), true);
     });
 
     it('identifies null type', () => {
       // eslint-disable-next-line unicorn/no-null
-      expect(isType(null, 'null')).to.equal(true);
-      expect(isType(undefined, 'null')).to.equal(false);
-      expect(isType('null', 'null')).to.equal(false);
+      assert.strictEqual(isType(null, 'null'), true);
+      assert.strictEqual(isType(undefined, 'null'), false);
+      assert.strictEqual(isType('null', 'null'), false);
     });
 
     it('identifies array type', () => {
-      expect(isType([], 'array')).to.equal(true);
-      expect(isType([1, 2, 3], 'array')).to.equal(true);
-      expect(isType({}, 'array')).to.equal(false);
-      expect(isType('array', 'array')).to.equal(false);
+      assert.strictEqual(isType([], 'array'), true);
+      assert.strictEqual(isType([1, 2, 3], 'array'), true);
+      assert.strictEqual(isType({}, 'array'), false);
+      assert.strictEqual(isType('array', 'array'), false);
     });
 
     it('identifies function type', () => {
-      expect(isType(() => {}, 'function')).to.equal(true);
-      expect(isType(async () => {}, 'function')).to.equal(true);
-      expect(isType(class MyClass {}, 'function')).to.equal(true);
-      expect(isType({}, 'function')).to.equal(false);
-      expect(isType('function', 'function')).to.equal(false);
+      assert.strictEqual(isType(() => {}, 'function'), true);
+      assert.strictEqual(isType(async () => {}, 'function'), true);
+      assert.strictEqual(isType(class MyClass {}, 'function'), true);
+      assert.strictEqual(isType({}, 'function'), false);
+      assert.strictEqual(isType('function', 'function'), false);
     });
 
     it('identifies object type', () => {
-      expect(isType({}, 'object')).to.equal(true);
-      expect(isType({ a: 1 }, 'object')).to.equal(true);
-      expect(isType([], 'object')).to.equal(false);
-      expect(isType(undefined, 'object')).to.equal(false);
-      expect(isType('object', 'object')).to.equal(false);
+      assert.strictEqual(isType({}, 'object'), true);
+      assert.strictEqual(isType({ a: 1 }, 'object'), true);
+      assert.strictEqual(isType([], 'object'), false);
+      assert.strictEqual(isType(undefined, 'object'), false);
+      assert.strictEqual(isType('object', 'object'), false);
     });
 
     it('handles edge cases: falsy values', () => {
-      expect(isType(0, 'number')).to.equal(true);
-      expect(isType('', 'string')).to.equal(true);
-      expect(isType(false, 'boolean')).to.equal(true);
+      assert.strictEqual(isType(0, 'number'), true);
+      assert.strictEqual(isType('', 'string'), true);
+      assert.strictEqual(isType(false, 'boolean'), true);
     });
   });
 
   describe('isType with array of types', () => {
     it('should return true for values matching any allowed type', () => {
-      expect(isType('hello', ['string', 'number'])).to.equal(true);
-      expect(isType(42, ['string', 'number'])).to.equal(true);
-      expect(isType(true, ['boolean', 'number'])).to.equal(true);
-      expect(isType([], ['array', 'object'])).to.equal(true);
+      assert.strictEqual(isType('hello', ['string', 'number']), true);
+      assert.strictEqual(isType(42, ['string', 'number']), true);
+      assert.strictEqual(isType(true, ['boolean', 'number']), true);
+      assert.strictEqual(isType([], ['array', 'object']), true);
     });
 
     it('should return false for values matching none of the allowed types', () => {
-      expect(isType(true, ['string', 'number'])).to.equal(false);
-      expect(isType('hello', ['number', 'boolean'])).to.equal(false);
+      assert.strictEqual(isType(true, ['string', 'number']), false);
+      assert.strictEqual(isType('hello', ['number', 'boolean']), false);
       // eslint-disable-next-line unicorn/no-null
-      expect(isType(null, ['string', 'number', 'boolean'])).to.equal(false);
+      assert.strictEqual(isType(null, ['string', 'number', 'boolean']), false);
     });
 
     it('should work with single-element array', () => {
-      expect(isType('hello', ['string'])).to.equal(true);
-      expect(isType(42, ['string'])).to.equal(false);
+      assert.strictEqual(isType('hello', ['string']), true);
+      assert.strictEqual(isType(42, ['string']), false);
     });
 
     it('should handle empty array (always returns false)', () => {
-      expect(isType('hello', [])).to.equal(false);
-      expect(isType(42, [])).to.equal(false);
-      expect(isType(true, [])).to.equal(false);
+      assert.strictEqual(isType('hello', []), false);
+      assert.strictEqual(isType(42, []), false);
+      assert.strictEqual(isType(true, []), false);
     });
 
     it('should work with all literal types in array', () => {
-      expect(isType('test', ['string', 'number', 'boolean', 'null', 'undefined', 'array', 'object', 'function', 'symbol', 'bigint'])).to.equal(true);
-      expect(isType(42, ['string', 'number', 'boolean'])).to.equal(true);
+      assert.strictEqual(isType('test', ['string', 'number', 'boolean', 'null', 'undefined', 'array', 'object', 'function', 'symbol', 'bigint']), true);
+      assert.strictEqual(isType(42, ['string', 'number', 'boolean']), true);
     });
   });
 
   describe('assertType', () => {
     it('passes for matching type - string', () => {
       const value = 'hello';
-      expect(() => assertType(value, 'string')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'string'));
     });
 
     it('passes for matching type - number', () => {
       const value = 42;
-      expect(() => assertType(value, 'number')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'number'));
     });
 
     it('passes for matching type - bigint', () => {
       const value = 42n;
-      expect(() => assertType(value, 'bigint')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'bigint'));
     });
 
     it('passes for matching type - boolean', () => {
       const value = true;
-      expect(() => assertType(value, 'boolean')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'boolean'));
     });
 
     it('passes for matching type - symbol', () => {
       const value = Symbol('test');
-      expect(() => assertType(value, 'symbol')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'symbol'));
     });
 
     it('passes for matching type - undefined', () => {
       const value = undefined;
-      expect(() => assertType(value, 'undefined')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'undefined'));
     });
 
     it('passes for matching type - null', () => {
       // eslint-disable-next-line unicorn/no-null
       const value = null;
-      expect(() => assertType(value, 'null')).to.not.throw();
+      assert.doesNotThrow(() => assertType(value, 'null'));
     });
 
     it('passes for matching type - array', () => {
-      expect(() => assertType([], 'array')).to.not.throw();
+      assert.doesNotThrow(() => assertType([], 'array'));
     });
 
     it('passes for matching type - object', () => {
       const obj = {};
-      expect(() => assertType(obj, 'object')).to.not.throw();
+      assert.doesNotThrow(() => assertType(obj, 'object'));
     });
 
     it('throws TypeHelpersAssertionError for mismatched type', () => {
-      expect(() => assertType('hello', 'number')).to.throw(TypeHelpersAssertionError);
-      expect(() => assertType(42, 'string')).to.throw(TypeHelpersAssertionError);
-      expect(() => assertType([], 'object')).to.throw(TypeHelpersAssertionError);
-      expect(() => assertType(undefined, 'undefined')).to.not.throw();
+      assert.throws(() => assertType('hello', 'number'), TypeHelpersAssertionError);
+      assert.throws(() => assertType(42, 'string'), TypeHelpersAssertionError);
+      assert.throws(() => assertType([], 'object'), TypeHelpersAssertionError);
+      assert.doesNotThrow(() => assertType(undefined, 'undefined'));
     });
 
     it('throws error with helpful message', () => {
       try {
         assertType('hello', 'number');
-        expect.fail('Should have thrown');
+        assert.fail('Should have thrown');
       } catch (err) {
-        expect(err).to.be.instanceOf(TypeHelpersAssertionError);
+        assert.ok(err instanceof TypeHelpersAssertionError);
         if (err instanceof TypeHelpersAssertionError) {
-          expect(err.message).to.include('number');
+          assert.match(err.message, /number/);
         }
       }
     });
 
     it('handles edge cases: falsy values', () => {
-      expect(() => assertType(0, 'number')).to.not.throw();
-      expect(() => assertType('', 'string')).to.not.throw();
-      expect(() => assertType(false, 'boolean')).to.not.throw();
+      assert.doesNotThrow(() => assertType(0, 'number'));
+      assert.doesNotThrow(() => assertType('', 'string'));
+      assert.doesNotThrow(() => assertType(false, 'boolean'));
     });
   });
 
   describe('assertType with array of types', () => {
     it('should not throw for values matching any allowed type', () => {
-      expect(() => assertType('hello', ['string', 'number'])).to.not.throw();
-      expect(() => assertType(42, ['string', 'number'])).to.not.throw();
-      expect(() => assertType(true, ['boolean', 'number'])).to.not.throw();
-      expect(() => assertType([], ['array', 'object'])).to.not.throw();
+      assert.doesNotThrow(() => assertType('hello', ['string', 'number']));
+      assert.doesNotThrow(() => assertType(42, ['string', 'number']));
+      assert.doesNotThrow(() => assertType(true, ['boolean', 'number']));
+      assert.doesNotThrow(() => assertType([], ['array', 'object']));
     });
 
     it('should throw when value matches none of the allowed types', () => {
-      expect(() => assertType(true, ['string', 'number'])).to.throw(TypeHelpersAssertionError);
-      expect(() => assertType('hello', ['number', 'boolean'])).to.throw(TypeHelpersAssertionError);
+      assert.throws(() => assertType(true, ['string', 'number']), TypeHelpersAssertionError);
+      assert.throws(() => assertType('hello', ['number', 'boolean']), TypeHelpersAssertionError);
     });
 
     it('should throw with error message including all types', () => {
       try {
         assertType(true, ['string', 'number']);
-        expect.fail('Should have thrown');
+        assert.fail('Should have thrown');
       } catch (err) {
-        expect(err).to.be.instanceOf(TypeHelpersAssertionError);
+        assert.ok(err instanceof TypeHelpersAssertionError);
         if (err instanceof TypeHelpersAssertionError) {
-          expect(err.message).to.include('string');
-          expect(err.message).to.include('number');
+          assert.match(err.message, /string/);
+          assert.match(err.message, /number/);
         }
       }
     });
 
     it('should work with single-element array', () => {
-      expect(() => assertType('hello', ['string'])).to.not.throw();
-      expect(() => assertType(42, ['string'])).to.throw(TypeHelpersAssertionError);
+      assert.doesNotThrow(() => assertType('hello', ['string']));
+      assert.throws(() => assertType(42, ['string']), TypeHelpersAssertionError);
     });
 
     it('should handle empty array (always throws)', () => {
-      expect(() => assertType('hello', [])).to.throw(TypeHelpersAssertionError);
-      expect(() => assertType(42, [])).to.throw(TypeHelpersAssertionError);
+      assert.throws(() => assertType('hello', []), TypeHelpersAssertionError);
+      assert.throws(() => assertType(42, []), TypeHelpersAssertionError);
     });
 
     it('should work with custom error message', () => {
       try {
         assertType(true, ['string', 'number'], 'Custom error');
-        expect.fail('Should have thrown');
+        assert.fail('Should have thrown');
       } catch (err) {
-        expect(err).to.be.instanceOf(TypeHelpersAssertionError);
+        assert.ok(err instanceof TypeHelpersAssertionError);
         if (err instanceof TypeHelpersAssertionError) {
-          expect(err.message).to.include('Custom error');
+          assert.match(err.message, /Custom error/);
         }
       }
     });
@@ -236,27 +236,27 @@ describe('Literal Types', () => {
 
   describe('explainVariable', () => {
     it('returns string for string values', () => {
-      expect(explainVariable('hello')).to.equal('string');
-      expect(explainVariable('')).to.equal('string');
+      assert.strictEqual(explainVariable('hello'), 'string');
+      assert.strictEqual(explainVariable(''), 'string');
     });
 
     it('returns number for number values', () => {
-      expect(explainVariable(42)).to.equal('number');
-      expect(explainVariable(0)).to.equal('number');
-      expect(explainVariable(-1)).to.equal('number');
+      assert.strictEqual(explainVariable(42), 'number');
+      assert.strictEqual(explainVariable(0), 'number');
+      assert.strictEqual(explainVariable(-1), 'number');
     });
 
     it('returns bigint for bigint values', () => {
-      expect(explainVariable(42n)).to.equal('bigint');
+      assert.strictEqual(explainVariable(42n), 'bigint');
     });
 
     it('returns boolean for boolean values', () => {
-      expect(explainVariable(true)).to.equal('boolean');
-      expect(explainVariable(false)).to.equal('boolean');
+      assert.strictEqual(explainVariable(true), 'boolean');
+      assert.strictEqual(explainVariable(false), 'boolean');
     });
 
     it('returns symbol for symbol values', () => {
-      expect(explainVariable(Symbol('test'))).to.equal('symbol');
+      assert.strictEqual(explainVariable(Symbol('test')), 'symbol');
     });
 
     it('returns undefined for undefined values', () => {
@@ -265,29 +265,29 @@ describe('Literal Types', () => {
 
     it('returns null for null values', () => {
       // eslint-disable-next-line unicorn/no-null
-      expect(explainVariable(null)).to.equal('null');
+      assert.strictEqual(explainVariable(null), 'null');
     });
 
     it('returns array for array values', () => {
-      expect(explainVariable([])).to.equal('array');
-      expect(explainVariable([1, 2, 3])).to.equal('array');
+      assert.strictEqual(explainVariable([]), 'array');
+      assert.strictEqual(explainVariable([1, 2, 3]), 'array');
     });
 
     it('returns function for function values', () => {
-      expect(explainVariable(() => {})).to.equal('function');
-      expect(explainVariable(async () => {})).to.equal('function');
-      expect(explainVariable(class MyClass {})).to.equal('function');
+      assert.strictEqual(explainVariable(() => {}), 'function');
+      assert.strictEqual(explainVariable(async () => {}), 'function');
+      assert.strictEqual(explainVariable(class MyClass {}), 'function');
     });
 
     it('returns object for object values', () => {
-      expect(explainVariable({})).to.equal('object');
-      expect(explainVariable({ a: 1 })).to.equal('object');
+      assert.strictEqual(explainVariable({}), 'object');
+      assert.strictEqual(explainVariable({ a: 1 }), 'object');
     });
 
     it('handles edge cases: falsy values', () => {
-      expect(explainVariable(0)).to.equal('number');
-      expect(explainVariable('')).to.equal('string');
-      expect(explainVariable(false)).to.equal('boolean');
+      assert.strictEqual(explainVariable(0), 'number');
+      assert.strictEqual(explainVariable(''), 'string');
+      assert.strictEqual(explainVariable(false), 'boolean');
     });
   });
 });

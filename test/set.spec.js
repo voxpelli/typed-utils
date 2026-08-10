@@ -1,8 +1,7 @@
-import chai from 'chai';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
 import { FrozenSet } from '../lib/set.js';
-
-const should = chai.should();
 
 describe('set helpers', () => {
   describe('FrozenSet', () => {
@@ -10,21 +9,21 @@ describe('set helpers', () => {
       /** @type {FrozenSet<string>} */
       let result;
 
-      should.not.Throw(() => {
+      assert.doesNotThrow(() => {
         result = new FrozenSet(['abc', '123']);
       });
 
-      should.Throw(() => {
+      assert.throws(() => {
         // @ts-ignore
         result.add('xyz');
       });
 
-      should.Throw(() => {
+      assert.throws(() => {
         // @ts-ignore
         result.delete('abc');
       });
 
-      should.Throw(() => {
+      assert.throws(() => {
         // @ts-ignore
         result.clear();
       });
